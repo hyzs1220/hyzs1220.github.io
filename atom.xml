@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-03T06:11:36.863Z</updated>
+  <updated>2019-12-03T06:34:29.613Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>test2</title>
+    <link href="http://yoursite.com/2019/12/03/test2/"/>
+    <id>http://yoursite.com/2019/12/03/test2/</id>
+    <published>2019-12-03T06:31:09.000Z</published>
+    <updated>2019-12-03T06:34:29.613Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/.com//1.jpg" alt></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;img src=&quot;/.com//1.jpg&quot; alt&gt;&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Hadoop+HBase安装配置</title>

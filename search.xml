@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>test2</title>
+      <link href="/2019/12/03/test2/"/>
+      <url>/2019/12/03/test2/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/.com//1.jpg" alt></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hadoop+HBase安装配置</title>
       <link href="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/"/>
       <url>/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/</url>
