@@ -19,12 +19,12 @@
 <li>不过随着网络深度的增加，会出现网络退化，导致学习能力下降，难以得到预期的函数效果H(x)</li>
 <li>不过发现，如果让网络学习达到F(x) = H(x) - x的函数效果（Residual，残差）则会容易许多</li>
 <li>而最终我们预期得到的H(x)通过H(x) = F(x) + x得到</li>
-<li><img src="Google-Inception-MobileNets%5C10.png" alt="" /></li>
+<li><img src="10.png" alt="" /></li>
 <li>其中右侧x直接连接到下一层输入，称之为恒等映射（短接）</li>
 </ul>
 <h3 id="网络结构"><a class="markdownIt-Anchor" href="#网络结构"></a> 网络结构</h3>
 <ul>
-<li><img src="Google-Inception-MobileNets%5C11.png" alt="" /></li>
+<li><img src="11.png" alt="" /></li>
 <li>常见的ResNet一般由5个stage组成，每个stage又包含若干个block，每个block中包含多个卷积层</li>
 <li>通过这样的结构划分，可以增加代码的可扩展性</li>
 <li>在最后一层，设置了一个Global Average pool
@@ -35,7 +35,7 @@
 </li>
 <li>在网络的50层结构以上的时候会出现Bottle Neck（瓶颈）
 <ul>
-<li><img src="Google-Inception-MobileNets%5C12.png" alt="" /></li>
+<li><img src="12.png" alt="" /></li>
 <li>在入口处通过1x1卷积，来进行降维操作。出口处通过1x1卷积，再恢复原有维度数</li>
 <li>通过这样的形式来减少参数量和计算量</li>
 </ul>
@@ -44,9 +44,9 @@
 </ul>
 <h2 id="inception"><a class="markdownIt-Anchor" href="#inception"></a> Inception</h2>
 <h3 id="原始的inception结构"><a class="markdownIt-Anchor" href="#原始的inception结构"></a> 原始的Inception结构</h3>
-<p><img src="Google-Inception-MobileNets%5C1.png" alt="" /></p>
+<p><img src="1.png" alt="" /></p>
 <p>这是Google提出的原始的Inception模块，输入通过不同的卷积和池化操作，然后在将每部分的结果进行堆叠，得到输出。具体实例如下：</p>
-<p><img src="Google-Inception-MobileNets%5C2.jpg" alt="" /></p>
+<p><img src="2.jpg" alt="" /></p>
 <ul>
 <li>其中不同的卷积核操作之后，得到的feature map的尺寸大小是不一样的，然后对其进行padding操作恢复原来尺寸大小，再将多个卷积核的操作结构进行堆叠即可</li>
 <li>同时在每一个卷积层之后都要进行ReLU操作，增加非线性的拟合能力</li>
@@ -60,8 +60,8 @@
 </ul>
 <h3 id="inception-v1"><a class="markdownIt-Anchor" href="#inception-v1"></a> Inception V1</h3>
 <p>为解决上述问题，通过在3x3前、5x5前以及max pooling后分别加上了1x1的卷积核，来达到<strong>降维</strong>的目的。</p>
-<p><img src="Google-Inception-MobileNets%5C3.png" alt="" /></p>
-<p><img src="Google-Inception-MobileNets%5C4.jpg" alt="" /></p>
+<p><img src="3.png" alt="" /></p>
+<p><img src="4.jpg" alt="" /></p>
 <blockquote>
 <p>比如，上一层的输出为100x100x128，经过具有256个通道的5x5卷积层之后(stride=1，pad=2)，输出数据为100x100x256，其中，卷积层的参数为128x5x5x256= 819200。而假如上一层输出先经过具有32个通道的1x1卷积层，再经过具有256个输出的5x5卷积层，那么输出数据仍为为100x100x256，但卷积参数量已经减少为128x1x1x32 + 32x5x5x256= 204800，大约减少了4倍。</p>
 </blockquote>
@@ -74,7 +74,7 @@
 <p>感受野的越大，那么在卷积的过程中，便能够同时捕获更多的图像信息，不过相应的参数量也会较大（5x5的卷积核的参数为25个）。因此Google提出了一种卷积分解的方法。</p>
 </li>
 <li>
-<p><img src="Google-Inception-MobileNets%5C5.png" alt="" /></p>
+<p><img src="5.png" alt="" /></p>
 <ul>
 <li>5x5的图像块，通过5x5的卷积核可以直接得到最终对应的feature map。参数个数为25</li>
 <li>5x5的图像块，先通过3x3的卷积核得到3x3的feature map，然后再进行一次卷积得到最终的feature map。参数个数为9+9=18</li>
@@ -82,7 +82,7 @@
 </ul>
 </li>
 <li>
-<p><img src="Google-Inception-MobileNets%5C6.png" alt="" /></p>
+<p><img src="6.png" alt="" /></p>
 <ul>
 <li>
 <p>同时，任意nxn的卷积都可以通过1xn卷积后接nx1卷积来替代</p>
@@ -118,7 +118,7 @@
 </li>
 <li>为了同时保持特征表示且降低计算量，使用以下结构（使用两个并行化的模块来降低计算量（卷积、池化并行执行，再进行合并））
 <ul>
-<li><img src="Google-Inception-MobileNets%5C7.png" alt="" /></li>
+<li><img src="7.png" alt="" /></li>
 </ul>
 </li>
 </ul>
@@ -132,12 +132,12 @@
 <li>利用残差结构来进一步改进Inception V3</li>
 <li>原始残差结构
 <ul>
-<li><img src="Google-Inception-MobileNets%5C8.png" alt="" /></li>
+<li><img src="8.png" alt="" /></li>
 </ul>
 </li>
 <li>与Inception相结合
 <ul>
-<li><img src="Google-Inception-MobileNets%5C9.png" alt="" /></li>
+<li><img src="9.png" alt="" /></li>
 </ul>
 </li>
 </ul>
