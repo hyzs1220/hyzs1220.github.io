@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-08-27T12:49:45.905Z</updated>
+  <updated>2020-08-12T16:45:43.815Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,30 +15,6 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>心灵房间</title>
-    <link href="http://yoursite.com/2020/08/27/%E5%BF%83%E6%84%BF%E6%88%BF%E9%97%B4/"/>
-    <id>http://yoursite.com/2020/08/27/%E5%BF%83%E6%84%BF%E6%88%BF%E9%97%B4/</id>
-    <published>2020-08-27T12:43:14.000Z</published>
-    <updated>2020-08-27T12:49:45.905Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="心愿房间"><a class="markdownIt-Anchor" href="#心愿房间"></a> 心愿房间</h1><p>百度百科：主要讲述了一对恩爱的夫妻搬入一栋位在纽约郊区的幽静古宅里发生的故事 。</p><a id="more"></a><video id="video" controls="" preload="none" >           <source id="mp4" src="https://hyzs1220.club/心愿房间.mp4" type="video/mp4">    </video>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;心愿房间&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#心愿房间&quot;&gt;&lt;/a&gt; 心愿房间&lt;/h1&gt;
-&lt;p&gt;百度百科：主要讲述了一对恩爱的夫妻搬入一栋位在纽约郊区的幽静古宅里发生的故事 。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="life" scheme="http://yoursite.com/categories/life/"/>
-    
-    
-      <category term="movie" scheme="http://yoursite.com/tags/movie/"/>
-    
-  </entry>
   
   <entry>
     <title>SENet&amp;语义分割相关知识学习</title>
