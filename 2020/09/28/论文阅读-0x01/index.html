@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="论文阅读-0x01"><meta name="keywords" content="notes"><meta name="author" content="hyzs1220"><meta name="copyright" content="hyzs1220"><title>论文阅读-0x01 | hyzs1220のBlog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><link rel="alternate" href="/atom.xml" title="hyzs1220のBlog" type="application/atom+xml">
+</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#论文阅读-0x01"><span class="toc-number">1.</span> <span class="toc-text"> 论文阅读-0x01</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#non-local-neutral-networks"><span class="toc-number">1.1.</span> <span class="toc-text"> Non-local Neutral Networks</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#abstract"><span class="toc-number">1.1.1.</span> <span class="toc-text"> Abstract</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#non-local-neutral-networks-2"><span class="toc-number">1.1.2.</span> <span class="toc-text"> Non-local Neutral Networks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#learning-in-the-frequency-domain"><span class="toc-number">1.2.</span> <span class="toc-text"> Learning in the Frequency Domain</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#abstract-2"><span class="toc-number">1.2.1.</span> <span class="toc-text"> Abstract</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pre-treatment"><span class="toc-number">1.2.2.</span> <span class="toc-text"> pre- treatment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#experiments"><span class="toc-number">1.2.3.</span> <span class="toc-text"> Experiments</span></a></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="img/avatar.png"></div><div class="author-info__name text-center">hyzs1220</div><div class="author-info__description text-center">一个人要隐藏多少秘密，才能巧妙地度过这一生。</div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">17</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">9</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">1</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(img/top.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">hyzs1220のBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">论文阅读-0x01</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-09-28</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/study/">study</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="论文阅读-0x01"><a class="markdownIt-Anchor" href="#论文阅读-0x01"></a> 论文阅读-0x01</h1>
+<p>两篇论文的阅读笔记：《Non-local Neutral Networks》&amp;《Learning in the Frequency Domain》</p>
+<a id="more"></a>
+<h2 id="non-local-neutral-networks"><a class="markdownIt-Anchor" href="#non-local-neutral-networks"></a> Non-local Neutral Networks</h2>
+<h3 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> Abstract</h3>
+<ul>
+<li>传统卷积操作和循环操作都是针对一个局部图像邻域进行操作， 以卷积操作为例，它的感受野大小就是卷积核大小，只考虑局部区域</li>
+<li>所以作者在本文中提出了一种非局部的方式来捕获远程依赖关系。
+<ul>
+<li>将某个位置的响应由所有位置的特征的<strong>加权平均</strong>计算得到</li>
+<li>对于顺序数据（语音，文本）：使用循环操作来建立远程依赖模式</li>
+<li>对于图像数据：通过深层卷积运算形成接收场来模拟长距离依赖</li>
+<li>上述两种处理模式：都是通过不断重复，通过数据传播信号，捕获远程依赖关系</li>
+</ul>
+</li>
+<li>作者提出的非局部运算是计算机视觉中经典的非局部均值运算（Non-local means）的一种概括</li>
+<li>可以将其添加到深度神经网络的较早部分</li>
+<li>优点：
+<ul>
+<li>可以直接计算任意两个位置之间的相互作用来捕获远程依赖关系</li>
+<li>即使只有很少的层数，依然有效，并能达到最佳的效果</li>
+<li>可以保持可变的输入大小，并且可以轻松的与其他操作结合使用</li>
+</ul>
+</li>
+</ul>
+<h3 id="non-local-neutral-networks-2"><a class="markdownIt-Anchor" href="#non-local-neutral-networks-2"></a> Non-local Neutral Networks</h3>
+<ul>
+<li>公式定义：
+<ul>
+<li>$ y_i = \frac{1}{C (x)}\sum\limits_{\forall j} f(x_i, y_j)g(x_j) $</li>
+<li>i为要计算其相应输出位置的索引，j是枚举所有可能位置的索引</li>
+<li>x为输入信号（文本、图像或特征图等），y是与x大小相同的输出信号</li>
+<li>成对函数f，计算i与所有j之间的标量（表示关联程度，相似度）</li>
+<li>g计算位置j处输入信号的表示形式（线性映射， 实际网络中用一个1x1卷积实现）</li>
+<li>C(x)进行归一化</li>
+<li>和全连接不同，fc仅是使用学习的权重，而不是使用函数；另外该公式支持可变大小的输入，并在输出中保持相应的大小，而fc需要固定大小，并且会丢失相应位置的对应关系（例如位置i处<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>）</li>
+<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C3.jpg" alt="" />
+<ul>
+<li>类似attention的实现，为了计算输出层的一个点，需要将输入的每个点都考虑一遍</li>
+</ul>
+</li>
+<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C1.png" alt="" />
+<ul>
+<li>论文实验结果表明，f的不同选择对Non-local的结果没有太大影响，表明Non-local这种行为本身才是提升模型的关键因素</li>
+<li>其中g进行了一个矩阵相乘，也就是一个空间编码</li>
+<li>f则是遵循非局部均值和双边滤波</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Non-local Block
+<ul>
+<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C2.png" alt="" /></li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是上面的Non-local操作，然后给一个权重矩阵<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>W</mi><mi>z</mi></msub></mrow><annotation encoding="application/x-tex">W_z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，再加上残差结构<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
+<li>Non-loca可以转化为矩阵运算乘法+卷积运算，对比for 循环提升效率</li>
+</ul>
+</li>
+<li>与全连接层的关系
+<ul>
+<li>Non-local Block利用两个点的相似性对每个位置的特征做加权</li>
+<li>全连接层则是利用position-related的weight对每个位置做加权</li>
+<li>任意两点的相似性仅跟两点的位置索引有关，即 <img src="https://www.zhihu.com/equation?tex=f%28%5Cmathbb%7Bx%7D_i%2C+%5Cmathbb%7Bx%7D_j%29%3Dw_%7Bij%7D" alt="[公式]" /></li>
+<li>g是identity函数， <img src="https://www.zhihu.com/equation?tex=g%28%5Cmathbb%7Bx%7D_i%29%3D%5Cmathbb%7Bx%7D_i" alt="[公式]" /></li>
+<li>归一化系数为1。归一化系数跟输入无关，全连接层不能处理任意尺寸的输入</li>
+</ul>
+</li>
+</ul>
+<h2 id="learning-in-the-frequency-domain"><a class="markdownIt-Anchor" href="#learning-in-the-frequency-domain"></a> Learning in the Frequency Domain</h2>
+<h3 id="abstract-2"><a class="markdownIt-Anchor" href="#abstract-2"></a> Abstract</h3>
+<ul>
+<li>传统CNN网络在空间域上进行操作，受到显存限制，输入图像不能过大。不然会在预处理阶段使用下采样，损失很多图像信息</li>
+<li>论文提出了一种方法： 将RGB图像在CPU上进行预处理，首先转换到YCbCr颜色空间，然后转换为频域（ DCT，离散余弦变换 ）。这样同一频率的所有分量都被分组到一个channel中，生成了多个channel，而且中某些channel的权重更大，因此在其中进行筛选。</li>
+<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C4.jpg" alt="" /></li>
+<li>论文证明了频域中的输入特征可以以最小的修改应用于空间域中开发的所有现有CNN模型</li>
+<li>只需要删除CNN的输入层部分，然后保留网络后面部分的残差block。</li>
+<li>将第一个残差层作为输入层的下一部分，并且需要修改输入通道的数量以适合DCT系数输入的尺寸。‘</li>
+<li>这样，修改后的模型可以保持与原始模型相似的参数计数和计算复杂度。</li>
+<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C5.jpg" alt="" /></li>
+<li>移除了传统ResNet-50中的三个输入层（灰色虚线框），以接受56×56×64 DCT输入</li>
+</ul>
+<h3 id="pre-treatment"><a class="markdownIt-Anchor" href="#pre-treatment"></a> pre- treatment</h3>
+<ul>
+<li>在预处理中，传统的预处理流程和增强流程依旧可以正常使用（ 包括图像大小调整，裁剪和翻转 等）</li>
+<li>DCT transform：然后将图像转换为YCbCr颜色空间，也就是频域</li>
+<li>DCT reshape：之后，将相同频率的二维DCT系数分组到一个channel，以形成三维DCT立方体</li>
+<li>DCT channel select：通过<strong>通道选择</strong>，选择了影响较大的频道的子集</li>
+<li>该功能模块叫dynamic gate model，实际上就是<strong>SE-Net中提出的SE-Block</strong></li>
+<li>DCT concatenate ： YCbCr颜色空间中的选定channel被concat在一起以形成一个张量</li>
+<li>DCT normalize： 最后，通过从训练数据集计算出的均值和方差对每个channel进行归一化</li>
+<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C6.jpg" alt="" /></li>
+</ul>
+<h3 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h3>
+<ul>
+<li>与高频频道（索引较大的框）相比，低频频道（索引较小的框）的选择频率更高。 这表明对于视觉推理任务而言，低频通道通常比高频通道更具信息性</li>
+<li>与色度分量Cb和Cr中的频道相比，模型更频繁地选择亮度分量Y中的频道。 这表明亮度分量对于视觉推理任务更具参考价值</li>
+<li>热图在分类和分割任务之间共享一个公共模式。 这表明上述两个观察结果并非特定于一项任务，很可能对更高层次的视觉任务具有普遍性</li>
+<li>这些观察结果暗示CNN模型可能确实表现出与人类视觉类似的特征，并且针对人眼的图像压缩标准（例如JPEG）也可能适用于CNN模型。</li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined" target="_blank" rel="noopener">hyzs1220</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://yoursite.com/2020/09/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01/">http://yoursite.com/2020/09/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/notes/">notes</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2020/08/10/SENet-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E5%AD%A6%E4%B9%A0/"><span>SENet&amp;语义分割相关知识学习</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(img/top.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2020 By hyzs1220</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody" target="_blank" rel="noopener"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
