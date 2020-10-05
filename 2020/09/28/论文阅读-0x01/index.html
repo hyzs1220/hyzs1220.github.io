@@ -44,12 +44,12 @@
 <li>g计算位置j处输入信号的表示形式（线性映射， 实际网络中用一个1x1卷积实现）</li>
 <li>C(x)进行归一化</li>
 <li>和全连接不同，fc仅是使用学习的权重，而不是使用函数；另外该公式支持可变大小的输入，并在输出中保持相应的大小，而fc需要固定大小，并且会丢失相应位置的对应关系（例如位置i处<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>）</li>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C3.jpg" alt="" />
+<li><img src="3.jpg" alt="" />
 <ul>
 <li>类似attention的实现，为了计算输出层的一个点，需要将输入的每个点都考虑一遍</li>
 </ul>
 </li>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C1.png" alt="" />
+<li><img src="1.png" alt="" />
 <ul>
 <li>论文实验结果表明，f的不同选择对Non-local的结果没有太大影响，表明Non-local这种行为本身才是提升模型的关键因素</li>
 <li>其中g进行了一个矩阵相乘，也就是一个空间编码</li>
@@ -60,7 +60,7 @@
 </li>
 <li>Non-local Block
 <ul>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C2.png" alt="" /></li>
+<li><img src="2.png" alt="" /></li>
 <li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是上面的Non-local操作，然后给一个权重矩阵<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>W</mi><mi>z</mi></msub></mrow><annotation encoding="application/x-tex">W_z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.04398em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，再加上残差结构<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
 <li>Non-loca可以转化为矩阵运算乘法+卷积运算，对比for 循环提升效率</li>
 </ul>
@@ -80,12 +80,12 @@
 <ul>
 <li>传统CNN网络在空间域上进行操作，受到显存限制，输入图像不能过大。不然会在预处理阶段使用下采样，损失很多图像信息</li>
 <li>论文提出了一种方法： 将RGB图像在CPU上进行预处理，首先转换到YCbCr颜色空间，然后转换为频域（ DCT，离散余弦变换 ）。这样同一频率的所有分量都被分组到一个channel中，生成了多个channel，而且中某些channel的权重更大，因此在其中进行筛选。</li>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C4.jpg" alt="" /></li>
+<li><img src="4.jpg" alt="" /></li>
 <li>论文证明了频域中的输入特征可以以最小的修改应用于空间域中开发的所有现有CNN模型</li>
 <li>只需要删除CNN的输入层部分，然后保留网络后面部分的残差block。</li>
 <li>将第一个残差层作为输入层的下一部分，并且需要修改输入通道的数量以适合DCT系数输入的尺寸。‘</li>
 <li>这样，修改后的模型可以保持与原始模型相似的参数计数和计算复杂度。</li>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C5.jpg" alt="" /></li>
+<li><img src="5.jpg" alt="" /></li>
 <li>移除了传统ResNet-50中的三个输入层（灰色虚线框），以接受56×56×64 DCT输入</li>
 </ul>
 <h3 id="pre-treatment"><a class="markdownIt-Anchor" href="#pre-treatment"></a> pre- treatment</h3>
@@ -97,7 +97,7 @@
 <li>该功能模块叫dynamic gate model，实际上就是<strong>SE-Net中提出的SE-Block</strong></li>
 <li>DCT concatenate ： YCbCr颜色空间中的选定channel被concat在一起以形成一个张量</li>
 <li>DCT normalize： 最后，通过从训练数据集计算出的均值和方差对每个channel进行归一化</li>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01%5C6.jpg" alt="" /></li>
+<li><img src="6.jpg" alt="" /></li>
 </ul>
 <h3 id="experiments"><a class="markdownIt-Anchor" href="#experiments"></a> Experiments</h3>
 <ul>
