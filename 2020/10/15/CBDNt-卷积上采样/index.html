@@ -35,7 +35,7 @@
 <li>去马赛克函数中的线性插值运算涉及到了不同颜色通道的像素，所以合成的噪声是通道依赖的</li>
 <li>再考虑JPEG压缩</li>
 </ul>
-<p>$ \begin{equation*}y = JPEG( f({\mathbf{DM}}( {\mathbf{L}} + {\mathbf{n}}({\mathbf{L}})) ) ).\tag{3}\end{equation*}$</p>
+<p>$ \begin{equation*}y = JPEG( f({\mathbf{DM}}( {\mathbf{L}} + {\mathbf{n}}({\mathbf{L}})) ) ).\tag{3}\end{equation*} $</p>
 <h3 id="网络模型"><a class="markdownIt-Anchor" href="#网络模型"></a> 网络模型</h3>
 <p><img src="1.jpg" alt="" /></p>
 <ul>
@@ -112,8 +112,8 @@
 <h3 id="实验"><a class="markdownIt-Anchor" href="#实验"></a> 实验</h3>
 <ul>
 <li>数据集： NC12、DND和·Nam</li>
-<li>损失函数：$ α=0.3 ，λ_1=0.5 ，λ_2=0.05$</li>
-<li>使用ADAM算法训练网络：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>β</mi><mn>1</mn></msub><mo>=</mo><mn>0.9</mn></mrow><annotation encoding="application/x-tex">β_1=0.9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05278em;">β</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">9</span></span></span></span></li>
+<li>损失函数：$ α=0.3 ，λ_1=0.5 ，λ_2=0.05 $</li>
+<li>使用ADAM算法训练网络：$ β_1=0.9 $</li>
 <li>最小batch的大小为32，图像块大小为128×128</li>
 <li>所有模型训练40 epochs，前20epochs使用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><msup><mn>0</mn><mrow><mi mathvariant="normal">−</mi><mn>3</mn></mrow></msup></mrow><annotation encoding="application/x-tex">10^{−3}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span>学习率，然后使用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>5</mn><mo>∗</mo><mn>1</mn><msup><mn>0</mn><mrow><mi mathvariant="normal">−</mi><mn>4</mn></mrow></msup></mrow><annotation encoding="application/x-tex">5 * 10^{−4}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span></span>的学习率fine tune模型</li>
 </ul>
@@ -125,7 +125,7 @@
 <li><img src="2.png" alt="" /></li>
 <li><strong>计算公式</strong>
 <ul>
-<li>$  out = (in - kernel + 2*padding) / stride + 1$</li>
+<li>$  out = (in - kernel + 2*padding) / stride + 1 $</li>
 </ul>
 </li>
 </ul>
@@ -134,24 +134,24 @@
 <ul>
 <li><strong>计算公式</strong>
 <ul>
-<li>$  H_{out} = (H_{in} - 1) * stride - 2*padding + kernel_size +  output_padding$</li>
-<li>$  W_{out} = (W_{in} - 1) * stride - 2*padding + kernel_size + output_padding$</li>
+<li>$  H_{out} = (H_{in} - 1) * stride - 2*padding + kernel_size +  output_padding $</li>
+<li>$  W_{out} = (W_{in} - 1) * stride - 2*padding + kernel_size + output_padding $</li>
 </ul>
 </li>
 <li>当stride=1时，就不会进行插值操作，只会进行padding</li>
 <li><img src="3.png" alt="" /></li>
 <li>首先正向卷积计算，4x4输入，卷积核3x3，stride=1，得到2x2。所以padding=0</li>
-<li>计算可以得到输出为$ (2-1)<em>1 -2</em>0 + 3 +0 = 4$</li>
+<li>计算可以得到输出为$ (2-1)<em>1 -2</em>0 + 3 +0 = 4 $</li>
 <li>可以看到上面在进行反卷积的时候进行了padding操作</li>
 <li>$ padding_{new} = kernel_size - padding -1 = 3 -0 -1 = 2 $</li>
-<li>所以下方大小变为$ H_{in} + 2<em>padding_{new} = 2+2</em>2=6$</li>
+<li>所以下方大小变为$ H_{in} + 2<em>padding_{new} = 2+2</em>2=6 $</li>
 <li>当stride=2时，进行插值和padding操作</li>
 <li><img src="4.png" alt="" /></li>
 <li>正向计算，5x5输入，卷积核3x3，stride=2，得到3x3。所以padding=1</li>
-<li>计算可以得到输出为$ (3-1)<em>2 -2</em>1 + 3 +0 = 5$</li>
+<li>计算可以得到输出为$ (3-1)<em>2 -2</em>1 + 3 +0 = 5 $</li>
 <li>$  H_{in_new} = H_{in} + (stride-1) * (H_{in}-1) = 3 + (2-1)*(3-1) = 5 $</li>
 <li>$ padding_{new} = kernel_size - padding -1 = 3 -1 -1 = 1 $</li>
-<li>所以下方大小变为$ H_{in_new} + 2<em>padding_{new} = 5+2</em>1=7$</li>
+<li>所以下方大小变为$ H_{in_new} + 2<em>padding_{new} = 5+2</em>1=7 $</li>
 </ul>
 </li>
 <li>其实没有特别理解，不过大概知道是怎么计算了，也是记录一下，以后可以翻出来再看看</li>
