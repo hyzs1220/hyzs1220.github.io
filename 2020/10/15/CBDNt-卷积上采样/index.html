@@ -134,8 +134,8 @@
 <ul>
 <li><strong>计算公式</strong>
 <ul>
-<li>$  H_{out} = (H_{in} - 1) \times stride - 2 \times padding + kernel _size +  output_padding $</li>
-<li>$  W_{out} = (W_{in} - 1) \times stride - 2 \times padding + kernel _size +  output_padding $</li>
+<li>$  H_{out} = (H_{in} - 1) \times stride - 2 \times padding + kernel \_size +  output\_padding $</li>
+<li>$  W_{out} = (W_{in} - 1) \times stride - 2 \times padding + kernel \_size +  output\_padding $</li>
 </ul>
 </li>
 <li>当stride=1时，就不会进行插值操作，只会进行padding</li>
@@ -143,15 +143,15 @@
 <li>首先正向卷积计算，4x4输入，卷积核3x3，stride=1，得到2x2。所以padding=0</li>
 <li>计算可以得到输出为$ (2-1) \times 1 -2 \times 0 + 3 +0 = 4 $</li>
 <li>可以看到上面在进行反卷积的时候进行了padding操作</li>
-<li>$ padding_{new} = kernel_size - padding -1 = 3 -0 -1 = 2 $</li>
+<li>$ padding_{new} = kernel\_size - padding -1 = 3 -0 -1 = 2 $</li>
 <li>所以下方大小变为$ H_{in} + 2 \times padding_{new} = 2+2 \times 2=6 $</li>
 <li>当stride=2时，进行插值和padding操作</li>
 <li><img src="4.png" alt="" /></li>
 <li>正向计算，5x5输入，卷积核3x3，stride=2，得到3x3。所以padding=1</li>
 <li>计算可以得到输出为$ (3-1) \times 2 -2 \times 1 + 3 +0 = 5 $</li>
-<li>$  H_{in_new} = H_{in} + (stride-1) \times (H_{in}-1) = 3 + (2-1) \times (3-1) = 5 $</li>
-<li>$ padding_{new} = kernel_size - padding -1 = 3 -1 -1 = 1 $</li>
-<li>所以下方大小变为$ H_{in _ new} + 2 \times padding_{new} = 5+2 \times 1=7 $</li>
+<li>$  H_{in \_new} = H_{in} + (stride-1) \times (H_{in}-1) = 3 + (2-1) \times (3-1) = 5 $</li>
+<li>$ padding_{new} = kernel\_size - padding -1 = 3 -1 -1 = 1 $</li>
+<li>所以下方大小变为$ H_{in \_ new} + 2 \times padding_{new} = 5+2 \times 1=7 $</li>
 </ul>
 </li>
 <li>其实没有特别理解，不过大概知道是怎么计算了，也是记录一下，以后可以翻出来再看看</li>
