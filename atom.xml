@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-10-18T13:43:29.595Z</updated>
+  <updated>2020-10-19T16:14:55.229Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>晚安~</title>
+    <link href="http://yoursite.com/2020/10/20/%E6%99%9A%E5%AE%89/"/>
+    <id>http://yoursite.com/2020/10/20/%E6%99%9A%E5%AE%89/</id>
+    <published>2020-10-19T16:05:32.000Z</published>
+    <updated>2020-10-19T16:14:55.229Z</updated>
+    
+    <content type="html"><![CDATA[<p>​</p><h1 id="晚安~"><a class="markdownIt-Anchor" href="#晚安~"></a> 晚安~🌙</h1><p>今天刷抖音的时候看到了最新一期Running Man 的一个剪辑视频，宋智孝的一句晚安，真的说的我心都酥了~</p><p>也是有段时间没有再看RM了，但真心喜欢他们这一群人，晚安~🌙</p><a id="more"></a><video id="video" controls="" preload="none" >           <source id="mp4" src="https://www.hyzs1220.ga/晚安.mp4" type="video/mp4">    </video>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;​&lt;/p&gt;
+&lt;h1 id=&quot;晚安~&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#晚安~&quot;&gt;&lt;/a&gt; 晚安~🌙&lt;/h1&gt;
+&lt;p&gt;今天刷抖音的时候看到了最新一期Running Man 的一个剪辑视频，宋智孝的一句晚安，真的说的我心都酥了~&lt;/p&gt;
+&lt;p&gt;也是有段时间没有再看RM了，但真心喜欢他们这一群人，晚安~🌙&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="life" scheme="http://yoursite.com/categories/life/"/>
+    
+    
+      <category term="Running Man" scheme="http://yoursite.com/tags/Running-Man/"/>
+    
+  </entry>
   
   <entry>
     <title>论文阅读-0x02</title>
