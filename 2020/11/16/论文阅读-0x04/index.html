@@ -58,7 +58,7 @@
 <li>二是由于衰减而缺乏可见性</li>
 </ul>
 </li>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04%5C1.png" alt="" />
+<li><img src="1.png" alt="" />
 <ul>
 <li>第一个输入通过消除大气光引起的色散确保了输出的自然再现(图1(b))</li>
 <li>第二种对比度增强的输入产生了更好的全局可见性，但主要是在厚的朦胧区域(如图1©中的后墙)</li>
@@ -80,7 +80,7 @@
 </ul>
 <h3 id="gated-fusion-networkgfn"><a class="markdownIt-Anchor" href="#gated-fusion-networkgfn"></a> Gated Fusion Network—GFN</h3>
 <ul>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04%5C2.png" alt="" /></li>
+<li><img src="2.png" alt="" /></li>
 <li>使用原始的模糊图像和三个衍生图像作为输入</li>
 <li>其核心思想是学习置信度映射，通过保留图像中最重要的特征，将多个输入图像合并为一个单一的图像
 <ul>
@@ -126,7 +126,7 @@
 </li>
 <li>网络使用了一个encoder-decoder network model ，并且带有残差结构以及跳跃连接</li>
 <li>为了在不丢失局部细节的情况下利用更多的上下文，使用扩展网络来扩大卷积层中的接受域。在每个卷积层或反卷积层之后添加校正层</li>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04%5C3.png" alt="" /></li>
+<li><img src="3.png" alt="" /></li>
 <li>多尺度结构
 <ul>
 <li>如图所示，第一卷积层以连接的形式从前一阶段获取清晰的图像以及它自己的模糊图像和派生的输入。每个输入大小是其粗尺度网络大小的两倍。在下一阶段之前有一个上采样层。在最精细的尺度上，恢复原始的高分辨率图像</li>
