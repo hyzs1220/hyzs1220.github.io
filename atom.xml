@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-12-07T13:15:47.449Z</updated>
+  <updated>2020-12-09T15:21:31.629Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,13 +21,13 @@
     <link href="http://yoursite.com/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/"/>
     <id>http://yoursite.com/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/</id>
     <published>2020-12-07T12:47:56.000Z</published>
-    <updated>2020-12-07T13:15:47.449Z</updated>
+    <updated>2020-12-09T15:21:31.629Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="论文阅读-0x07"><a class="markdownIt-Anchor" href="#论文阅读-0x07"></a> 论文阅读-0x07</h1><p>最近突然有一些做图像着色的想法，也有个想法也算是比较成熟，不过看到已经有不少比较成熟的论文了，所以再学习看一下，还是想试着做一下，哪怕做出来效果不好，但也是自己的一次尝试学习嘛，噶油！</p><p>论文的阅读笔记：</p><p>《 Example-Based Colourization Via Dense Encoding Pyramids 》<a href="https://github.com/chufengxiao/Example-based-Colorization-via-Dense-Encoding-pyramids" target="_blank" rel="noopener">[code]</a> ,   Pacific Graphics 2018</p><p>《  Interactive Deep Colorization Using Simultaneous Global and Local Inputs 》， ICASSP 2019</p><a id="more"></a><h2 id="example-based-colourization-via-dense-encoding-pyramids"><a class="markdownIt-Anchor" href="#example-based-colourization-via-dense-encoding-pyramids"></a> Example-Based Colourization Via Dense Encoding Pyramids</h2><h2 id="interactive-deep-colorization-using-simultaneous-global-and-local-inputs"><a class="markdownIt-Anchor" href="#interactive-deep-colorization-using-simultaneous-global-and-local-inputs"></a> Interactive Deep Colorization Using Simultaneous Global and Local Inputs</h2>]]></content>
+    <content type="html"><![CDATA[<h1 id="论文阅读-0x08"><a class="markdownIt-Anchor" href="#论文阅读-0x08"></a> 论文阅读-0x08</h1><p>最近突然有一些做图像着色的想法，也有个想法也算是比较成熟，不过看到已经有不少比较成熟的论文了，所以再学习看一下，还是想试着做一下，哪怕做出来效果不好，但也是自己的一次尝试学习嘛，噶油！</p><p>论文的阅读笔记：</p><p>《 Example-Based Colourization Via Dense Encoding Pyramids 》<a href="https://github.com/chufengxiao/Example-based-Colorization-via-Dense-Encoding-pyramids" target="_blank" rel="noopener">[code]</a> ,   Pacific Graphics 2018</p><p>《  Interactive Deep Colorization Using Simultaneous Global and Local Inputs 》， ICASSP 2019</p><a id="more"></a><h2 id="example-based-colourization-via-dense-encoding-pyramids"><a class="markdownIt-Anchor" href="#example-based-colourization-via-dense-encoding-pyramids"></a> Example-Based Colourization Via Dense Encoding Pyramids</h2><h2 id="interactive-deep-colorization-using-simultaneous-global-and-local-inputs"><a class="markdownIt-Anchor" href="#interactive-deep-colorization-using-simultaneous-global-and-local-inputs"></a> Interactive Deep Colorization Using Simultaneous Global and Local Inputs</h2>]]></content>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;论文阅读-0x07&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#论文阅读-0x07&quot;&gt;&lt;/a&gt; 论文阅读-0x07&lt;/h1&gt;
+      &lt;h1 id=&quot;论文阅读-0x08&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#论文阅读-0x08&quot;&gt;&lt;/a&gt; 论文阅读-0x08&lt;/h1&gt;
 &lt;p&gt;最近突然有一些做图像着色的想法，也有个想法也算是比较成熟，不过看到已经有不少比较成熟的论文了，所以再学习看一下，还是想试着做一下，哪怕做出来效果不好，但也是自己的一次尝试学习嘛，噶油！&lt;/p&gt;
 &lt;p&gt;论文的阅读笔记：&lt;/p&gt;
 &lt;p&gt;《 Example-Based Colourization Via Dense Encoding Pyramids 》&lt;a href=&quot;https://github.com/chufengxiao/Example-based-Colorization-via-Dense-Encoding-pyramids&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;[code]&lt;/a&gt; ,   Pacific Graphics 2018&lt;/p&gt;
