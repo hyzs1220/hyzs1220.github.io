@@ -30,7 +30,7 @@
 <li>作者通过扩展网络，提出了一种新的并行残差密集块来有效地提取颜色表示的局部-全局上下文</li>
 <li>不像全自动彩色化产生固定颜色的图像，该网络的参考图像是灵活的;自然图像和简单的调色板都可以用来引导色彩</li>
 </ul>
-<p><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08%5C1.png" alt="" /></p>
+<img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/1.png" class="">
 <ul>
 <li>
 <p>密集编码金字塔能够根据参考图像或调色板的不同颜色产生似是而非的结果。更重要的是，它比其他的更友好，因为用户可以很容易地操纵调色板，从而得到所需的样式</p>
@@ -132,7 +132,7 @@
 </li>
 </ul>
 <h3 id="method"><a class="markdownIt-Anchor" href="#method"></a> Method</h3>
-<p><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08%5C2.png" alt="" /></p>
+<img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/2.png" class="">
 <ul>
 <li>目的是将参考图像的颜色分布更语义化地映射到输入的灰度图像上
 <ul>
@@ -198,7 +198,8 @@
 <h4 id="并行残差密集块parallel-residual-dense-block"><a class="markdownIt-Anchor" href="#并行残差密集块parallel-residual-dense-block"></a> 并行残差密集块——Parallel residual dense block</h4>
 <ul>
 <li>主要是为了充分利用 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi mathvariant="script">F</mi><mi>i</mi></msup></mrow><annotation encoding="application/x-tex">\mathcal{F}^{i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.824664em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathcal" style="margin-right:0.09931em;">F</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span></span></span></span></span></span></span></span> 的多种特征，提取图像的丰富特征表示，包括输入图像、参考图像和输出图像</li>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08%5C3.png" alt="" />
+<li>
+<img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/3.png" class="">
 <ul>
 <li>与原来的链式残差结构做对比</li>
 </ul>
@@ -226,7 +227,9 @@
 <li>它使网络在分类问题中比单热点编码更快地提取知识</li>
 <li>该编码器通过搜索由RBF加权的bins的K个最近的邻居，从而将图像映射到颜色分布中</li>
 <li>对第i级参考图像 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>Y</mi><mi>i</mi></msup></mrow><annotation encoding="application/x-tex">Y^{i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.824664em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span></span></span></span></span></span></span></span> 的颜色分布 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>Z</mi><mi>i</mi></msup></mrow><annotation encoding="application/x-tex">Z^{i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.824664em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span></span></span></span></span></span></span></span> 进行编码</li>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08%5C4.png" alt="" /></li>
+<li>
+<img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/4.png" class="">
+</li>
 <li>emmm没有特别看懂他这部分，感觉这里的K-nearest neighbours和感受野差不多，后面作者也说到在低分辨率下采用较大的  <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo fence="true">∣</mo><msup><mi>K</mi><mi>i</mi></msup><mo fence="true">∣</mo></mrow><annotation encoding="application/x-tex">\left|K^{i}\right|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.212em;vertical-align:-0.35000999999999993em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.86199em;"><span style="top:-2.2559899999999997em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∣</span></span></span><span style="top:-2.86199em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∣</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35000999999999993em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.86199em;"><span style="top:-2.2559899999999997em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∣</span></span></span><span style="top:-2.86199em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∣</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35000999999999993em;"><span></span></span></span></span></span></span></span></span></span></span>，然后较大的分辨率上采用较小的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo fence="true">∣</mo><msup><mi>K</mi><mi>i</mi></msup><mo fence="true">∣</mo></mrow><annotation encoding="application/x-tex">\left|K^{i}\right|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.212em;vertical-align:-0.35000999999999993em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.86199em;"><span style="top:-2.2559899999999997em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∣</span></span></span><span style="top:-2.86199em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∣</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35000999999999993em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.86199em;"><span style="top:-2.2559899999999997em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∣</span></span></span><span style="top:-2.86199em;"><span class="pstrut" style="height:2.606em;"></span><span class="delimsizinginner delim-size1"><span>∣</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35000999999999993em;"><span></span></span></span></span></span></span></span></span></span></span></li>
 </ul>
 </li>
@@ -255,8 +258,12 @@
 <li>然后使用各种参考图（调色板）来评估稳健性</li>
 <li>用户研究</li>
 <li>消融实验</li>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08%5C5.png" alt="" /></li>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08%5C6.png" alt="" /></li>
+<li>
+<img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/5.png" class="">
+</li>
+<li>
+<img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/6.png" class="">
+</li>
 </ul>
 <h3 id=""><a class="markdownIt-Anchor" href="#"></a> 😝😜😋</h3>
 <p>看的第一篇图像上色的论文，感触还是蛮多的，慢慢写点吧，然后以后看的时候也多注意这些方面</p>
@@ -271,7 +278,9 @@
 </li>
 <li>另外发现图像上色并不像自己之前想的那么简单，作者在实验部分，借鉴一张参考图像来给图像上色的部分中，作者认为网络会学习其语义特征，进而来给灰度图像进行上色，而对于直接使用调色板来给图像上色，是缺少这种语义信息的，所以在上色过程中会出现一些问题，类似下面这种，不能够出现我们所预期想要得到的色彩效果（感觉也是因为在训练过程中没有相关数据集的学习）
 <ul>
-<li><img src="%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08%5C7.png" alt="" /></li>
+<li>
+<img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/7.png" class="">
+</li>
 <li>所以就感觉自己想的那种通过调色板来实现非常完美的图像上色还是很麻烦的，感觉很难学习到那种对应区域上色，以及调色板之外色彩的学习生成</li>
 <li>理解上来说，感觉神经网络通过学习应该是学习一些语义特征之类的知识，但对于图像上色，如果没有很丰富的数据集支持，在最后使用的时候就很难达到我们所预期的效果，不过这东西感觉有没有很好的办法，，所以还是有点迷茫</li>
 </ul>

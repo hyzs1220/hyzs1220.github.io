@@ -36,7 +36,9 @@
 <li>另一方面，可以通过设计合适的方法来构建配对集，以获取对应于给定真实噪声图像的几乎无噪声（或清晰）的图像。对于现实世界的摄影，可以通过平均多个噪声图像或校准和后处理低ISO图像来获取几乎无噪点的图像。不过这种几乎无噪声的图像可能会存在过度平滑的问题，而且获取成本昂贵。此外，这种几乎无噪声的图像采集可能不适用于其他成像机制(如显微镜或医学成像)</li>
 </ul>
 </li>
-<li><img src="/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/1.png" alt="" /></li>
+<li>
+<img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/1.png" class="">
+</li>
 <li>Noise2Noise  (N2N)模型来从成对的噪声实例中学习映射，而不是使用成对训练集的监督学习
 <ul>
 <li>不过它要求每对图像中底层的干净图像是完全相同的，噪声是独立地从相同的分布中提取的，这限制了它的实用性</li>
@@ -115,7 +117,8 @@
 </li>
 </ul>
 </li>
-<li><img src="/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/2.png" alt="" />
+<li>
+<img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/2.png" class="">
 <ul>
 <li>在第一阶段，构建了一个新的盲点网络D-BSN，以及一个图像特定的噪声模型CNNest
 <ul>
@@ -142,7 +145,9 @@
 </li>
 <li>D-BSN
 <ul>
-<li><img src="/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/3.png" alt="" /></li>
+<li>
+<img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/3.png" class="">
+</li>
 <li>对于某一位置的输出，BSN的核心是排除当前位置输入值的影响(即盲点要求)</li>
 <li>对于第一层卷积，可以很容易地使用掩蔽卷积来做到，对于噪声图像 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="bold">y</mi></mrow><annotation encoding="application/x-tex">\mathbf{y}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.63888em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">y</span></span></span></span></span> ，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="bold">w</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{w}_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.59444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">w</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 表示第k层的3x3卷积，对应mask <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="bold">m</mi></mrow><annotation encoding="application/x-tex">\mathbf{m}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.44444em;vertical-align:0em;"></span><span class="mord"><span class="mord mathbf">m</span></span></span></span></span> ，将其中心位置赋0，其他位置为1</li>
 <li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi mathvariant="bold">f</mi><mi>k</mi><mrow><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msubsup><mo>=</mo><mi mathvariant="bold">y</mi><mo>∗</mo><mo stretchy="false">(</mo><msub><mi mathvariant="bold">w</mi><mi>k</mi></msub><mo>∘</mo><mi mathvariant="bold">m</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf{f}^{(1)}_k = \mathbf{y} * (\mathbf{w}_k \circ \mathbf{m})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3461079999999999em;vertical-align:-0.30130799999999996em;"></span><span class="mord"><span class="mord"><span class="mord mathbf" style="margin-right:0.10903em;">f</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.398692em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span><span style="top:-3.2197999999999998em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.30130799999999996em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.6597200000000001em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">y</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">w</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∘</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathbf">m</span></span><span class="mclose">)</span></span></span></span>
@@ -158,13 +163,17 @@
 </ul>
 </li>
 <li>同时如果使用1x1卷积和跳跃连接，也不会破坏这个盲点要求，因此可以使用这几个方法来构建FCN，即D-BSN</li>
-<li><img src="/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/4.png" alt="" /></li>
+<li>
+<img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/4.png" class="">
+</li>
 <li>网络的具体结构如上</li>
 <li>multiple dilated convolution (MDC)多尺度空洞卷积，使用到了残差连接，两个网络分支的结果最终直接连接起来，经过四个1x1卷积来得到最终的特征表达</li>
 </ul>
 </li>
 <li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mi>N</mi><msub><mi>N</mi><mrow><mi>e</mi><mi>s</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">CNN_{est}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></li>
-<li><img src="/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/5.png" alt="" /></li>
+<li>
+<img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/5.png" class="">
+</li>
 <li>给定真实噪声图像 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="bold">y</mi></mrow><annotation encoding="application/x-tex">\mathbf{y}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.63888em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">y</span></span></span></span></span> 底层的干净图像 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi mathvariant="bold">x</mi><mo stretchy="true">~</mo></mover></mrow><annotation encoding="application/x-tex">\widetilde {\mathbf{x}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.70444em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.70444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathbf">x</span></span></span></span><span class="svg-align" style="width:calc(100% - 0.05556em);margin-left:0.05556em;top:-3.44444em;"><span class="pstrut" style="height:3em;"></span><span style="height:0.26em;"><svg width='100%' height='0.26em' viewBox='0 0 600 260' preserveAspectRatio='none'><path d='M200 55.538c-77 0-168 73.953-177 73.953-3 0-7
 -2.175-9-5.437L2 97c-1-2-2-4-2-6 0-4 2-7 5-9l20-12C116 12 171 0 207 0c86 0
  114 68 191 68 78 0 168-68 177-68 4 0 7 2 9 5l12 19c1 2.175 2 4.35 2 6.525 0
