@@ -1,0 +1,1210 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="论文的阅读笔记： 《 Space-Time-Aware Multi-Resolution Video Enhancement 》[code] ,  CVPR 2020 《 From Fidelity to Perceptual Quality: A Semi-Supervised Approach for Low-Light Image Enhancement 》，CVPR 2020">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读-0x07">
+<meta property="og:url" content="http://example.com/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="论文的阅读笔记： 《 Space-Time-Aware Multi-Resolution Video Enhancement 》[code] ,  CVPR 2020 《 From Fidelity to Perceptual Quality: A Semi-Supervised Approach for Low-Light Image Enhancement 》，CVPR 2020">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/1.png">
+<meta property="og:image" content="http://example.com/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/2.png">
+<meta property="og:image" content="http://example.com/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/3.png">
+<meta property="og:image" content="http://example.com/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/4.png">
+<meta property="og:image" content="http://example.com/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/5.png">
+<meta property="og:image" content="http://example.com/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/6.png">
+<meta property="og:image" content="http://example.com/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/7.png">
+<meta property="article:published_time" content="2020-12-03T13:10:59.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.584Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="图像增强与图像恢复">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/1.png">
+  
+  
+  
+  <title>论文阅读-0x07 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="论文阅读-0x07"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-12-03 21:10" pubdate>
+          2020年12月3日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          56 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">论文阅读-0x07</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>论文的阅读笔记：</p>
+<p>《 Space-Time-Aware Multi-Resolution Video Enhancement 》<a target="_blank" rel="noopener" href="https://github.com/alterzero/STARnet">[code]</a> ,  CVPR 2020</p>
+<p>《 From Fidelity to Perceptual Quality: A Semi-Supervised Approach for Low-Light Image Enhancement 》，CVPR 2020</p>
+<span id="more"></span>
+<h2 id="Space-Time-Aware-Multi-Resolution-Video-Enhancement">Space-Time-Aware Multi-Resolution Video Enhancement</h2>
+<h3 id="Abstract">Abstract</h3>
+<ul>
+<li>时空感知多分辨率视频增强（Space-Time-Aware Multi-Resolution Video Enhancement）</li>
+<li>时空超分辨率（space-time super-resolution，ST-SR）问题
+<ul>
+<li>其目标是将低帧率的低空间分辨率视频转换为高空间和时间分辨率的视频</li>
+<li>增加视频帧的空间分辨率，同时对帧进行插值以提高帧速率</li>
+<li>现在的方法一次只能处理一方面</li>
+</ul>
+</li>
+<li>作者提出的STARnet 能够在空间和时间上同时处理，能够利用时间和空间之间的相互信息关系:更高的分辨率可以提供更多关于运动的详细信息，更高的帧率可以提供更好的像素校准信息</li>
+<li>在ST-SR问题中，该模型中生成潜在的低分辨率和高分辨率表示的组件可用于微调针对空间SR或时间SR的专用机制</li>
+<li><img src="/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/1.png" srcset="/img/loading.gif" lazyload alt>
+<ul>
+<li>白色和灰色矩形分别表示输入和输出帧。小矩形和大矩形分别表示S-LR和S-HR帧。省略了从图像到特征的特征提取步骤</li>
+<li>(a)和(b)分别为原始的S-SR和T-SR方法</li>
+<li>对于ST-SR，  ©执行T-SR生成中间帧，然后使用S-SR放大帧(如DAIN→RBPN)
+<ul>
+<li>反过来，(d)执行S-SR，然后SR帧被用于使用T-SR生成中间帧(例如，RBPN→DAIN)</li>
+</ul>
+</li>
+<li>STARnet (e)联合优化了所有任务(S-SR、T-SR和ST-SR)，以便在多个分辨率下相互增强空间和时间特征
+<ul>
+<li>紫色箭头表示ST-SR从LR到HR的直接连接</li>
+<li>除了上采样之外，还使用下采样将S-HR特性转换回S-LR特性，以便在多种分辨率下实现相互连接</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>现有的SR方法对空间和时间上采样是独立的
+<ul>
+<li>空间SR  (S-SR)采用多输入帧(即多图像SR和视频SR)，通过对相似帧进行空间对齐，将空间低分辨率(S-LR)帧超分辨为空间高分辨率(S-HR)帧（上图a）</li>
+<li>时间SR (T-SR)旨在通过在帧之间进行时间插值，将输入帧的帧率从短时低分辨率(T-LR)帧提高到短时高分辨率(T-HR)帧（上图b）</li>
+<li>可以通过交替地、独立地使用任何基于学习的S-SR和T-SR来执行ST-SR
+<ul>
+<li>在S-LR上构造中间帧，然后用S-SR生成它们的SR帧（上图c）</li>
+<li>对输入帧进行空间上采样S-SR，然后进行T-SR构造其中间帧（上图d）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>然而，空间和时间显然是相关的。这种关系允许我们联合使用空间和时间表示来解决人类和机器感知的视觉任务
+<ul>
+<li>直观地说,更准确的运动可以在更高的空间表现（高分辨率）</li>
+<li>反过来,更高的时间表示(例如,更多的帧的表示内容很相似)可以用来在时间帧中准确地提取更多的空间上下文信息在多图像SR和视频SR</li>
+</ul>
+</li>
+<li>为此作者提出了空间感知的多分辨率网络，即STARnet
+<ul>
+<li>STARnet通过为ST-SR提供从LR到HR的直接连接，显式的合并了空间和时间表示，以便在LR和HR空间中互相增强S-SR和T-SR（上图e）</li>
+<li>这个网络还提供了可扩展性，可以对同一个网络进行ST-SR、S-SR或T-SR的进一步优化（下图）</li>
+<li><img src="/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/2.png" srcset="/img/loading.gif" lazyload alt>
+<ul>
+<li>ST-SR、T-SR、S-SR比较(S-SR: 4倍，T-SR: 2倍)红色箭头表示其他方法产生的伪影和模糊，而STARnet(我们的)可以构建更好的图像</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>该文的主要贡献
+<ul>
+<li>新的基于学习的ST-SR方法，它训练一个端到端的深度网络来共同学习空间和时间上下文，从而形成作者所称的时空感知多分辨率网络(STARnet)。该方法优于S-SR和T-SR方法的组合</li>
+<li>在多个分辨率上联合学习，以估计在视频中观察到的大的和细微的运动
+<ul>
+<li>在S-HR帧上执行T-SR很难估计大尺度运动，而在S-LR帧上对细微的运动进行插值则很困难</li>
+<li>作者的联合学习通过在多个分辨率之间直接横向连接来呈现丰富的多尺度特征，从而解决了这两个问题</li>
+</ul>
+</li>
+<li>一种新的S-SR和T-SR的观点优于直接的S-SR和T-SR
+<ul>
+<li>与直接的S-SR和TSR方法相比，作者的S-SR和T-SR模型是通过finetuning  STAR获得的</li>
+<li>这种来自STAR的微调允许S-SR和T-SR模型被ST-SR学习扩展
+<ul>
+<li>通过插入帧和输入帧来增强S-SR</li>
+<li>通过在S-HR中观察到的微妙运动以及在S-LR中观察到的大运动来增强T-SR</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Space SR
+<ul>
+<li>通过更好的上采样层，残差学习，反投影，递归层和渐进式上采样来拓展帧，增强分辨率</li>
+<li>在视频SR中，时间信息通过帧级联和递归网络保留</li>
+</ul>
+</li>
+<li>Time SR
+<ul>
+<li>T-SR或视频插值，主要通过合成实现
+<ul>
+<li>其中T-SR使用一个流运动的形象，不过流图像会遭受模糊和大运动的困扰</li>
+<li>可以通过对输入的S-HR帧进行空间缩减，然后分别在缩减的S-LR和输入的S-HR帧中提取大而细微的运动</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Space-Time SR
+<ul>
+<li>ST-SR的第一项工作解决了巨大的线性方程，然后从所有LR帧中创建了一个包含所有时空测量值的向量</li>
+<li>后来，在空间和时间重复的假设下，从单个视频记录中提出了ST-SR</li>
+<li>但仍存在一些问题，例如方程之间的依赖性，对某些参数的敏感性以及需要更长的视频以提取有意义的时空模式</li>
+</ul>
+</li>
+<li>另一种方法是将S-SR和T-SR结合起来，但此方法独立地处理时空的每个上下文。 尚未通过联合学习对ST-SR进行研究。如图1（c）和（d）所示</li>
+</ul>
+<h3 id="Space-Time-Aware-multiResolution">Space-Time-Aware multiResolution</h3>
+<h4 id="Formulation">Formulation</h4>
+<ul>
+<li>
+<p>给定两个低分辨率（LR）帧 $( I_t^l,I_{t+1}^l )$ ，尺寸为 $M^l \times N^l$</p>
+<ul>
+<li>ST-SR获取时空SR帧 $(I_t^{sr}, I_{t+n}^{sr} , I_{t+1}^{sr})$ , 尺寸为 $M^{h} \times N^h$
+<ul>
+<li>其中0&lt;n&lt;1， $M^{h} &gt; M^l , N^{h} &gt; N^l$</li>
+</ul>
+</li>
+<li>ST-SR的目的是从$\left{I_{1}^{l}\right}<em>{t=0}^{T}$得到$\left{I</em>{t}^{sr}\right}_{t=0}^{T+}$
+<ul>
+<li>其中T+指超过T数量的帧数</li>
+</ul>
+</li>
+<li>此外，STARnet从 $(I_t^l,I_{t+1}^l)$ 计算得到S-LR帧 $(I_{t+n}^l)$ ，用于在LR和HR上联合学习时空信息</li>
+<li>双向的密度运动流图
+<ul>
+<li>$F_{t-&gt;t+1} and F_{t+1 -&gt;t}$ ，从 $I_t^l,I_{t+1}^l$ 中预计算得到</li>
+</ul>
+</li>
+<li>$\mathrm{L}<em>{t} \in \mathbb{R}^{M^{l} \times N^{l} \times c^{l}}$ 和 $\mathrm{H}</em>{t} \in \mathbb{R}^{M^{h} \times N^{h} \times c^{h}}$ 代表S-LR和S-HR在时间t的特征图
+<ul>
+<li>cl和ch为通道数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>STARnet主要分为三个阶段</p>
+<ul>
+<li>第一阶段：初始化
+<ul>
+<li>在LR和HR上实现了S-SR，T-SR和ST-SR的联合学习，其中T-SR和ST-SR在由“ ST-SR”指示的同一子网中执行</li>
+<li>四个输入： $(I_t^l,I_{t+1}^l)$ 及其双向流图像$F_{t-&gt;t+1} and F_{t+1 -&gt;t}$</li>
+</ul>
+</li>
+</ul>
+<p>$\begin{aligned} \text { S-SR: } &amp; H_{t}=\operatorname{Net}<em>{S}\left(I</em>{t}^{l}, I_{t+1}^{l}, F_{t+1 \rightarrow t} ; \theta_{s}\right) \ H_{t+1} &amp;=\operatorname{Net}<em>{S}\left(I</em>{t+1}^{l}, I_{t}^{l}, F_{t \rightarrow t+1} ; \theta_{s}\right) \ L_{t} &amp;=\operatorname{Net}<em>{D}\left(H</em>{t} ; \theta_{d}\right) \ L_{t+1} &amp;=\operatorname{Net}<em>{D}\left(H</em>{t+1} ; \theta_{d}\right) \ \text { Motion: } \quad M &amp;=\operatorname{Net}<em>{M}\left(F</em>{t \rightarrow t+1}, F_{t+1 \rightarrow t} ; \theta_{m}\right) \ \text { ST-SR: } H_{t+n}, L_{t+n} &amp;=\operatorname{Net}<em>{S T}\left(H</em>{t}, H_{t+1}, L_{t}, L_{t+1}, M ; \theta_{s t}\right) \end{aligned}$</p>
+<ul>
+<li>
+<p>θ表示每个网络中的一组权重</p>
+</li>
+<li>
+<p>通过上采样和下采样以增强SR的特征之后，$Net_D$ 对 $H_t and H_{t+1}$ 进行缩减，用来更新 $L_t and L_{t+1}$</p>
+</li>
+<li>
+<p>$Net_M$ 产生运动特征的表示 ，由双向流计算得到。其输出为流特征图，由CNN学习得到</p>
+</li>
+<li>
+<p>虽然很难直接解释这些特征，但它们旨在帮助 $F_{t-&gt;t+1} and F_{t+1 -&gt;t}$  之间的空间对齐</p>
+</li>
+<li>
+<p>最后结合所有特征，特征空间中的STAR由 $Net_{ST}$ 计算得到</p>
+</li>
+<li>
+<p>$Net_{ST}$ 可以同时实现LR和HR上集成的T-SR和ST-SR</p>
+</li>
+<li>
+<p><img src="/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/3.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>$Net_{ST}$ ：蓝色和紫色箭头部分</li>
+</ul>
+</li>
+<li>
+<p>阶段1的输出是中间帧的HR和LR特征图 $H_{t+n}, L_{t+n}$</p>
+</li>
+<li>
+<p>第二阶段：Refinement（细化改善）</p>
+<ul>
+<li>进一步保持循环一致性，以再次细化特征图</li>
+<li>第一阶段中得到的流特征M，在第二阶段的第一个方程中便使用
+<ul>
+<li>这使得我们可以得到更可靠的特征图</li>
+<li>进一步完善，在等式中提取残差特征，用于实践特征的精确空间对齐</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>$\begin{aligned} \mathrm{t}: H_{t}^{b} &amp;=\operatorname{Net}<em>{B}\left(L</em>{t+n}, L_{t}, M ; \theta_{b}\right) \ L_{t}^{b} &amp;=\operatorname{Net}<em>{D}\left(H</em>{t}^{b} ; \theta_{d}\right) \ \hat{H}<em>{t} &amp;=H</em>{t}+\operatorname{ReLU}\left(H_{t}-H_{t}^{b}\right) \ \hat{L}<em>{t} &amp;=L</em>{t}+\operatorname{ReLU}\left(L_{t}-L_{t}^{b}\right) \ \mathrm{t}+1: H_{t+1}^{f} &amp;=\operatorname{Net}<em>{F}\left(L</em>{t+n}, L_{t+1}, M ; \theta_{f}\right) \ L_{t+1}^{f} &amp;=\operatorname{Net}<em>{D}\left(H</em>{t+1}^{f} ; \theta_{d}\right) \ \hat{H}<em>{t+1} &amp;=H</em>{t+1}+\operatorname{ReLU}\left(H_{t+1}-H_{t+1}^{f}\right) \ \hat{L}<em>{t+1} &amp;=L</em>{t+1}+\operatorname{ReLU}\left(L_{t+1}-L_{t+1}^{f}\right) \ \mathrm{t}+\mathrm{n}: H_{t+n}^{f} &amp;=\operatorname{Net}<em>{F}\left(\hat{L}</em>{t}, L_{t+n}, M ; \theta_{f}\right) \ L_{t+n}^{f} &amp;=\operatorname{Net}<em>{D}\left(H</em>{t+n}^{f} ; \theta_{d}\right) \ H_{t+n}^{b} &amp;=\operatorname{Net}<em>{B}\left(\hat{L}</em>{t+1}, L_{t+n}, M ; \theta_{b}\right) \ L_{t+n}^{b} &amp;=\operatorname{Net}<em>{D}\left(H</em>{t+n}^{b} ; \theta_{d}\right) \ \hat{H}<em>{t+n} &amp;=H</em>{t+n}+\operatorname{ReLU}\left(H_{t+n}-H_{t+n}^{f}\right)+\operatorname{ReLU}\left(H_{t+n}-H_{t+n}^{b}\right) \ \hat{L}<em>{t+n} &amp;=L</em>{t+n}+\operatorname{ReLU}\left(L_{t+n}-L_{t+n}^{f}\right)+\operatorname{ReLU}\left(L_{t+n}-L_{t+n}^{b}\right) \end{aligned}$</p>
+<ul>
+<li>第三阶段：Reconstruction（重建）
+<ul>
+<li>使用进一个卷积层的 $Net_{rec}$ 将四个特征图 $\left(\hat{H}<em>{t}, \hat{H}</em>{t+n}, \hat{H}<em>{t+1},\right. \left.\hat{L}</em>{t+n}\right)$ 转换为对应图像$\left(I_{t}^{s r}, I_{t+n}^{s r}, I_{t+1}^{s r}, I_{t+n}^{l}\right)$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>训练目标</p>
+<ul>
+<li>在该训练中
+<ul>
+<li>SHR图像（作为ground-truth）缩小为SLR图像</li>
+<li>T-HR帧（作为ground-truth）缩略为T-LR帧</li>
+</ul>
+</li>
+<li>包含三个loss
+<ul>
+<li>空间损失：在 $I_{t}^{sr}$ 和 $I_{t+1}^{sr}$ 上</li>
+<li>时间损失：仅在 $I_{t+n}^{l}$ 上</li>
+<li>时空损失：仅在 $I_{t+n}^{sr}$ 上</li>
+<li>以上每个损失都由 $L_1$ 损失和 $L_{vgg}$ 组成
+<ul>
+<li>L1 是预测的超分辨率帧和真实帧之间每个像素点的损失
+<ul>
+<li>$L_{1}=\sum_{t=0}^{T}\left|I_{t}^{h}-I_{t}^{s r}\right|_{1}$</li>
+</ul>
+</li>
+<li>$L_{vgg}$ 是使用预训练的VGG19网络在特征空间中计算得到的</li>
+<li>为了计算 $L_{vgg}$ ， $I^h$ 和 $I^{sr}$ 都通过与VGG多个最大池化层（m = 5）的微分函数fm映射到特征空间中</li>
+<li>$L_{v g g}=\sum_{t=0}^{T}\left|f_{m}\left(I_{t}^{h}\right)-f_{m}\left(I_{t}^{s r}\right)\right|_{2}^{2}$</li>
+<li>L1 用于满足标准图像质量评估标准（如PSNR），并经过SR验证</li>
+<li>$L_{vgg}$ 用于改善视觉感知</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>提供了4种变体
+<ul>
+<li><img src="/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/4.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>原始STAR</li>
+<li>STAR-ST：使用了空间损失和时空损失在HR上，在时空超分辨帧 $\left{I_{t}^{sr}\right}_{t=0}^{T+}$ 上优化网络</li>
+<li>STAR-S：在S-HR上使用空间损失，仅优化了 $\left{I_{t}^{sr}\right}_{t=0}^{T}$</li>
+<li>STAR-T：在T-HR上使用时间损失
+<ul>
+<li>STAR-T可以在两种不同的方案S-LR和S-HR上进行训练</li>
+<li>$STAR-T_{HR}$ 使用原始帧（S-HR）作为输入帧，而 $STAR-T_{LR}$ 使用缩小的帧（S-LR）作为输入帧</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>流程优化</p>
+<ul>
+<li>上文提到了作者使用的预先计算得到的流图像，不过正如很多文章中说到的，两个时间帧之间的大运动会使得视频插帧变得很困难
+<ul>
+<li>尽管STARnet不仅在S-HR中而且在S-LR中都通过T-SR抑制了这种不良影响，但很难完全解决此问题</li>
+<li>为了进一步改进，提出了一种简单的解决方案来精炼或去噪流图像，称为流优化（FR）模块</li>
+</ul>
+</li>
+<li>令 $F_{t-&gt;t+1} and F_{t+1 -&gt;t}$  是帧 $I_{t}^{l}$ 和 $I_{t+1}^{l}$ 向前和向后的动作</li>
+<li>在训练中，可以从t时刻的输入帧到ground truth来计算 $F_{t-&gt;t+n}$</li>
+</ul>
+<p>$\begin{aligned} \mathrm{FR}: \hat{F}<em>{t \rightarrow t+1} &amp;=\operatorname{Net}</em>{f l o w}\left(F_{t \rightarrow t+1}, I_{t}, I_{t+1} ; \theta_{f l o w}\right) \ \hat{F}<em>{t+1 \rightarrow t} &amp;=\operatorname{Net}</em>{f l o w}\left(F_{t+1 \rightarrow t}, I_{t+1}, I_{t} ; \theta_{f l o w}\right) \end{aligned}$</p>
+<ul>
+<li>为了减少噪声，使用损失
+<ul>
+<li>$\begin{aligned} L_{\text {flow}}=&amp;\left|\hat{F}<em>{t \rightarrow t+1}-\left(F</em>{t \rightarrow t+n}+F_{t+n \rightarrow t+1}\right)\right|<em>{2}^{2} \ &amp;+\left|\hat{F}</em>{t+1 \rightarrow t}-\left(F_{t+1 \rightarrow t+n}+F_{t+n \rightarrow t}\right)\right|_{2}^{2} \end{aligned}$</li>
+</ul>
+</li>
+<li>加上该损失，STARnet的损失为
+<ul>
+<li>$\begin{aligned} L_{r} &amp;=w_{1} * L_{1}+w_{2} * L_{f l o w} \ L_{f} &amp;=L_{r}+w_{3} * L_{v g g} \end{aligned}$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Experiment">Experiment</h3>
+<p>略过吧，，</p>
+<h3 id="😝😜😋">😝😜😋</h3>
+<p>这篇论文看的我有点晕，而且是视频处理方面，虽然也能看懂，不过看的也比较费事。上面的很多公式啥的其实也都很简单，也就慢慢读下来了。感觉作者的主要思路就是在视频帧进行超分辨率的时候充分结合了当前时刻和下一刻帧的信息，然后为了减少大运动造成的影响，使用了一种预先计算得到的流图像，从而尽可能地得到物体运动信息，保证插入帧的质量。</p>
+<p>关于网络结构和损失函数设计啥的，都还是比较常规的。</p>
+<p>比较愁我的就是，论文内容里面插着各种公式，我做笔记又是手打公式感觉太麻烦了，，，不过作者各部分都介绍的还算满详细的</p>
+<h2 id="From-Fidelity-to-Perceptual-Quality-A-Semi-Supervised-Approach-for-Low-Light-Image-Enhancement">From Fidelity to Perceptual Quality: A Semi-Supervised Approach for Low-Light Image Enhancement</h2>
+<p>从保真到感官质量：低光图像增强的半监督方法</p>
+<h3 id="Abstract-2">Abstract</h3>
+<ul>
+<li>曝光不足会导致很多问题：能见度降低、低对比度、噪声强烈和色彩偏置等</li>
+<li>作者提出了一种半监督学习方法用于弱光图像增强——<strong>deep recursive band network (DRBN)</strong> ，深度递归波段网络
+<ul>
+<li>用来恢复一个增强的正常光图像和成对的低/正常光图像的线性波段表示</li>
+<li>然后基于感知质量驱动的对抗性学习和不成对数据，通过另一种可学习的线性变换对给定频段进行重组，从而获得改进的频段</li>
+</ul>
+</li>
+<li>弱光环境下
+<ul>
+<li>使用一些专业设备可以减轻一些退化，但仍然不可以完全避免噪声的出现</li>
+<li>如果没有足够的光到达相机传感器，会导致场景信号被系统噪声掩盖</li>
+<li>如果花费更长的曝光时间来抑制噪声，这将很有帮助，但是这会引入模糊性</li>
+<li>所以通过软件算法等进行处理，为高级计算机视觉任务做铺垫</li>
+</ul>
+</li>
+<li>传统方法
+<ul>
+<li>直方图均化：通过拉伸动态范围来增强低光图像
+<ul>
+<li>不过会产生不可预料的光照信息，并且会意外放大噪声信息</li>
+</ul>
+</li>
+<li>基于Retinex理论：分别分解和处理图像的两层（即反射层和照明层）</li>
+</ul>
+</li>
+<li>深度学习
+<ul>
+<li>现有的损失函数与人的感知没有很好的匹配，没有捕捉到图像的内在信号结构，导致视觉结果不理想，如色彩分布偏和残留噪声</li>
+<li>EnlightenGAN证明了利用非配对数据进行弱光增强的可行性（其数据集只有低/正常光图像，不必要成对）
+<ul>
+<li>不过由于没有成对的监督，细节无法恢复，强化结果中仍然存在强烈的噪声</li>
+</ul>
+</li>
+<li>全监督方法：在成对监督的情况下进行训练，在训练阶段提供了ground truth
+<ul>
+<li>用于详细的信号建模，网络更有能力抑制噪声和保留细节</li>
+</ul>
+</li>
+<li>无监督方法：从未配对的低/正常光照图像集中提取学习增强映射的知识
+<ul>
+<li>能够更自适应地学习恢复光照、颜色和对比度</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>为此，作者希望能够结合以上两种优点的统一体系结构——构建了一种新的用于弱光图像增强的半监督学习框架</li>
+<li>DRBN 提供一种波段表示形式，以连接<strong>从成对数据获得的先验信号保真度</strong>和<strong>未配对的高质量数据集提取的先验视觉质量</strong>（其中视觉图像通过平均意见得分选择）</li>
+<li>第一阶段（递归波段学习）：对成对的低/正态光图像进行网络训练
+<ul>
+<li>通过成对的低/正常光图像进行训练来恢复线性波段表示，其估计在递归过程中是互利的</li>
+<li>然后利用DRBN第一阶段提取的增强图像的频带表示，弥补成对数据的恢复知识与高质量图像数据集提供的感知质量之间的差距</li>
+</ul>
+</li>
+<li>第二阶段（波段重组）
+<ul>
+<li>通过对抗性学习来学习重构波段表示以适应高质量图像的视觉特性</li>
+</ul>
+</li>
+<li>作者归纳的主要贡献
+<ul>
+<li>首次尝试提出一种用于弱光图像增强的半监督学习框架
+<ul>
+<li>通过一个深度递归波段表示将完全监督和非监督框架连接起来，以整合它们的优点</li>
+</ul>
+</li>
+<li>该框架可以提取一系列由粗到细的波段表示
+<ul>
+<li>通过递归的端到端训练，这些波段表示的估计是互利的，能够去除噪声和纠正细节</li>
+</ul>
+</li>
+<li>在质量导向的对抗学习的知觉指导下重组了深层波段表示
+<ul>
+<li>基于平均意见得分（MOS）在感知上选择鉴别器的“真实图像”</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Deep-Recursive-Band-Network-for-SemiSupervised-Low-Light-Enhancement">Deep Recursive Band Network for SemiSupervised Low-Light Enhancement</h3>
+<h4 id="Motivation">Motivation</h4>
+<ul>
+<li><strong>弥合信号保真度和感知质量之间的差距</strong></li>
+<li>递归波段学习
+<ul>
+<li>配对训练数据提供了较强的信号保真度约束来校正细节信息</li>
+<li>在这个过程中，除了得到增强图像 $\hat x$ ，还从y得到了一些列波段表示 $\left{\Delta \hat{x}<em>{s</em>{1}}^{T}, \Delta \hat{x}<em>{s</em>{2}}^{T}, \ldots, \Delta \hat{x}<em>{s</em>{n}}^{T}\right}$
+<ul>
+<li>其中 $\hat{x}=\sum_{i=1}^{n} \hat{x}<em>{s</em>{i}}^{T}$ ， $s_i$ 表示波段的阶数，$\Delta \hat{x}<em>{s</em>{i}}^{T}$ 通过全监督学习得到（高阶波段依赖于低阶波段）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>连接递归波段表示和对抗性学习
+<ul>
+<li>由于第一阶段信号保真度的限制，无法自然地获得良好的视觉质量</li>
+<li>受最近基于未配对数据集的图像增强方法的启发，在第二阶段，我们重新组合在第一阶段学习得到的波段表示来获取从人类感知的角度来看更好的感知质量的结果</li>
+<li>$\hat{x}=\sum_{i=1}^{n} w_{i}\left(y,\left{\Delta \hat{x}<em>{s</em>{1}}^{T}, \Delta \hat{x}<em>{s</em>{2}}^{T}, \ldots, \Delta \hat{x}<em>{s</em>{n}}^{T}\right}\right) \Delta \hat{x}<em>{s</em>{i}}^{T}(y)$
+<ul>
+<li>其中 $w_i$ 为权重参数</li>
+<li>其重新组合一张增强图像的波段信号，从几乎无噪声且细节重建良好的图像来得到更优越的光照、对比度和颜色分布的新图像，即从人类视觉的角度来看具有更好的感知质量</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Deep-Recursive-Band-Network">Deep Recursive Band Network</h4>
+<p><img src="/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/5.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>网络主要分成两个部分</p>
+<ul>
+<li>
+<p>递归波段学习（依赖于配对数据）</p>
+<ul>
+<li>基于低光输入递归恢复正常光图像，充分利用成对数据学习来恢复增强图像的每个波段信号，能很好地恢复细节和抑制噪声</li>
+<li>中间估计是前一个递归的输出，作为下一个递归的引导输入
+<ul>
+<li>将y与上一次的递归输出 $\hat{x}<em>{s</em>{3}}^{t-1}$ 的增强结果连接到特征空间中，然后通过几个卷积层（特征的空间分辨率通过步长卷积和反卷积完成下采样和上采样）进行变换</li>
+<li>并且网络中使用到了跳跃了解，从而帮助浅层特征更好地传递到深层部分</li>
+<li>每次BLN在s1= 1/4, s2= 1/2和s3= 1三个尺度上产生对应三个不同尺寸的特征，从而提取一系列由粗到细的波段表示，然后合并到增强结果中</li>
+<li>将所有的带估计连接在一起，形成联合估计</li>
+</ul>
+</li>
+<li>用公式直观表示</li>
+</ul>
+<p>$\begin{aligned}\left[f_{s_{1}}^{1}, f_{s_{2}}^{1}, f_{s_{3}}^{1}\right] &amp;=F_{\mathrm{BLN}<em>{-} F}^{1}(y) \ \hat{x}</em>{s_{1}}^{1} &amp;=F_{\mathrm{R}<em>{-} s</em>{1}}^{1}\left(f_{s_{1}}^{1}\right) \ \hat{x}<em>{s</em>{2}}^{1} &amp;=F_{\mathrm{R}<em>{-} s</em>{2}}^{1}\left(f_{s_{2}}^{1}\right)+F_{\mathrm{U}}\left(\hat{x}<em>{s</em>{1}}^{1}\right) \ \hat{x}<em>{s</em>{3}}^{1} &amp;=F_{\mathrm{R}<em>{-} s</em>{3}}^{1}\left(f_{s_{3}}^{1}\right)+F_{\mathrm{U}}\left(\hat{x}<em>{s</em>{2}}^{1}\right) \end{aligned}$</p>
+<ul>
+<li>其中 $f_{s_{1}}^{1}, f_{s_{2}}^{1}, f_{s_{3}}^{1}$ 分别为y在三个不同尺度下得到的输出</li>
+<li>$F_{\mathrm{R}<em>{-} s</em>{1}}^{1},F_{\mathrm{R}<em>{-} s</em>{2}}^{1},F_{\mathrm{R}<em>{-} s</em>{3}}^{1}$ 表示将特征以相应的尺度映射回图像域的处理，$F_{U}(·)$ 表示上采样过程</li>
+<li>首先在最低尺度s1下恢复图像，然后通过两次上采样操作，得到中间输出</li>
+<li>在递归过程中，通过中间输出的指导下，只学习残差特征和图像（即将y和上一次的递归输出拼接作为这一次递归的输入）</li>
+</ul>
+<p>$\begin{aligned}\left[f_{s_{1}}^{t}, f_{s_{2}}^{t}, f_{s_{3}}^{t}\right] &amp;=F_{\mathrm{BLN}<em>{-} F}^{t}(y, \hat{x}</em>{s_{3}}^{t-1}) \ f_{s_{i}}^{t} &amp;= \Delta f_{s_{i}}^{t} + f_{s_{i}}^{t-1}, i=1,2,3 \ \hat{x}<em>{s</em>{1}}^{t} &amp;=F_{\mathrm{R}<em>{-} s</em>{1}}^{t}\left(f_{s_{1}}^{t}\right) \ \hat{x}<em>{s</em>{2}}^{t} &amp;=F_{\mathrm{R}<em>{-} s</em>{2}}^{t}\left(f_{s_{2}}^{t}\right)+F_{\mathrm{U}}\left(\hat{x}<em>{s</em>{1}}^{t}\right) \ \hat{x}<em>{s</em>{3}}^{t} &amp;=F_{\mathrm{R}<em>{-} s</em>{3}}^{t}\left(f_{s_{3}}^{t}\right)+F_{\mathrm{U}}\left(\hat{x}<em>{s</em>{2}}^{t}\right) \end{aligned}$</p>
+<ul>
+<li>最后递归T次（作者设为4），重构损失为
+<ul>
+<li>$\begin{aligned} L_{\mathrm{Rect}}=-&amp;\left(\phi\left(\hat{x}<em>{s</em>{3}}^{T}, x\right)+\lambda_{1} \phi\left(\hat{x}<em>{s</em>{2}}^{T}, F_{D}\left(x, s_{2}\right)\right)\right.\ &amp;\left.+\lambda_{2} \phi\left(\hat{x}<em>{s</em>{1}}^{T}, F_{D}\left(x, s_{1}\right)\right)\right) \end{aligned}$
+<ul>
+<li>其中 $F_D$ 为下采样，比例因子为s2</li>
+<li>$\phi$ 用来计算SSIM值，$\lambda _1, \lambda _2$ 为权重参数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>可以将从成对图像中学习到的增强知识与高质量图像的数据先验结合起来</li>
+<li>可以看出，其包含以下几个有点
+<ul>
+<li>由最后一个递归式推导出的高阶波段将影响该递归式中低阶带的推导
+<ul>
+<li>因此，低阶带和高阶带之间的连接是双向的</li>
+<li>高阶带也为恢复低阶带提供了有用的指导</li>
+</ul>
+</li>
+<li>递归估计使不同的频带能够学会基于所有波段的先前估计来校正当前自身估计</li>
+<li>递归学习提高了建模能力。后一阶递归只需在前一阶递归估计的指导下，恢复残差信号。因此，可以获得准确的估计，并注意细节</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>波段重组（依赖于非配对数据）</p>
+<ul>
+<li>
+<p>信号的保真度并不总是很好地与人类的视觉感知对齐，特别是对于图像的一些全局属性，如光线、颜色分布等</p>
+</li>
+<li>
+<p>让模型通过感知质量引导的对抗性学习，在高质量图像数据集的感知引导下<strong>重新组合</strong>恢复的频带信号</p>
+<ul>
+<li>基于MOS值从美学视觉分析数据集中选择的高质量图像用于表示人类感知的先验知识</li>
+</ul>
+</li>
+<li>
+<p>利用另一个网络对重构过程 $F_{RC}(·)$ 进行建模，生成重构频带信号的变换系数（线性地操纵和融合这些波段）</p>
+</li>
+<li>
+<p>公式表示</p>
+<p>$\begin{aligned}\left{w_{1}, w_{2}, w_{3}\right} &amp;=F_{\mathrm{RC}}\left(\left{\Delta \hat{x}<em>{s</em>{1}}^{T}, \Delta \hat{x}<em>{s</em>{2}}^{T}, \Delta \hat{x}<em>{s</em>{3}}^{T}\right}\right) \ \hat{x}<em>{3}^{F} &amp;=\sum</em>{i=1}^{3} w_{i} \Delta \hat{x}<em>{s</em>{i}}^{T} \ \Delta \hat{x}<em>{s</em>{i}}^{T} &amp;=\hat{x}<em>{s</em>{i}}^{T}-F_{\mathrm{U}}\left(\hat{x}<em>{s</em>{i-1}}^{T}\right), i=2,3 \ \Delta \hat{x}<em>{s</em>{1}}^{T} &amp;=\hat{x}<em>{s</em>{1}}^{T} \end{aligned}$</p>
+</li>
+<li>
+<p>其中 $\hat{x}<em>{s</em>{1}}^{F}$ 通过三个损失进行训练</p>
+<p>$\begin{aligned} L_{\text {Detail }} &amp;=-\phi\left(\hat{x}<em>{3}^{F}-x\right) \ L</em>{\text {Percept }} &amp;=\left|F_{\mathrm{P}}\left(\hat{x}<em>{3}^{F}\right)-F</em>{\mathrm{P}}(x)\right|<em>{2}^{2} \ L</em>{\text {Quality }} &amp;=-\log D\left(\hat{x}_{3}^{F}\right) \end{aligned}$</p>
+<ul>
+<li>对抗性损失(称为质量损失 $L_{Quality}$)，用于判断图像是否感知高质量，作为约束条件</li>
+<li>其中D为鉴别器，用于衡量 $\hat{x}<em>{s</em>{1}}^{F}$ 偏向符合人类视觉的可能性</li>
+<li>$F_P$ 表示从预先训练好的VGG网络中提取深度特征的过程</li>
+</ul>
+</li>
+<li>
+<p>整体损失函数为</p>
+<ul>
+<li>$L_{\mathrm{SBR}}=L_{\mathrm{Percept}}+\lambda_{3} L_{\mathrm{Detail}}+\lambda_{4} L_{\mathrm{Quality}}$</li>
+</ul>
+</li>
+<li>
+<p>从而保证无论从信号保真度还是从人的感知质量来看，总体上都取得了较好的效果</p>
+</li>
+</ul>
+</li>
+<li>
+<p>总结</p>
+<ul>
+<li>首先执行波段表示学习。通过成对数据集的引导，学会了对每个波段信号进行恢复
+<ul>
+<li>这一阶段确保了信号保真度和细节恢复</li>
+</ul>
+</li>
+<li>利用未配对数据集的感知指导进行波段重组以提高增强图像的视觉质量
+<ul>
+<li>其中高质量的图像作为人类视觉感知的先验知识</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Experiment-2">Experiment</h3>
+<ul>
+<li>消融实验
+<ul>
+<li><img src="/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/6.png" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+<li><img src="/2020/12/03/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x07/7.png" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+<h3 id="😝😜😋-2">😝😜😋</h3>
+<p>这篇论文，刚开始看开头的时候，真的是一脸懵逼，和前面看的几篇弱光增强的论文挺不一样的，感觉波段啊，递归啊啥的好难理解，然后当我看完网络结构部分之后，就感觉真的是，，，原来也就那样，没有那么复杂，不过作者对这个网络中所使用的一些东西的介绍和描述，确实值得学习😋</p>
+<p>其实也挺简单的，就是前面一个普通u-net网络，作者递归了四次，然后学习了多尺度特征，然后充分利用。第二部分，将这些中间输出全部整合起来，通过一个人类感知分值计算来选择比较好的结果，，，</p>
+<p>那个网络结构图和网络介绍部分看一下就行，基本就懂了，前面部分介绍的有点玄乎</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A2%9E%E5%BC%BA%E4%B8%8E%E5%9B%BE%E5%83%8F%E6%81%A2%E5%A4%8D/" class="print-no-link">#图像增强与图像恢复</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>论文阅读-0x07</div>
+      <div>http://example.com/2020/12/03/论文阅读-0x07/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年12月3日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/" title="论文阅读-0x08">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">论文阅读-0x08</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x06/" title="论文阅读-0x06">
+                        <span class="hidden-mobile">论文阅读-0x06</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

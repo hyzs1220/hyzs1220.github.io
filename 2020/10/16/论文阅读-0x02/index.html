@@ -1,0 +1,953 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="两篇论文的阅读笔记：《Classification of Hyperspectral and LiDAR Data Using Coupled CNNs》,IEEE TGRS 2020 &amp;《Hybrid noise removal in hyperspectral imagery with spatial-spectral gradient network》,IEEE TGRS 2019">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读-0x02">
+<meta property="og:url" content="http://example.com/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="两篇论文的阅读笔记：《Classification of Hyperspectral and LiDAR Data Using Coupled CNNs》,IEEE TGRS 2020 &amp;《Hybrid noise removal in hyperspectral imagery with spatial-spectral gradient network》,IEEE TGRS 2019">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/1.gif">
+<meta property="og:image" content="http://example.com/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/1.png">
+<meta property="og:image" content="http://example.com/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/2.png">
+<meta property="og:image" content="http://example.com/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/3.png">
+<meta property="og:image" content="http://example.com/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/4.png">
+<meta property="og:image" content="http://example.com/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/5.png">
+<meta property="og:image" content="http://example.com/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/6.png">
+<meta property="og:image" content="http://example.com/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/7.png">
+<meta property="article:published_time" content="2020-10-16T06:09:34.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.569Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/1.gif">
+  
+  
+  
+  <title>论文阅读-0x02 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="论文阅读-0x02"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-10-16 14:09" pubdate>
+          2020年10月16日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          28 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">论文阅读-0x02</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>两篇论文的阅读笔记：《Classification of Hyperspectral and LiDAR Data Using Coupled CNNs》,IEEE TGRS 2020 &amp;《Hybrid noise removal in hyperspectral imagery with spatial-spectral gradient network》,IEEE TGRS 2019 <a target="_blank" rel="noopener" href="https://github.com/WHUQZhang">[代码]</a></p>
+<span id="more"></span>
+<h2 id="Classification-of-Hyperspectral-and-LiDAR-Data-Using-Coupled-CNNs">Classification of Hyperspectral and LiDAR Data Using Coupled CNNs</h2>
+<h3 id="Introduction">Introduction</h3>
+<ul>
+<li>
+<p>Hyperspectral and LiDAR Data：高光谱(HSI)和激光雷达数据</p>
+</li>
+<li>
+<p>HSI图像具有丰富的光谱信息，但是对于同一材质的物体区分性较弱</p>
+</li>
+<li>
+<p>LiDAR图像则具有丰富的深度信息</p>
+<ul>
+<li>例如：区域中存在混凝土结构的楼房和道路，HSI图像很难区分二者之间的差别（ 因为它们的光谱响应是相似的 ），但是LiDAR图像则可以通过深度信息区分出楼房和道路。</li>
+<li>相反，激光雷达数据无法区分由不同材料(如沥青和混凝土)组成的具有相同高度的两条不同的道路。</li>
+<li>论文使用两个耦合卷积神经网络（CNN）</li>
+<li>一个用于从高光谱数据中学习光谱空间特征</li>
+<li>另一个CNN用于从激光雷达数据中获取高程信息</li>
+</ul>
+</li>
+<li>
+<p>两个CNN网络都由三个卷积层组成，最后两个卷积层通过参数共享策略耦合在一起</p>
+</li>
+<li>
+<p>在这方面，主要有两种相关方法在使用</p>
+<ul>
+<li>基于特征级融合：主要是一些特征图层次上的直接叠加，不过作者也说到会出现休斯现象，特别是在训练样本数量相对较少的情况下</li>
+<li>为了解决这个问题，使用主成分分析(PCA)来降低维数</li>
+<li>同时与本文相似， 可以设计许多次空间相关模型来融合提取的光谱、空间和高程特征</li>
+<li>基于决策级融合：主要是在最终的结果输出阶段进行融合，主要是分类器的选择和使用</li>
+</ul>
+</li>
+<li>
+<p>在这之前有很多相关工作：有人直接将激光雷达数据作为高光谱数据的另一个光谱波段，然后将连接起来的数据输入到CNN中进行特征学习和分类；或者多个CNN网络来训练等</p>
+</li>
+<li>
+<p>论文主要贡献：</p>
+<ul>
+<li>设计了两个耦合的CNN， 耦合的卷积层可以减少参数的数量，同时引导两个CNN相互学习，从而促进特征融合过程</li>
+<li>在融合阶段，同时使用特征级和决策级融合策略。 对于特征级融合，除了广泛采用的级联方法外，还提出了求和和最大化融合方法。 为了增强学习功能的判别能力，分别向CNN添加了两个输出层。 最后，这三个输出结果通过加权求和方法组合在一起，其权重由训练数据上每个输出的分类精度确定</li>
+<li>使用标准训练和测试集在两个数据集上测试了该模型的有效性</li>
+</ul>
+</li>
+</ul>
+<h3 id="网络模型">网络模型</h3>
+<p><img src="/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/1.gif" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>网络主要包含两个部分： 用于光谱空间特征学习的HS网络；用于高程特征学习的LiDAR网络。</li>
+<li>每个模块包括一个输入模块、一个特征学习模块和一个融合模块</li>
+<li>HS网络
+<ul>
+<li>利用PCA减少原始高光谱数据的冗余信息，然后在给定像素周围提取一个小立方体</li>
+</ul>
+</li>
+<li>LiDAR网络
+<ul>
+<li>直接提取与高光谱数据空间位置相同的图像斑块</li>
+</ul>
+</li>
+<li>可以看到，在网络的feature  learning模块中，使用了三层卷积层，最后两层共享参数。在融合模块中，构造了三个分类器。每个CNN都有一个输出层，融合后的特征也被送入一个输出层。</li>
+</ul>
+<p><img src="/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/1.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>在第一层卷积之前，都先进行PAC操作来减少冗余信息</li>
+<li>HS网络和LiDAR网络的第一层卷积是分别独立的</li>
+<li>第二卷积层，我们让HS网络和激光雷达网络共享参数，使用耦合策略
+<ul>
+<li>减少两次参数的数量，对于少量的训练样本是非常有用的</li>
+<li>它可以让这两个网络互相学习
+<ul>
+<li>在没有权值共享的情况下，各网络的训练参数将利用各自的损失函数独立优化</li>
+<li>这一层的反向传播梯度将由两个网络的损耗函数决定，即一个网络中的信息将直接影响另一个网络</li>
+<li>第三卷积层，也使用耦合策略，这可以进一步提高从第二卷积层学习到的表示的区分能力</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>数据融合
+<ul>
+<li><img src="/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/2.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>在这里作者提出了一种基于特征层和决策层融合的新组合策略
+<ul>
+<li>如图所示，首先结合两个特征生成一种新的特征表示</li>
+<li>将这三个特征分别输入到输出层中</li>
+<li>最后，所有的输出层集成在一起，以产生最终的结果</li>
+</ul>
+</li>
+<li>$O = D[ f_1(R_h;W_1), f_2(R_l;W_2), f_3(F(R_h,R_l);W_3);U]$</li>
+<li>其中特征融合可以采用逐元素相加或者Max函数
+<ul>
+<li>$F_3 = F_1 + F_2$ 或者 $F_3 = max(F_1 , F_2)$</li>
+</ul>
+</li>
+<li>对于决策级融合，采用加权求和的方法
+<ul>
+<li>$O = D(\hat y_1, \hat y_2,\hat y_3;U) = u_1 \odot \hat y_1+ u_2 \odot \hat y_2+ u_3 \odot \hat y_3$</li>
+<li>$\odot$为加权操作</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>损失函数
+<ul>
+<li>然后$L_1$表示HSI图像 $y_1$ 的交叉熵损失，。所 $L_2$ 表示 LiDAR 图像 $y_2$ 的交叉熵损失，$L_3$ 表示融合信息O的交叉熵损失，所以最终的损失函数为：
+<ul>
+<li>$L = \lambda_1 L_1 + \lambda_2 L_2 + L_3$</li>
+<li>在实验中，权重参数根据经验将其设置为0.01</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="实验">实验</h3>
+<ul>
+<li>训练参数
+<ul>
+<li>batch size = 64</li>
+<li>learning rate = 0.001</li>
+<li>epochs = 200</li>
+</ul>
+</li>
+<li><img src="/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/3.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>休斯顿数据集上，使用不同模型下的准确率情况</li>
+</ul>
+<h2 id="Hybrid-noise-removal-in-hyperspectral-imagery-with-spatial-spectral-gradient-network">Hybrid noise removal in hyperspectral imagery with spatial-spectral gradient network</h2>
+<h3 id="Introduction-2">Introduction</h3>
+<ul>
+<li>本文提出了一种用于HSI中混合噪声去除的空间光谱梯度网络(SSGN)</li>
+<li>考虑到稀疏噪声特有的空间结构方向性和光谱差异，加上补充信息，采用空间-光谱梯度学习策略，有效地提取了HSI的内在和深层特征</li>
+<li>SSGN基于全级联的多尺度卷积网络，利用同一模型可以同时处理不同HSI或频谱中的不同类型的噪声</li>
+<li>由于传感器的不稳定性和大气的干扰，HSI经常受到多种类型的噪声，如高斯噪声、条纹噪声、脉冲噪声、死线噪声和混合噪声</li>
+<li>当前高光谱图像去噪：
+<ul>
+<li>手动参数必须针对不同的HSI数据进行适当、仔细的调整，这对于不同的场景和HSI传感器造成了不方便、不通用、耗时的缺点</li>
+<li>HSI的噪声同时存在于空间域和光谱域，其类型不同，水平也不同</li>
+</ul>
+</li>
+<li>克服上述去噪方法的不足，充分利用DCNNs的优点，考虑高斯噪声、条纹噪声、脉冲噪声、死线及其混合的噪声类型，提出了一种用于混合噪声去噪的空间光谱梯度网络(SSGN)。主要的创新可以概括如下
+<ul>
+<li>提出了一种用于HSI去噪的空间频谱卷积网络SSGN，将空间数据和相邻的光谱数据同时使用在全级联的多尺度卷积神经网络块中</li>
+<li>该模型<strong>将空间梯度和光谱梯度结合在一起</strong>
+<ul>
+<li>利用空间梯度提取稀疏噪声在水平和垂直方向上的独特结构方向性</li>
+<li>利用光谱梯度获取光谱附加互补信息用于噪声去除</li>
+<li>同时在空间光谱损失函数中加入了光谱梯度，在整体框架内减小了光谱失真。</li>
+</ul>
+</li>
+<li>实验结果表明，该方法能够通过单一模型有效地处理不同HSIs或光谱中的高斯噪声、条带噪声和混合噪声。与其他最新的HSI去噪算法相比，在不同混合噪声场景下，SSGN算法在评估指标、视觉评估和时间消耗方面都有较好的表现</li>
+</ul>
+</li>
+</ul>
+<h3 id="关于高光谱图像去噪">关于高光谱图像去噪</h3>
+<ul>
+<li>现有的HSI去噪方法大致可以分为两类
+<ul>
+<li>基于过滤器的方法
+<ul>
+<li>通过傅立叶变换、小波变换或非局部均值(NLM)滤波器等滤波操作从噪声信号中分离出干净的信号</li>
+<li>作者举例了一些相关方法，不过指出这些滤波方法的存在缺点
+<ul>
+<li>使用了手工制作的固定小波，对变换函数的选择很敏感，没有考虑杂波等高频干扰几何特性的差异</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>基于模型优化的方法
+<ul>
+<li>有很多已经提出并使用的方法，如总变差、稀疏表示、低秩矩阵和张量模型
+<ul>
+<li>都考虑了HSI数据的合理假设或先验。这种方法可以将有噪声的HSI映射到清晰的HSI，以保持空间和光谱特征</li>
+</ul>
+</li>
+<li>对于HSI，相邻波段之间的高光谱相关性和一个波段内的高空间相似性都可以揭示HSI的低秩特性或张量结构
+<ul>
+<li>为了充分利用3-D张量高光谱图像的光谱空间结构特性，人们提出了基于低阶张量的高光谱图像去噪方法，但是这些方法往往以较高的计算时间消耗为代价来获得更好的性能。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>不同HSI去噪方法对混合噪声的不适应性和低效率问题仍然制约着HSI去噪的应用</li>
+</ul>
+</li>
+</ul>
+<h3 id="网络模型-2">网络模型</h3>
+<ul>
+<li>SSGN方法考虑了噪声结构特征、各频带的空间特性和频谱冗余
+<ul>
+<li>通过在含噪声的HSI patch和去噪后的HSI  patch之间进行端到端的学习</li>
+<li>同时采用模拟的第k个噪声频带及其水平/垂直空间梯度和相邻谱梯度(Cube)作为输入数据，输出第k个噪声频带的残余噪声</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/4.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>网络输入：
+<ul>
+<li>(a)  噪声下的当前输入空间谱带</li>
+<li>(b)  输入空间谱带的水平和垂直梯度</li>
+<li>©  前空间谱带相邻K个谱带的差异（Cube）</li>
+<li>其变换得到方式如下👇</li>
+</ul>
+</li>
+<li>空间和光谱的联合梯度信息：
+<ul>
+<li>空间波段的梯度信息由于其独特的结构方向性，在一定程度上可以有效地突出稀疏噪声，特别是稀疏分布的条带噪声</li>
+<li>由于HSI数据包含数百个波段的丰富光谱信息，每个波段的噪声水平和类型通常不同。这些差异提供了额外的补充信息，有利于消除混合噪声</li>
+<li>因此作者认为利用空间和光谱的联合梯度信息，可以从空间和光谱域去除HSI中的混合噪声，包括密集噪声和空闲噪声</li>
+<li><img src="/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/5.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>其计算方式如下：</li>
+<li>$\mathbf{G}_x (m,n,k) = \mathbf{Y}(m+1,n,k) - {\mathbf{Y}}(m,n,k)$</li>
+<li>$\mathbf{G}_y (m,n,k) = {\mathbf{Y}}(m,n+1,k)-{\mathbf{Y}}(m,n,k)$</li>
+<li>$\mathbf{G}_z (m,n,k) = {\mathbf{Y}}(m,n,k+1)-{\mathbf{Y}}(m,n,k)$</li>
+<li>其中 $G_x,G_y,G_z$ 分别表示当前波段 $Y_k$ 的<strong>水平空间梯度、垂直空间梯度和光谱梯度</strong></li>
+<li>网络最终使用残差学习策略</li>
+</ul>
+</li>
+<li>多尺度卷积块：
+<ul>
+<li>通过不同尺寸的卷积核大小能偶获得不同的感受野大小。特别是在条带噪声和坏线的场景下效果十分明显</li>
+<li><img src="/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/6.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>SSGN还采用了完全级联的多尺度卷积块来提取更多具有不同接收域大小的特征图。</li>
+<li>随着层深的增加，不同块的结果逐渐接近最终的残差混合噪声，包括高斯噪声等稠密噪声和稀疏条纹噪声、死线等稀疏噪声</li>
+</ul>
+</li>
+<li>三个输入经过多尺度卷积模块获得最终的输出，SSGN使用 光谱-空间损失函数 进行优化</li>
+<li>传统的图像去噪、超分辨任务都是使用欧几里得损失函数，但是这仅仅考虑了空间信息</li>
+<li>为了在保持空间结构信息的同时抑制光谱失真，本文提出了一种新的损失函数</li>
+<li>$\xi (\Theta)=(1-\alpha)\cdot \xi _{\mathrm spatial} +\alpha \cdot \xi _{\mathrm spectral}$
+<ul>
+<li>$\alpha  = 0.00$ 是权衡空间和光谱项之间的惩罚参数， 可以看出光谱损失占的权重很小</li>
+</ul>
+</li>
+<li>其中 $ξ _{spatial}$ （空间） 和  $ξ _{spectral term}$ （光谱）分别定义为
+<ul>
+<li>$\xi _{\mathrm spatial} = \frac 1 {2T}\sum _{i=1}^T {\big | \boldsymbol{ Res _k^i -({\mathbf Y}_k^i -{\mathbf X}_k^i)} \big |_2^2}$</li>
+<li>$\xi _{\mathrm spectral} = \frac 1 {2T}\sum _{i=1}^T {\sum _{z=k-\frac K 2,z\ne k}^{k+\frac K 2} {\big | {\Phi _z^i -{\mathbf G}_z^i} \big |_2^2}}$</li>
+</ul>
+</li>
+</ul>
+<h3 id="实验-2">实验</h3>
+<ul>
+<li>去噪前，将各HSI波段的灰度值独立归一化为[0-1]</li>
+<li>模拟实验采用平均峰值信噪比 (MPSNR)、平均结构相似度指数(MSSIM)和平均谱角(MSA)作为评价指标</li>
+<li>一般来说，在模拟实验中，较高的MPSNR和MSSIM值和较低的MSA值可以反映出较好的HSI去噪效果</li>
+<li>整个网络学习率被初始化为0.001。每过10个epoch，通过乘以0.5的下降因子来降低学习率</li>
+<li>采用Adam优化算法，动量参数分别为0.9、0.999和$10^{−8}$</li>
+<li>后面作者对实验结果进行了很充分的分析，而且比较了加入各种手工混合噪声对实验结构的影响，而且时间效率很高。</li>
+</ul>
+<p><img src="/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/7.png" srcset="/img/loading.gif" lazyload alt></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="print-no-link">#深度学习</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>论文阅读-0x02</div>
+      <div>http://example.com/2020/10/16/论文阅读-0x02/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年10月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/10/20/%E6%99%9A%E5%AE%89/" title="晚安~">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">晚安~</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/15/CBDNet-%E5%8D%B7%E7%A7%AF%E4%B8%8A%E9%87%87%E6%A0%B7/" title="CBDNt&amp;卷积上采样">
+                        <span class="hidden-mobile">CBDNt&amp;卷积上采样</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

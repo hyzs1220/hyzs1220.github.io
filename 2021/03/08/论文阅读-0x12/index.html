@@ -1,0 +1,978 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="论文的阅读笔记： 《  SCOUTER: Slot Attention-based Classifier for Explainable Image Recognition 》,    ARXIV 《  Coordinate Attention for Efficient Mobile Network Design 》， CVPR 2021">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读-0x12">
+<meta property="og:url" content="http://example.com/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="论文的阅读笔记： 《  SCOUTER: Slot Attention-based Classifier for Explainable Image Recognition 》,    ARXIV 《  Coordinate Attention for Efficient Mobile Network Design 》， CVPR 2021">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/1.png">
+<meta property="og:image" content="http://example.com/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/2.png">
+<meta property="og:image" content="http://example.com/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/3.png">
+<meta property="og:image" content="http://example.com/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/4.png">
+<meta property="og:image" content="http://example.com/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/5.png">
+<meta property="article:published_time" content="2021-03-08T05:19:03.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.580Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="图像增强与图像恢复">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/1.png">
+  
+  
+  
+  <title>论文阅读-0x12 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="论文阅读-0x12"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-03-08 13:19" pubdate>
+          2021年3月8日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          39 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">论文阅读-0x12</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>论文的阅读笔记：</p>
+<p>《  SCOUTER: Slot Attention-based Classifier for Explainable Image Recognition 》,    ARXIV</p>
+<p>《  Coordinate Attention for Efficient Mobile Network Design 》， CVPR 2021</p>
+<span id="more"></span>
+<h2 id="SCOUTER-Slot-Attention-based-Classifier-for-Explainable-Image-Recognition">SCOUTER: Slot Attention-based Classifier for Explainable Image Recognition</h2>
+<p>SCOUTER:用于解释图像识别的基于时隙注意的分类器</p>
+<h3 id="Abstract">Abstract</h3>
+<ul>
+<li>对于可解释的AI，现有的方法大多基于梯度或中间特征，并没有直接参与分类器的决策过程</li>
+<li>在本文作者提出了一种基于时隙注意力的分类器，称为SCOUTER，用于透明而准确的分类</li>
+<li>与其他基于注意力的方法主要有两个区别点
+<ul>
+<li>SCOUTER的解释涉及每个类别的最终置信度，提供了更直观的解释</li>
+<li>所有类别都有其相应的肯定或否定解释，说明“为什么图像属于某个类别”或“为什么图像不属于某个类别”</li>
+</ul>
+</li>
+<li>同时作者设计了一种新的损失，它可以控制模型的行为以在肯定解释和否定解释之间切换，以及解释区域的大小</li>
+<li>了解深度学习模型如何进行预测具有重要意义，特别是对于医学诊断等领域，采用黑盒模型存在潜在风险。因此，可解释人工智能(explainable artificial intelligence ，XAI)作为一种能够深入研究模型推理过程的技术，受到了广泛的关注</li>
+<li>XAI中最流行的范式是属性解释（attributive explanation），它涉及像素或区域对最终预测的贡献水平
+<ul>
+<li>因此，可以用它来回答“为什么图像x属于类别t”的问题，解释通常是通过<strong>显示热图来突出显示支持预测的区域</strong>，这种可视化对理解模型的行为有很大帮助</li>
+<li>这里自然会出现一个问题:这些区域是如何影响决策的。也就是说，属性解释强调了一些<strong>视觉成分</strong>，这些视觉成分可以为决策提供积极的支持;同样的，他们也可以提供否定解释</li>
+</ul>
+</li>
+<li>作者针对XAI，提出了SCOUTER（Slot-based COnfigUrable and Transparent classifiER）
+<ul>
+<li>针对每一个类别 $I$ ，都存在一个支持集 $\mathcal{S}<em>{l}=\left{s</em>{l 1}, s_{l 2}, \ldots\right}$ （其中的元素支持输入图像对于类别 $I$ 的判定），而SCOUTER的目标是找到一个 $\mathcal{S}<em>{l}$ 的子集 $\mathcal{S}</em>{l} '$ ，其中包含一个或多个支持元素。</li>
+<li><strong>SCOUTER的决策仅仅基于在输入图像中发现</strong>的 $\mathcal{S}=\left{\mathcal{S}_{l}’ | l = 1,2, \ldots\right}$ （每一类的支持子集），而不是使用难以解释的黑盒分类器</li>
+<li>这种透明性使SCOUTER配置可以找到正面(S+)或负面(S−)支持，同时可视化正面和负面解释</li>
+</ul>
+</li>
+<li>在这种可解释分类器的新范式下，<strong>更小的支持区域可能会更好地促进每种支持的语义解释</strong>
+<ul>
+<li>也就是说，找到眼睛、鼻子、嘴唇等的组合可能比直接找到一张脸更能解释问题</li>
+<li>为此作者在损失函数中引入了一个新的术语来约束支持区域的大小</li>
+<li>不过这种对支持区域的约束本身可能会降低分类性能，但多个支撑的组合可以弥补丢失的线索</li>
+</ul>
+</li>
+<li>SCOUTER是建立在最近出现的slot attention之上的，它<strong>为图像表示提供了一种以对象为中心的方法</strong>。基于这种方法，作者提出了一个可解释的缝隙注意(xSlot)模块</li>
+<li><strong>xSlot模块的输出直接用作对应于S的每个类别的置信度值</strong>，因此不再需要常用的全连接(FC)层分类器</li>
+<li><img src="/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/1.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>作者工作的主要贡献：
+<ul>
+<li>提出了一个透明的分类器，提供精确和有意义的解释，直接参与决策过程</li>
+<li>设计了一个loss来调整不同任务/数据集的探索区域，可以更好地满足各种应用的需求</li>
+<li>引入了积极解释和消极解释的新概念，后者是一种新型解释，当机器的决策与用户的期望相悖时，这种解释非常有帮助</li>
+</ul>
+</li>
+<li>在计算机视觉任务中，深度神经网络普遍是以下结构：骨干网络backbone network B + 下游网络downstream network
+<ul>
+<li>不过在网络的末尾研究者一般会使用一个简单的分类器来完成图像分类任务，包括一个或两个FC层和softmax。因为虽然FC分类器具有黑盒性质，但它是最普遍和最具表现力的选择</li>
+<li>而作者在本文探讨了<strong>使用可解释分类器的可能性，以使决策过程透明，同时保持分类性能</strong></li>
+</ul>
+</li>
+<li>XAI方法主要有三种，即可视化法、蒸馏法和本征法（visualization, distillation,  intrinsic methods）
+<ul>
+<li>其中可视化方法就是提供一个热图，用这种形式来表示说明输入或中间特征的重要性</li>
+<li>属性解释：为每个类产生视觉解释(即热图)</li>
+<li>反事实解释：给出了“如何改变图像 $x$ (属于 $t_a$ )，使其看起来像 $t_b$ 中的图像”的解释</li>
+<li>作者提出的判别解释：回答“为什么图像 $x$ 属于 $t_a$ 而不是 $t_b$ 的问题
+<ul>
+<li>和作者提出来的否定解释类似，不过区别性解释实际上是试图识别区分 $t_a$ 与单一类别 $t_b$ 的事实，而否定性解释则是旨在识别否定目标类别 $t_a$ 本身的事实</li>
+</ul>
+</li>
+<li>蒸馏方法：基本思想是使用固有的透明模型来<strong>模拟训练过的黑盒深度神经网络的输出和行为</strong>。内在方法将解释作为其模型的一部分，因此，这种XAI方法可能更可取，因为它们不需要在做出决策后生成解释</li>
+</ul>
+</li>
+<li>自注意力机制——Self-attention
+<ul>
+<li>这个最早出现在Transformers中，其中自注意力层逐个扫描输入元素，并使用对整个输入的权重聚合来更新他们</li>
+<li>Slot  attention也是基于这种机制从图像中提取以对象为中心的特征。然而，原始的Slot  attention仅在一些合成的图像数据集上进行测试</li>
+<li>而这里的SCOUTER是基于Slot  attention，设计为一个可解释的分类器适用于自然图像</li>
+</ul>
+</li>
+</ul>
+<h3 id="SCOUTER">SCOUTER</h3>
+<ul>
+<li>给定图像x，分类模型的目标是在类别集合 $\Omega = { \omega_1, \omega_1, \ldots , \omega_n, }$ 中找到其最可能的类别 $l$</li>
+<li>对于神经网络，可以首先通过一个backbone network B来提取特征，然后将特征表示映射到一个置信度的得分向量，使用FC层和softmax作为分类器</li>
+<li>作者在论文中将这个的分类器替换为SCOUTER，包含xSlot注意力模块
+<ul>
+<li>xSlot注意力模块对于给出的特征表示，给出对于每一个类别的置信度</li>
+</ul>
+</li>
+<li>包括骨干网在内的整个网络用SCOUTER loss进行训练，控制解释区域的大小，并在积极和消极的解释之间转换</li>
+</ul>
+<h4 id="xSlot-Attention">xSlot Attention</h4>
+<ul>
+<li>在原始的slot注意力机制中，slot是基于对特征图的关注而聚集的局部区域的表示
+<ul>
+<li>骨干网B上附加一个L slot的单个时隙注意力模块，产生L个不同的特征表示作为输出</li>
+<li>当存在多个感兴趣的对象时，此配置非常方便。 这个想法可以很容易地传递出来，即在输入图像中发现支撑物S，从而做出确定的决定</li>
+</ul>
+</li>
+<li><strong>xSlot注意模块的每个slot都与一个类别相关联</strong>，并让用户相信输入图像属于这个类别</li>
+<li>在slot注意机制下，类别 $l$ 的slot需要在图像上找到相应的支持 $\mathcal{S}_{l}$</li>
+<li>对于特征图 $F$ ，xSlot 注意力模块更新时隙slot $w_l^{(t)}$ ，其中 $w_l^{(t)}$ 表示 $t$ 更新后的slot， $l \in \Omega$  是与该slot的类别，<strong>slot被初始化为随机权值</strong>，即
+<ul>
+<li>$w_{l}^{(0)} \sim \mathcal{N}(\mu, \operatorname{diag}(\sigma)) \in \mathbb{R}^{n \times c^{\prime}}$</li>
+<li>其中 $\mu,\sigma$ 是高斯分布的均值和方差，$c’$ 是权重向量的大小，用 $W^{(t)} \in \mathbb{R}^{1 \times c^{\prime}}$ 表示所有类别的slot</li>
+</ul>
+</li>
+<li>slot $W^{(t+1)}$ 由 $W^{(t)}$ 和特征图 $F$ 进行更新得到</li>
+<li>首先，特征图 $F$ 通过一个1x1卷积来减少通道数，使用ReLU进行非线性变换
+<ul>
+<li>$F’ = ReLU(Conv(F)) \in \mathbb{R}^{ c^{\prime} \times d}$ ，即特征图 $F$ 的空间维数被平展开来（d=hw）</li>
+</ul>
+</li>
+<li>然后 $F’$ 通过位置嵌入（position embedding）来加入空间位置信息
+<ul>
+<li>$\widetilde F = F’ + PE$ ，PE就是位置嵌入</li>
+</ul>
+</li>
+<li>之后使用两个多层感知器（MLPs）Q和K，每一个都有三个FC层和他们之间的ReLU非线性激活
+<ul>
+<li>$Q(W^{(t)}) \in \mathbb{R}^{n \times c^{\prime}}, K( \widetilde F) \in \mathbb{R}^{c^{\prime} \times d}$</li>
+</ul>
+</li>
+<li>通过sigmoid来得到点积注意力 $A^{(t)}$
+<ul>
+<li>$A^{(t)} = \sigma (Q(W^{(t)})K(\widetilde F)) \in (0,1)^{n \times d}$</li>
+</ul>
+</li>
+<li>然后将注意力权重加到空间维度上来计算特征的权重总和
+<ul>
+<li>$U^{(t)} = A^{(t)}F’ \in \mathbb{R}^{n \times c^{\prime} }$</li>
+</ul>
+</li>
+<li>slot $W^{(t+1)}$ <strong>通过一个门控单元（GRU）来进行更新</strong>
+<ul>
+<li>$W^{(t+1)} = GRU(U^{(t)},W^{(t)})$</li>
+<li>这里作者将 $U^{(t)},W^{(t)}$ 分别作为输入状态和隐藏状态，在原有slot 注意力的基础上，作者对slot进行了 $T=3$ 次的更新</li>
+</ul>
+</li>
+<li>xSlot注意力模块的最终输出是 $U^{(t)}$ 中每一类 $l$ 中所有元素的和，是F的函数
+<ul>
+<li>$xSlot(F) = U^{(t)}1_{c’} \in \mathbb{R}^{n}_{+}$</li>
+<li>其中1是所有 $c’$ 元素为1的列向量</li>
+<li>以上给出的置信度通常由FC层计算，而SCOUTER只是对xSlot注意模块的输出进行了汇总</li>
+</ul>
+</li>
+<li>另外在原始的slot注意力模块中，对特征进行线性变换，即 $V(\widetilde F)$ ，然后使用 $A^{(t)}$ 对其加权
+<ul>
+<li>不过作者在xSlot中省略了这种转换，认为模块在Q，K，GRU中已经有了足够学习参数</li>
+</ul>
+</li>
+<li><img src="/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/2.png" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+<h4 id="损失函数">损失函数</h4>
+<ul>
+<li>$L_{SCOUTER} = L_{CE} + \lambda L_{Area}$</li>
+<li>交叉熵损失和一个区域面积损失</li>
+<li>$L_{\text {Area }}=\mathbf{1}<em>{n}^{\top} A^{(T)} \mathbf{1}</em>{d}$
+<ul>
+<li>即 $A^{(T)}$ 中所有元素的总和，当 $\lambda$ 更大时，SCOUTER通过选择更少更小的支持来获取更小的支持区域</li>
+</ul>
+</li>
+</ul>
+<h4 id="Switching-Positive-and-Negative-Explanation">Switching Positive and Negative Explanation</h4>
+<ul>
+<li>上面的损失函数，在网络训练中只能提供正向解释，因为 $A^{(T)}$ 中的较大元素表示预测是基于相应特征进行的</li>
+<li>为此作者引入超参数 $e \in { +1,-1 }$</li>
+<li>$o=\mathrm{xSlot}<em>{e}(F)=e \cdot U^{(T)} \mathbf{1}</em>{c^{\prime}} \quad \in \mathbb{R}_{+}^{n}$
+<ul>
+<li>从而来实现正负支持</li>
+</ul>
+</li>
+<li>后面就是对这个的一些解释，基本就是在e不同的取值下， 会得到不同的区域解释，用来支持分类结果</li>
+</ul>
+<h3 id="Experients">Experients</h3>
+<ul>
+<li>实验部分没啥，有几个点稍微记录一下</li>
+<li>随着分类类别（&gt;100）的增多，网络的训练效果会变得不稳定
+<ul>
+<li>“这可能是因为越来越难以找到一贯出现在同一类别的所有图像中但其他类别却不共用的有效支助。这个缺点限制了SCOUTER在小型或中型数据集上的应用”</li>
+</ul>
+</li>
+<li><img src="/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/3.png" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+<h3 id="😝😜😋">😝😜😋</h3>
+<p>这篇论文其实还是蛮有意思的，对于深度学习中的黑盒行为，进行了可解释化，不过网络结构刚开始没太理解，后来发现就是self-attention，，，在此基础上，作者进行了改动，然后将结果进行可视化，这里的可视化就是用一种热图的形式来对分类结果进行支持</p>
+<p>感觉这种方法，在这种图像分类中其实还是蛮有用的，不过如果想用在图像修复说的话，感觉不太好迁移过去，没有啥实际的作用吧，不过也是一个不断学习的过程</p>
+<h2 id="Coordinate-Attention-for-Efficient-Mobile-Network-Design">Coordinate Attention for Efficient Mobile Network Design</h2>
+<h3 id="Abstract-2">Abstract</h3>
+<ul>
+<li>通道注意力机制对于提升模型性能效果显著（如SE attention），但通常忽略了位置信息，而位置信息对于生成空间选择性注意力图非常重要</li>
+<li>在本文中，作者提出了一种新的移动网络注意力机制，将位置信息嵌入到通道注意中，称之为Coordinate Attention</li>
+<li>与通过二维全局池化将特征张量转换为单一特征向量的通道注意不同，Coordinate Attention将通道注意力分解为两个一维特征编码过程，分别沿两个空间方向聚合特征
+<ul>
+<li>通过这种方式，可以在一个空间方向上捕获长期的依赖关系，同时可以在另一个空间方向上保留精确的位置信息</li>
+<li>然后将得到的特征图feature map分别编码成一对方向感知和位置敏感的注意力图attention map，可以将其互补地应用于输入特征图，以增强关注对象的表示</li>
+</ul>
+</li>
+<li>Coordinate Attention是简单的，可以灵活地插入经典的移动网络，如MobileNetV2、MobileNeXt和EfficientNet，几乎没有计算开销</li>
+<li>这里作者<strong>主要是针对于移动网络，所以需要考虑移动网络有限的计算能力</strong>，而目前最流行的移动网络注意力机制仍然是SE attention，不过却忽略了位置信息的重要性</li>
+<li>后来的工作尝试通过降低输入张量的通道维数，然后使用卷积计算空间注意力，从而利用位置信息。不过卷积只能捕获局部关系，却无法建模远景任务所必需的长期依赖关系</li>
+<li>在本文中，作者通过将位置信息嵌入到通道注意中提出了一种新的有效的注意机制，使移动网络能够在较大的区域内进行注意力计算，同时避免产生大量的计算开销
+<ul>
+<li>为了缓解二维全局池化造成的位置信息丢失，作者<strong>将通道注意力分解为两个并行的一维特征编码过程</strong>，有效地将空间坐标信息整合到生成的注意图中</li>
+<li><strong>利用两个一维全局池化操作分别将垂直和水平方向的输入特征聚合为两个独立的方向感知特征映射</strong></li>
+<li>然后，这两个嵌入方向特定信息的特征图被分别编码成两个注意力图，每一个都捕捉输入特征地图沿一个空间方向的远距离依赖关系</li>
+<li>这样，位置信息就可以保存在生成的注意力图中。<strong>然后这两种注意映射通过乘法应用到输入特征映射上，以强调注意力区域</strong></li>
+<li>作者将所提出的注意方法命名为Coordinate Attention，因为它能够区分空间方向(即坐标)并生成坐标感知的注意力图</li>
+</ul>
+</li>
+<li>作者提出的Coordinate Attention的优势：
+<ul>
+<li>不仅能捕获跨通道的信息，还能捕获方向和位置敏感的信息，有助于模型更准确地定位和识别支持区域</li>
+<li>灵活和轻量级，可以很容易地插入移动网络的经典模块中</li>
+<li>作为一个预训练模型，可以为移动网路的下游任务带来显著性能提升，特别是对于那些具有密集预测(例如，语义分割)的任务</li>
+</ul>
+</li>
+<li>目前最先进的移动网络大多基于深度可分离卷积和反向残差模块（depthwise separable convolutions and the inverted residual block ）</li>
+<li>对于Non-local/self-attention，其计算量过大，并不适应于移动网络
+<ul>
+<li>所以这里作者将二维全局池化分解两个一维编码过程，从而来减少计算量</li>
+</ul>
+</li>
+</ul>
+<h3 id="Coordinate-Attention">Coordinate Attention</h3>
+<p><img src="/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/4.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>对于Coordinate Attention模块，其输入和输出（增强表示后）尺寸是相同的</li>
+<li>标准卷积本身是很难对信道之间的关系进行建模，显式地构建通道间的依赖关系可以增加模型对信息通道的敏感性，这些信息通道对最终分类决策的贡献更大。此外，使用全局平均池还可以帮助模型捕获全局信息</li>
+<li>SE block
+<ul>
+<li>分为压缩和激励两部分（squeeze and excitation），分别用于全局信息嵌入和信道关系的自适应重新校准（就是加权嘛）</li>
+<li>$z_{c}=\frac{1}{H \times W} \sum_{i=1}^{H} \sum_{j=1}^{W} x_{c}(i, j)$
+<ul>
+<li>输入 $\boldsymbol{X} \in \mathbb{R}^{C \times H \times W}$</li>
+</ul>
+</li>
+<li>$\hat{\mathbf{X}}=\mathbf{X} \cdot \sigma(\hat{\mathbf{z}})$
+<ul>
+<li>通道乘法，进行加权，其中 $\hat{\mathbf{z}}$  为变换函数</li>
+<li>$\hat{\mathbf{z}} = T_2(ReLU(T_1(\mathbf{z})))$</li>
+<li>$T_1,T_2$ 为两个线性变换，用来学习捕捉每个通道的权重</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Coordinate Attention通过精确的位置信息对通道关系和远程依赖性进行编码，分为coordinate information embedding and coordinate attention generation生成两个步骤</li>
+<li>coordinate information embedding
+<ul>
+<li>作者对SE的权重计算公式进行分解，转化为一对一维特征编码操作</li>
+<li>具体来说，给定输入X，使用空间大小为(H,1)和(1,W)的pooling kernel<strong>分别沿着水平坐标和垂直坐标对每个通道进行编码</strong></li>
+<li>$z_{c}^{h}(h)=\frac{1}{W} \sum_{0&lt;=i&lt;W} x_{c}(h, i)$</li>
+<li>$z_{c}^{w}(w)=\frac{1}{H} \sum_{0&lt;=j&lt;H} x_{c}(j, w)$</li>
+<li>这两种转换也允许注意力块捕捉沿着一个空间方向的长期依赖关系，并保存沿着另一个空间方向的精确位置信息，这有助于网络更准确地定位感兴趣的对象</li>
+</ul>
+</li>
+<li>coordinate attention generation
+<ul>
+<li>首先，对于移动环境中的应用来说，新的转换应该尽可能地简单和廉价</li>
+<li>其次，它可以充分利用捕获到的位置信息，使感兴趣的区域能够准确地突出显示</li>
+<li>最后但最重要的是，它还应该能够有效地捕捉通道间的关系</li>
+<li>对于上面得到的聚合特征映射，使用一个1x1卷积连接起来，然后使用非线性激活</li>
+<li>$\mathbf{f}=\delta\left(F_{1}\left(\left[\mathbf{z}^{h}, \mathbf{z}^{w}\right]\right)\right)$
+<ul>
+<li>$\mathbf{f} \in \mathbb{R}^{C/r \times (H + W)}$ 是对水平方向和垂直方向的空间信息进行编码的中间特征映射</li>
+<li>r控制SE块大小的缩减率</li>
+</ul>
+</li>
+<li>然后沿着空间维度，将 $\mathbf{f}$ 分解为 $\mathbf{f}^{h} \in \mathbb{R}^{C/r \times H}$ 和$\mathbf{f}^w \in \mathbb{R}^{C/r \times W}$</li>
+<li>接着利用两个1 × 1卷积将 $\mathbf{f}^h$ 和 $\mathbf{f}^w$ 变换为和输入 $X$ 相同通道数的张量
+<ul>
+<li>$\mathbf{g}^h=\sigma\left(F_{h}\left(\mathbf{f}^h\right)\right)$</li>
+<li>$\mathbf{g}^w=\sigma\left(F_{w}\left(\mathbf{f}^w\right)\right)$</li>
+</ul>
+</li>
+<li>综上</li>
+<li>$y_c(i,j) = x_c(i,j) \times g_c^h(i) \times g_c^w(j)$</li>
+</ul>
+</li>
+<li><img src="/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/5.png" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+<h3 id="😝😜😋-2">😝😜😋</h3>
+<p>emm这篇论文有点简单，，，没啥好说的，可能也是针对移动端，所以设计的简单很多</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A2%9E%E5%BC%BA%E4%B8%8E%E5%9B%BE%E5%83%8F%E6%81%A2%E5%A4%8D/" class="print-no-link">#图像增强与图像恢复</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>论文阅读-0x12</div>
+      <div>http://example.com/2021/03/08/论文阅读-0x12/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年3月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/06/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x13/" title="论文阅读-0x13">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">论文阅读-0x13</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/" title="论文阅读-0x11">
+                        <span class="hidden-mobile">论文阅读-0x11</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

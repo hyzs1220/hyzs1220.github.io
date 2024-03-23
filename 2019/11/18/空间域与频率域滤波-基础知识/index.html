@@ -1,0 +1,771 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="最近学习接触了在空间域和频率域对图像处理的知识，在使用matlab操作的时候也是有很多收获，在此记录并进一步学习整理一下啦~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="空间域与频率域滤波-基础知识">
+<meta property="og:url" content="http://example.com/2019/11/18/%E7%A9%BA%E9%97%B4%E5%9F%9F%E4%B8%8E%E9%A2%91%E7%8E%87%E5%9F%9F%E6%BB%A4%E6%B3%A2-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="最近学习接触了在空间域和频率域对图像处理的知识，在使用matlab操作的时候也是有很多收获，在此记录并进一步学习整理一下啦~">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2019/11/18/%E7%A9%BA%E9%97%B4%E5%9F%9F%E4%B8%8E%E9%A2%91%E7%8E%87%E5%9F%9F%E6%BB%A4%E6%B3%A2-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.png">
+<meta property="article:published_time" content="2019-11-18T01:17:13.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.560Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="matlab">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2019/11/18/%E7%A9%BA%E9%97%B4%E5%9F%9F%E4%B8%8E%E9%A2%91%E7%8E%87%E5%9F%9F%E6%BB%A4%E6%B3%A2-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.png">
+  
+  
+  
+  <title>空间域与频率域滤波-基础知识 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="空间域与频率域滤波-基础知识"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-11-18 09:17" pubdate>
+          2019年11月18日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">空间域与频率域滤波-基础知识</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>最近学习接触了在空间域和频率域对图像处理的知识，在使用matlab操作的时候也是有很多收获，在此记录并进一步学习整理一下啦~</p>
+<span id="more"></span>
+<h2 id="空间域操作">空间域操作</h2>
+<p>对于空间域对图像进行操作主要包括这几个方面：</p>
+<ul>
+<li>灰度变换
+<ul>
+<li>灰度变换函数 $s=T®$  ，这种技术有时被称为对比度拉伸</li>
+<li>在极限情况下，会产生一幅二值图像。这种形式的映射称为阈值处理函数</li>
+<li>灰度变换函数的曲线：
+<ul>
+<li>图像反转（得到底片）、恒等变换、对数变换等，还有分段线性变换函数（对比度拉伸、灰度级分层等效果）</li>
+</ul>
+</li>
+<li><img src="/2019/11/18/%E7%A9%BA%E9%97%B4%E5%9F%9F%E4%B8%8E%E9%A2%91%E7%8E%87%E5%9F%9F%E6%BB%A4%E6%B3%A2-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.png" srcset="/img/loading.gif" lazyload alt="img"></li>
+</ul>
+</li>
+<li>直方图（对灰度百分比的统计）
+<ul>
+<li>归一化的直方图：表示灰度级r在图像中出现的概率的一个估计。其所有分量之和等于1</li>
+<li>可用于图像增强</li>
+<li>处理过程：
+<ul>
+<li>首先可以得到一个灰度分布和直方图的值（均一化后，$p_r(r_k)$）。例如灰度级个数为L=7</li>
+<li>然后去计算变换函数，即 $s_i = (L-1)\sum_{j=o}^i p_r(r_j)$  ，i从0开始</li>
+<li>对 $s_i$ 取整</li>
+<li>在取整后，灰度级可能会减少，即会被映射到不同的灰度级上。根据映射关系来确定变换后的灰度级对应的像素值，会出现多个灰度级被映射到一个灰度级的情况，那么像素值相加即可。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>滤波器
+<ul>
+<li>对应位置相乘后累加，得到当前像素点的值（中心像素）</li>
+<li>平滑滤波器（全是正数，要乘上滤波器中所有系数的和，这是计算平均值所要求的）
+<ul>
+<li>这种滤波器有时候也叫均值滤波器，就是实现一种模糊操作，相当于降低了“尖锐”的变化部分。这样看的话，其实也可以理解为一种频率波的低通滤波器，减少了高频的部分。（也可以用于处理含有椒盐噪声的图像）</li>
+</ul>
+</li>
+<li>中值滤波器
+<ul>
+<li>统计排序滤波器（非线性），使用包围区域内排列统计结果决定的值来替代中心像素的值</li>
+<li>中值滤波器就是使用中值来替代</li>
+<li>能够很好的处理椒盐噪声</li>
+</ul>
+</li>
+<li>锐化滤波器（有正有负）
+<ul>
+<li>突出灰度的过渡部分，其推导过程是通过离散函数的二阶微分得到的，通过微分得到原函数的变化趋势，即像素值的变化快慢。也可以进一步推导到二次微分，即拉普拉斯算子。</li>
+<li>二阶微分 = $f(x+1) + f(x-1) - 2f(x)$</li>
+<li>使用二阶微分进行图像锐化——拉普拉斯算子</li>
+<li>两个变量的拉普拉斯算子 = $f(x+1,y)+f(x-1,y)+f(x,y+1)+f(x,y-1)-4f(x,y)$</li>
+<li>由于拉普拉斯图像中既有正值也有负值，所以负值标为0</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>梯度
+<ul>
+<li>一阶微分进行图像锐化（边缘检测、边缘增强）</li>
+<li>梯度经常用robert交叉微分算子，Prewitt微分算子，sobel算子来实现</li>
+</ul>
+</li>
+</ul>
+<p>在空间域进行滤波操作的时候，可能会出现滤波器和图像运算不全面的情况，所以需要进行padding操作。</p>
+<h3 id="常用空间滤波器代码-matlab">常用空间滤波器代码(matlab)</h3>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs matlab"><span class="hljs-comment">% 显示原图像：</span><br>f=imread(str_path); <br>subplot(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">1</span>),imshow(f); <br><br><span class="hljs-comment">%fspecial：用于产生预定义滤波器</span><br>h1=fspecial(<span class="hljs-string">&#x27;sobel&#x27;</span>);<span class="hljs-comment">%sobel水平边缘增强滤波器</span><br>h2=fspecial(<span class="hljs-string">&#x27;gaussian&#x27;</span>);<span class="hljs-comment">%高斯低通滤波器</span><br>h3=fspecial(<span class="hljs-string">&#x27;laplacian&#x27;</span>);<span class="hljs-comment">%拉普拉斯滤波器</span><br>h4=fspecial(<span class="hljs-string">&#x27;log&#x27;</span>);<span class="hljs-comment">%高斯拉普拉斯（LoG）滤波器</span><br>h5=fspecial(<span class="hljs-string">&#x27;average&#x27;</span>);<span class="hljs-comment">%均值滤波器</span><br>g6=medfilt2(f);<span class="hljs-comment">%中值滤波</span><br><br>g=filter2(h1,f,<span class="hljs-string">&#x27;same&#x27;</span>);<br>g = uint8(g);<br><br>subplot(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">2</span>),imshow(g); <br><br><span class="hljs-comment">% 利用Sobel算子锐化图像</span><br>h=[	<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">1</span>;<br>	<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>;<br>	<span class="hljs-number">-1</span>,<span class="hljs-number">-2</span>,<span class="hljs-number">-1</span><br>	];<span class="hljs-comment">%Sobel算子</span><br><span class="hljs-built_in">j</span>=filter2(h,f);<br><br><span class="hljs-comment">% 利用拉氏算子锐化图像</span><br><span class="hljs-built_in">j</span>=double(f);<br>h=[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>;<span class="hljs-number">1</span>,<span class="hljs-number">-4</span>,<span class="hljs-number">1</span>;<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>];<span class="hljs-comment">%拉氏算子</span><br>k=conv2(<span class="hljs-built_in">j</span>,h,<span class="hljs-string">&#x27;same&#x27;</span>);<br><br><span class="hljs-comment">% 图像边缘检测</span><br><span class="hljs-built_in">j</span> = edge(f,<span class="hljs-string">&#x27;sobel&#x27;</span>,thresh)	<span class="hljs-comment">% sobel算子</span><br><span class="hljs-built_in">j</span> = edge(f,<span class="hljs-string">&#x27;prewitt&#x27;</span>,thresh)	<span class="hljs-comment">%prewitt算子</span><br><span class="hljs-built_in">j</span> = edge(f,<span class="hljs-string">&#x27;roberts&#x27;</span>,thresh)	<span class="hljs-comment">%roberts算子</span><br><span class="hljs-built_in">j</span> = edge(f,<span class="hljs-string">&#x27;log&#x27;</span>,thresh)	<span class="hljs-comment">%log算子</span><br><span class="hljs-built_in">j</span> = edge(f,<span class="hljs-string">&#x27;canny&#x27;</span>,thresh)	<span class="hljs-comment">%canny算子</span><br><span class="hljs-built_in">j</span> = edge(f,<span class="hljs-string">&#x27;zerocross&#x27;</span>,thresh)	<span class="hljs-comment">%Zero-Cross算子</span><br><br></code></pre></td></tr></table></figure>
+<h2 id="频率域操作">频率域操作</h2>
+<p>关于如何从空间域变换到频率域的数学推导就不写了，自己也是大概理解，在频率域上操作可以实现一些在空间域难以实现的操作，比如在频率域我们能够很明了的看出图像的高频部分（变化较快）和低频部分（变化较慢），从而来设计高通、低通、带通和带阻滤波器等来对图像进行不同的操作。</p>
+<p>这里直接给出进行频率域操作的代码，感觉太过于公式化或是理论也不太好，从编写代码的过程中中感觉能学到更多。<br>
+（我就不放实验结果了，呜呜呜 ~ ）</p>
+<h3 id="使用高通-低通滤波器">使用高通/低通滤波器</h3>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs matlab"><span class="hljs-comment">% 代码中用到的paddedsize、lpfilter、hpfilter以及dftfilt函数都可以直接从网上找到。</span><br>strFile = <span class="hljs-string">&#x27;test.jpg&#x27;</span>;<br><br>o_img = imread(strFile);<br>subplot(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">1</span>);<br>imshow(o_img);<br>img = o_img;<br><br><span class="hljs-comment">% 彩色图像</span><br><span class="hljs-keyword">for</span> <span class="hljs-built_in">i</span>=<span class="hljs-number">1</span>:<span class="hljs-number">3</span><br>    temp_img = img(:,:,<span class="hljs-built_in">i</span>);<br>    temp_img = <span class="hljs-built_in">squeeze</span>(temp_img);<br>    PQ = paddedsize(<span class="hljs-built_in">size</span>(temp_img)); <span class="hljs-comment">%产生滤波时所需大小的矩阵</span><br>    D0 = <span class="hljs-number">0.05</span> * PQ(<span class="hljs-number">1</span>);    <span class="hljs-comment">%设定高斯滤波器的阈值</span><br>    H = lpfilter(<span class="hljs-string">&#x27;gaussian&#x27;</span>,PQ(<span class="hljs-number">1</span>),PQ(<span class="hljs-number">2</span>),D0); <span class="hljs-comment">%产生低斯高通滤波器</span><br>    <span class="hljs-comment">%H = hpfilter(&#x27;gaussian&#x27;,PQ(1),PQ(2),D0); %产生高斯高通滤波器</span><br><br>    temp_img = dftfilt(temp_img,H);<br>    img(:,:,<span class="hljs-built_in">i</span>) = temp_img;<br><span class="hljs-keyword">end</span><br><br>subplot(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">2</span>);<br>imshow(img);<br></code></pre></td></tr></table></figure>
+<h3 id="使用带阻滤波器">使用带阻滤波器</h3>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs matlab">str_path = <span class="hljs-string">&#x27;test.png&#x27;</span>;<br><br><span class="hljs-comment">% 无padding过程</span><br><br><span class="hljs-comment">% 显示原图像：</span><br>f=imread(str_path); <br><span class="hljs-built_in">figure</span>,subplot(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">1</span>),imshow(f); <br>title(<span class="hljs-string">&#x27;原图像&#x27;</span>);<br>F=fft2(f);  <span class="hljs-comment">% 二维快速傅里叶变换</span><br>[M, N]=<span class="hljs-built_in">size</span>(f);<br>f=double(f);<br><br>fc=fftshift(F); <span class="hljs-comment">%将零频分量移动到数组中心,重新排列傅里叶变换 </span><br>s=<span class="hljs-built_in">log</span>(<span class="hljs-number">1</span>+<span class="hljs-built_in">abs</span>(fc)); <br>subplot(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">2</span>),imshow(s,[]);<br>title(<span class="hljs-string">&#x27;原图像频谱&#x27;</span>);<br><br><span class="hljs-comment">%理想带阻滤波器滤波效果：</span><br>[u,v]=dftuv(M,N);	<span class="hljs-comment">% 确定滤波函数大小</span><br>d1=<span class="hljs-built_in">sqrt</span>(u.^<span class="hljs-number">2</span>+v.^<span class="hljs-number">2</span>); <br><br><span class="hljs-comment">% 设计带阻滤波器</span><br>w=<span class="hljs-number">5</span>;<br>D0=<span class="hljs-number">15</span>;<br>ba= d1&lt;(D0-w/<span class="hljs-number">2</span>) | d1&gt;(D0+w/<span class="hljs-number">2</span>);<br>H=double(ba);	<span class="hljs-comment">% 滤波函数</span><br><br><span class="hljs-comment">% 设计巴特沃斯带阻滤波器</span><br><span class="hljs-comment">%n=3;</span><br><span class="hljs-comment">%H = 1./(1 + (w*d1./(d1.^2-D0^2)).^(2*n));</span><br><br><span class="hljs-comment">% 高斯带阻滤波：</span><br><span class="hljs-comment">%H = 1-exp(-1/2*(((d1.^2)-D0^2)./(d1*w)).^2);</span><br><br>F = fft2(f);	<span class="hljs-comment">% 频域率滤波</span><br><br>g=<span class="hljs-built_in">real</span>(ifft2(H.*F));<span class="hljs-comment">% 反变换回空间域</span><br>subplot(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>),imshow(g,[]); <br>title(<span class="hljs-string">&#x27;理想带阻&#x27;</span>);<br>F=fft2(g); <br>fc=fftshift(F); <br>s=<span class="hljs-built_in">log</span>(<span class="hljs-number">1</span>+<span class="hljs-built_in">abs</span>(fc));  <br>subplot(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">4</span>),imshow(s,[]); <br>title(<span class="hljs-string">&#x27;理想带阻频谱&#x27;</span>);<br><br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/matlab/" class="print-no-link">#matlab</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>空间域与频率域滤波-基础知识</div>
+      <div>http://example.com/2019/11/18/空间域与频率域滤波-基础知识/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年11月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/" title="区域填充">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">区域填充</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/11/18/%E4%BA%8C%E7%BB%B4%E5%9B%BE%E5%83%8F%E5%8F%98%E6%8D%A2-%E8%A3%81%E5%89%AA/" title="二维图像变换-裁剪">
+                        <span class="hidden-mobile">二维图像变换-裁剪</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

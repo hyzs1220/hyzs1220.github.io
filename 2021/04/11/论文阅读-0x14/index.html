@@ -1,0 +1,1152 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="论文的阅读笔记： 《 Noise2Noise: Learning Image Restoration without Clean Data 》,   [code],  ICML2018 《 Noise2Void: Learning Denoising from Single Noisy Images 》[code]，CVPR 2019">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读-0x14">
+<meta property="og:url" content="http://example.com/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="论文的阅读笔记： 《 Noise2Noise: Learning Image Restoration without Clean Data 》,   [code],  ICML2018 《 Noise2Void: Learning Denoising from Single Noisy Images 》[code]，CVPR 2019">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/1.png">
+<meta property="og:image" content="http://example.com/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/2.png">
+<meta property="og:image" content="http://example.com/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/3.png">
+<meta property="og:image" content="http://example.com/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/4.png">
+<meta property="og:image" content="http://example.com/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/5.png">
+<meta property="og:image" content="http://example.com/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/6.png">
+<meta property="article:published_time" content="2021-04-11T02:49:58.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.588Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="图像增强与图像恢复">
+<meta property="article:tag" content="高光谱图像去噪">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/1.png">
+  
+  
+  
+  <title>论文阅读-0x14 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="论文阅读-0x14"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-04-11 10:49" pubdate>
+          2021年4月11日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          69 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">论文阅读-0x14</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>论文的阅读笔记：</p>
+<p>《 Noise2Noise: Learning Image Restoration without Clean Data 》,   <a target="_blank" rel="noopener" href="https://github.com/NVlabs/noise2noise">[code]</a>,  ICML2018</p>
+<p>《 Noise2Void: Learning Denoising from Single Noisy Images 》<a target="_blank" rel="noopener" href="https://github.com/juglab/n2v">[code]</a>，CVPR 2019</p>
+<span id="more"></span>
+<h2 id="Noise2Noise-Learning-Image-Restoration-without-Clean-Data">Noise2Noise: Learning Image Restoration without Clean Data</h2>
+<h3 id="Abstract">Abstract</h3>
+<ul>
+<li>作者将基本的统计推理应用于机器学习（学习将损坏的观测数据映射到干净的信号）的信号重建，得到了一个简单而有力的结论：
+<ul>
+<li><strong>在没有明确的图像先验或损坏的似然模型的情况下，通过只查看损坏样例的情况下学习图像恢复是可能的</strong></li>
+<li>达到甚至超过使用干净的数据训练的水平表现</li>
+<li>作者展示了使用一个单一的模型学习了去噪任务——仅仅基于噪声数据</li>
+</ul>
+</li>
+<li>从损坏或不完整的观测值中重建信号是统计数据分析的一个重要分支
+<ul>
+<li>随着深度神经网络的最新进展，人们避免了传统的、显式的信号损坏的先验统计建模</li>
+<li>取而代之的是学习将损坏的观测数据映射到未观测到的干净版本</li>
+<li>训练一个回归模型（例如CNN网络），使用大量数据对 $(\hat x_i, y_i)$ ：损坏输入 $\hat x_i$ 和对应的干净数据 $y_i$ ，然后训练最小化经验风险
+<ul>
+<li>$\underset{\theta}{\operatorname{argmin}} \sum_{i} L\left(f_{\theta}\left(\hat{x}<em>{i}\right), y</em>{i}\right)$</li>
+<li>$f_{\theta}$ 是CNNs网络的参数映射族</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>使用符号 $\hat x$ 来强调以下事实：损坏的输入 $\hat x \sim p(\hat x |y_i)$ 是根据干净目标得到的随机变量分布</li>
+<li>获得干净的训练目标通常是困难或乏味的：无噪声照片需要长时间曝光，完整的MRI取样排除了动态受试者等</li>
+<li>在该工作中，作者观察到，可以只使用损坏的图像来得到好的图像
+<ul>
+<li>而且效果一样好，甚至更好（像使用干净的样本一样）</li>
+<li>此外，也<strong>不需要明确的统计似然模型，也不需要图像先验，而是从训练数据中间接学习到这些信息数据</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="Theoretical-Background">Theoretical Background</h3>
+<ul>
+<li>假设我们有一组不可靠的室温测量值 $(y_1, y_2, \dots)$
+<ul>
+<li>估计真实未知温度的一个常见策略是根据损失函数 $L$ 找到一个与测量值的平均偏差最小的数字 $z$ :
+<ul>
+<li>$\underset{z}{\operatorname{argmin}} \mathbb E_y{ L(z,y) }$</li>
+</ul>
+</li>
+<li>对于 $L_2$ 损失 $L(z,y) = (z-y)^2$ ， 该损失函数的最优解在测量值的算数平均值(期望)处取到：
+<ul>
+<li>$z=E_y{y}$</li>
+</ul>
+</li>
+<li>对于 $L_1$ 损失 $L(z,y) = |z-y|$ ， 该损失函数的最优解在测量值的中值处取到：
+<ul>
+<li>$z=median {y}$</li>
+</ul>
+</li>
+<li>对于 $L_0$ 损失 $L(z,y) = |z-y|_0$ ， 该损失函数的最优解在测量值的众数处取到：
+<ul>
+<li>$z=mode {y}$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>从统计学角度，这些常用的损失函数都可以解释为似然函数的负对数，而对这些损失函数的优化过程可以看做为最大似然估计（M-estimators, ML）</li>
+<li>训练神经网络回归器是这种点估计过程的推广
+<ul>
+<li>已知一系列输入-目标对 $( x_i, y_i)$ ，典型的网络训练形式是优化下列目标函数：</li>
+<li>$\underset{\theta}{\operatorname{argmin}} \mathbb E_{x,y}{ L(f_\theta(x),y) }$
+<ul>
+<li>$f_{\theta}$ 是网络的参数映射族</li>
+<li>这里如果进行简化，就是上面提到的那个简单的估计真实未知温度的损失</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>完整训练任务在每个训练样本上分解为相同的最小化问题（如果将整个训练任务分解为几个训练步骤，根据贝叶斯定理可将上述目标函数变为 ）：
+<ul>
+<li>$\underset{\theta}{\operatorname{argmin}} \mathbb E_{x} { \mathbb E_{y|x}{ L(f_\theta(x),y) } }$</li>
+</ul>
+</li>
+<li>该网络可以<strong>通过分别解决每个输入样本的点估计问题来减少这种损失</strong>
+<ul>
+<li>因此，潜在损失的特性是通过神经网络训练来继承的</li>
+<li>（ 则网络训练的目标函数与前面所说的标量损失函数有相同的形式，也具有相同的特性 ）</li>
+</ul>
+</li>
+<li>在有限的输入-目标对 $(x_i,y_i)$ 中，通过方程1 $\underset{\theta}{\operatorname{argmin}} \sum_{i} L\left(f_{\theta}\left(\hat{x}<em>{i}\right), y</em>{i}\right)$ 训练回归量的过程隐藏了一个微妙的点:与该过程所隐藏的输入和目标之间1:1的映射(虚假的)不同，在现实中的映射是多值的
+<ul>
+<li>例如，在所有自然图像的超分辨率任务中，低分辨率图像x可以用许多不同的高分辨率图像y来解释，因为关于边缘和纹理的确切位置和方向的知识信息在降采样的过程中丢失了</li>
+<li>也就是说，$p(y|x)$ 是与低分辨率x一致的自然图像的高度复杂分布</li>
+<li>使用  $L_2$ loss对成对低分辨率图像和高分辨率图像训练神经网络回归器，网络学习输出所有可能解释的平均值(例如，不同的边缘偏移量)，导致网络预测的空间模糊</li>
+<li>为了克服这种趋势，已经做了大量的工作，例如使用学习到的鉴别器函数作为损失</li>
+</ul>
+</li>
+<li>作者观察到，对于某些问题，这种趋势会带来意想不到的好处</li>
+<li>最小化  $L_2$ loss的一个简单的、乍一看无用的性质是，<strong>在期望上，如果我们用 与目标期望匹配的随机数 替换目标，则估计保持不变</strong>
+<ul>
+<li>就是说我们用的这个<strong>随机数的期望</strong>和 <strong>目标的期望</strong> 相匹配，那个这个过程就是一致的</li>
+<li>这很容易看出：无论 $y$ 的具体分布是什么，  $L_2$ loss都成立</li>
+<li>因此，当输入条件的目标分布 $p(y|x)$ 被<strong>任意具有相同条件期望值的分布</strong>所替代时，方程 $\underset{\theta}{\operatorname{argmin}} \mathbb E_{x} { \mathbb E_{y|x}{ L(f_\theta(x),y) } }$  中的最优网络参数θ仍然保持不变</li>
+<li>这意味着，原则上，我们可以<strong>用零均值噪声破坏神经网络的训练目标，而不改变网络学习的内容</strong></li>
+</ul>
+</li>
+<li>将此与方程 $\underset{\theta}{\operatorname{argmin}} \sum_{i} L\left(f_{\theta}\left(\hat{x}<em>{i}\right), y</em>{i}\right)$ 中损坏的输入相结合，我们就剩下了经验风险最小化任务
+<ul>
+<li>$\underset{\theta}{\operatorname{argmin}} \sum_{i} L\left(f_{\theta}\left(\hat{x}<em>{i}\right), \hat y</em>{i}\right)$</li>
+<li>其中<strong>输入和目标现在都从一个损坏的分布(不一定相同)中得到</strong>，<strong>以潜在的、未观察到的干净目标 $y_i$ 为条件</strong>，使得 $\mathbb E { \hat y_i | \hat x_i } = y_i$</li>
+</ul>
+</li>
+<li>有趣的是，上述方法都不依赖于损坏的似然模型，也不依赖于底层干净图像流形的密度模型（先验）
+<ul>
+<li>也就是说，我们不需要显式的 $p({noisy}|{clean})$ 或 $p(clean)$ ，<strong>只要我们有根据它们分布的数据</strong></li>
+</ul>
+</li>
+<li>在许多图像还原任务中，损坏的输入数据的期望 是 我们寻求还原的干净目标
+<ul>
+<li>弱光摄影就是一个例子:长、无噪声曝光是短、独立、有噪声曝光的平均值</li>
+<li>考虑到这一点，上面的研究表明，只要有一对有噪声的图像，就可以学习去除摄像噪声，而不需要潜在的昂贵或困难的长时间曝光图像</li>
+<li>对其他损失函数也可以得出类似的结论</li>
+<li>例如，$L_1$ loss恢复了目标的中位数，这意味着可以训练神经网络修复<strong>具有显著(最高50%)异常值内容</strong>的图像，同样只需要访问这些损坏的图像对</li>
+</ul>
+</li>
+</ul>
+<h3 id="Practical-Experiments">Practical Experiments</h3>
+<p><img src="/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/1.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>作者对噪声目标训练的实际性能进行了实验研究
+<ul>
+<li>从简单噪声分布(高斯分布、泊松分布、伯努利分布)开始</li>
+<li>然后继续研究更加困难、难以解析的蒙特卡罗图像合成噪声</li>
+</ul>
+</li>
+<li>首先研究利用合成的加性高斯噪声对被破坏目标的影响
+<ul>
+<li>由于噪声的均值为零，使用  $L_2$ loss进行训练来恢复均值</li>
+</ul>
+</li>
+<li>显然，每个训练实例都要求做不可能的事情:<strong>网络不可能成功地将一个噪声实例转换成另一个</strong>。因此，在训练过程中，训练损失实际上并没有减少，而且损失梯度仍然相当大
+<ul>
+<li>但什么较大、噪声较大的梯度不会影响收敛速度?</li>
+<li>虽然激活梯度确实是有噪声的，但权值梯度实际上是相对干净的，因为<strong>高斯噪声在所有像素中是独立和同分布的</strong></li>
+</ul>
+</li>
+<li>最终作者得出这样的结论：对于加性高斯噪声，损坏的目标在两个级别上优于干净目标，不仅具有相同的性能，而且还具有更好的优势
+<ul>
+<li>在相同的潜在干净图像上得到更多的损坏实现</li>
+<li>有利于看到更多潜在的干净图像，即使每个图像只有两个损坏的实现</li>
+</ul>
+</li>
+<li>后面作者针对各种不同噪声，都做了一些实验，效果都还是很好的，不过有些噪声比较复杂，就稍微看了一眼，，其实也没咋看懂</li>
+<li>作者已经证明，简单的统计参数导致使用深度神经网络学习信号恢复的新能力
+<ul>
+<li><strong>在等于或接近使用干净目标数据的性能水平下，有可能在复杂损坏下恢复信号而无需观察干净信号，而无需对噪声或其他损坏进行显式统计表征</strong></li>
+<li>也就是说对于去噪来说，干净的数据是不必要的</li>
+<li>这并不是一个新发现:事实上，考虑一下经典的BM3D算法，它利用单个有噪声图像中的自相似斑块</li>
+<li>作者证明了之前证明的深度神经网络的高恢复性能同样可以在没有干净数据的情况下完全实现，所有这些都基于相同的通用深度卷积模型</li>
+<li>这为许多应用程序带来了显著的好处，消除了收集干净数据的潜在费力需求</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/2.png" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="😝😜😋">😝😜😋</h3>
+<p>这篇文章还是很神奇的，通过对损失的巧妙分析，证明了noise to noise的可能性。</p>
+<p>其实这样想想真的挺有道理的，他最终损失那里求得期望，只要你在目标图像那里加的噪声是平均期望为零，那么对整个网络的训练和学习是没有影响的，也就是说网络的参数学习其实是一样的，真的很巧妙。</p>
+<p>不过也是几年前的工作了，再看看最新的继续学习吧~</p>
+<h2 id="Noise2Void-Learning-Denoising-from-Single-Noisy-Images">Noise2Void: Learning Denoising from Single Noisy Images</h2>
+<h3 id="Abstract-2">Abstract</h3>
+<ul>
+<li>目前，图像去噪领域主要是基于一对有噪声的输入图像和干净的目标图像进行训练的判辩式深度学习方法
+<ul>
+<li>最近的研究表明，这种方法也可以在没有清洁目标的情况下进行训练</li>
+<li>可以使用独立的噪声图像对，这种方法被称为NOISE2NOISE (N2N)</li>
+</ul>
+</li>
+<li>在这里，作者提出了NOISE2VOID (N2V)，这是一种将这一想法更进一步的训练方案
+<ul>
+<li>它不需要有噪声的图像对，也不需要干净的目标图像</li>
+<li>N2V允许我们直接对要去噪的数据体进行训练，因此可以在其他方法无法应用时应用</li>
+</ul>
+</li>
+<li>特别有趣的是应用于生物医学图像数据，在这种情况下，通常不可能获得干净或噪声的训练目标</li>
+<li>作者也直言不能指望N2V比那些在训练中拥有更多可用信息的方法表现更好，但依旧优于无训练的去噪方法</li>
+<li>图像去噪就是检查一个有噪声的图像 $\boldsymbol{x} = \boldsymbol{s} +  \boldsymbol{n}$ ，把它分成两个部分：它的信号 $\boldsymbol{s}$ 和我们想要去除的有损噪声 $\boldsymbol{n}$ 的信号
+<ul>
+<li>去噪方法通常依赖于假设 $\boldsymbol{s}$ 中的像素值在统计上不是独立的</li>
+<li>也就是说，<strong>观察一个未知的像素的图像上下文，可以很好地让我们对像素强度做出合理的预测</strong></li>
+<li>大量的工作通过马尔可夫随机场(MRFs)明确地建模了这些相互依赖</li>
+<li>近年来，人们用各种方法训练卷积神经网络(CNNs)，从周围的图像块（感受野）中预测像素值</li>
+</ul>
+</li>
+<li>通常，这类系统需要噪声输入图像 $x_j$ 和它们对应的干净目标图像 $s_j$  (ground  truth)的训练对 $(x_j,s_j)$ 。然后对网络参数进行调整，<strong>使网络预测和已知ground  truth之间的误差度量(损失)最小化</strong></li>
+<li>每当ground  truth图像无法获得时，这些方法就无法进行训练，因此对于去噪任务来说就变得毫无用处</li>
+<li><strong>NOISE2NOISE (N2N)训练试图学习同一训练图像 $(s + n,s +  n’)$ 的独立退化版本对之间的映射，它们包含相同的信号 $s$ ，但独立绘制噪声 $n$ 和 $n’$</strong>
+<ul>
+<li>神经网络不可能学会完美地从一个有噪声的图像中预测另一个图像</li>
+<li>然而，在这个不可能的训练任务上训练的网络，可以产生收敛到与 使用ground  truth图像传统训练的网络相同的预测结果</li>
+<li>在无法获得ground  truth数据的情况下，N2N仍然可以实现去噪网络的训练。但是，这<strong>需要获取两幅具有独立噪声 $(n,n’)$ 的相同内容 $\boldsymbol{s}$ 的图像</strong></li>
+<li>尽管N2N训练有这些优点，但该方法至少有两个缺点
+<ul>
+<li>N2N训练需要成对的噪声图像</li>
+<li>只有在(准)静态场景中才能获得(准)常数 $\boldsymbol{s}$ 的这类成对数据</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>和N2N一样，N2V也利用了这样的观察：在没有干净的ground  truth真实数据的情况下，可以训练出高质量的去噪模型</li>
+<li>但与N2N或传统的训练方法不同，N2V也可以应用于既没有成对噪声图像又没有干净目标图像的数据，即N2V是一种<strong>自监督的训练方法</strong></li>
+<li>在这项工作中，作者做了两个简单的统计假设
+<ul>
+<li>信号 $\boldsymbol{s}$ 不是像素独立的</li>
+<li>在给定信号 $\boldsymbol{s}$ 的情况下，噪声 $\boldsymbol{n}$ 是有条件的像素独立的</li>
+</ul>
+</li>
+<li>虽然不能期望该方法优于训练过程中有额外信息可用的方法，但可以观察到，N2V结果的去噪性能仅略有下降，而且仍然优于BM3D
+<ul>
+<li>但由于可以N2V方法的使用条件十分简单，所以在一些场景中能够发挥巨大的实用价值</li>
+</ul>
+</li>
+<li>主要贡献：
+<ul>
+<li>引入NOISE2VOID，一种新的训练去噪cnn的方法，<strong>只需要单一的、有噪声的图像</strong></li>
+<li>将N2V训练的去噪结果与现有CNN训练方案和未经训练的方法的结果进行比较</li>
+<li>该方法具有良好的理论动机，并且对有效实施方式进行了详细说明</li>
+</ul>
+</li>
+<li>使用N2V时，我们必须坚持更窄的去噪任务，因为我们依赖于这样一个事实，即<strong>多噪声观测可以帮助我们检索真实信号</strong>。 但对于诸如 模糊blur 之类的一般扰动则不是这种情况</li>
+<li>我们在多个方法类别的交集中看到了N2V，我们将简要讨论其中每一个的最相关的作品
+<ul>
+<li>如上所述，这里省略了N2N</li>
+<li>Batson等人介绍了一种基于去除部分输入思想的神经网络和其他系统的自我监督训练方法。他们表明，这种方案不仅可以用于去除像素，也可以用于一般的变量组</li>
+<li><strong>Discriminative Deep Learning Methods，判别式深度学习方法：</strong>
+<ul>
+<li>Jain等首先使用cnn进行去噪任务。他们介绍了今天仍然被成功的方法所使用的基本设置：去噪被视为一个回归任务，CNN学习将其预测和干净的ground  truth真相数据之间计算的损失最小化</li>
+<li>Zhang等人通过引入一种非常深的CNN架构去噪，获得了最先进的结果。该方法基于残差学习的思想。他们的CNN试图预测的不是干净的信号，而是每个像素处的噪声，以便在后续步骤中对信号进行计算。这种结构允许他们训练一个单一的CNN去噪被不同的噪声级别损坏的图像。它们的架构完全省去了池化层</li>
+<li>大约在同一时间，Mao等人 为去噪任务引入了一种互补的非常深入的编码器-解码器架构。它们也利用残差学习，但通过在相应的编码和解码模块之间引入对称的跳跃连接来做到这一点。他们能够使用一个单一的网络来处理不同级别的噪声</li>
+<li>Tai等人将循环持久记忆单元作为其体系结构的一部分，并进一步改进了以前的方法</li>
+<li>最近，Weigert等人提出了用于荧光显微镜数据背景下图像恢复的CARE软件框架。他们通过记录成对的低曝光和高曝光图像来获取训练数据。这可能是一个困难的过程，因为生物样本不能在两次暴露之间移动。我们使用他们的实现作为我们实验的起点，包括他们特定的U-Net架构</li>
+</ul>
+</li>
+<li><strong>Internal Statistics Methods，内部统计方法：</strong>
+<ul>
+<li>内部统计方法不需要事先根据ground  truth数据进行训练。相反，他们可以直接应用到一个测试图像，他们提取所有需要的信息。N2V可以被视为这一类别的成员，因为它可以直接对测试图像进行训练</li>
+<li>Buades等人引入了非局部均值，这是一种经典的去噪方法。与N2V一样，该方法根据噪声环境预测像素值</li>
+<li><strong>BM3D是Dabov等人提出的一种经典的基于内部统计的方法</strong>。它基于这样一种理念，即自然图像通常包含重复的图案。BM3D对图像进行去噪处理的方法是<strong>将相似的模式分组并进行联合滤波</strong>。这种方法的缺点是<strong>测试期间的计算成本</strong>。相比之下，<strong>N2V只需要在训练期间进行大量计算。一旦一个CNN被训练为一种特定的数据，它可以有效地应用到任何数量的附加图像</strong></li>
+<li>Ulyanov等人表明，cnn的结构与自然图像的分布有内在的共鸣，可以用于图像恢复，而不需要额外的训练数据。他们将一个随机但恒定的输入输入到一个CNN中，然后训练它来近似一个单一的有噪声的图像作为输出。Ulyanov等人发现，当他们在收敛前的正确时刻中断训练过程时，网络产生一幅正则化去噪图像作为输出</li>
+</ul>
+</li>
+<li><strong>Generative Models，生成模型：</strong>
+<ul>
+<li>Chen等人提出了一种基于生成对抗网络(GANs)的图像恢复方法。作者使用未配对的训练样本组成的噪声和干净的图像。GAN生成器学习生成噪声并创建对应的干净和有噪声图像对，这些图像反过来在传统监督设置中用作训练数据。与N2V不同的是，这种方法在训练过程中需要干净的图像</li>
+<li>Van Den  Oord等人提出了一个生成模型，不过并不是用于去噪，但在思想上类似于N2V。像N2V一样，他们训练一个神经网络，<strong>根据其周围环境预测一个看不见的像素值</strong>。然后，该网络被用来生成合成图像。然而，当我们为回归任务训练我们的网络时，它们预测每个像素的概率分布。另一个区别在于感受野的结构。当他们使用在图像上移动的不对称结构时，我们总是<strong>在正方形感受野中掩盖中心像素</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Methods">Methods</h3>
+<ul>
+<li>
+<p><strong>Image Foamation，图像构成：</strong></p>
+<ul>
+<li>图像 $\boldsymbol{x} = \boldsymbol{s} +  \boldsymbol{n}$ 的生成是由联合分布绘制的：</li>
+<li>$p(\boldsymbol{s},\boldsymbol{n}) = p(\boldsymbol{s})p(\boldsymbol{n}|\boldsymbol{s})$</li>
+<li>假设 $p(\boldsymbol{s})$ 是一个任意分布，满足以下条件：</li>
+<li>$p(s_i|s_j) \not = p(s_i)$</li>
+<li>对于彼此在一定半径内的两个像素 $i$ 和 $j$ ，<strong>也就是说信号 $\boldsymbol{s}_i$ 的像素在统计上不是独立的</strong></li>
+<li>关于噪声 $\boldsymbol{n}$ ，我们假设是以下形式的条件分布</li>
+<li>$p(\boldsymbol{n}|\boldsymbol{s}) = \prod_{i} p\left(\boldsymbol{n}_{i} \mid \boldsymbol{s}_i \right)$</li>
+<li><strong>也就是说噪声的像素值 $\boldsymbol{n}_i$ 在给定信号的情况下是条件独立的</strong></li>
+<li>进一步假设<strong>噪声为零均值</strong>，从而可以得到</li>
+<li>$\mathbb{E}[\boldsymbol{n}_i] = 0 \\mathbb{E}[\boldsymbol{x}_i] = \boldsymbol{s}_i$</li>
+<li>也就是说，<strong>如果我们获取多个图像，相同的信号，但不同的噪声实现，并将它们平均，结果将接近真实的信号</strong>
+<ul>
+<li>这方面的一个例子是使用固定的三脚架相机记录静态场景的多张照片</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Traditional Supervised Training，传统的监督训练：</strong></p>
+<ul>
+<li>训练一个CNN来实现从 $\boldsymbol{x}$ 到 $\boldsymbol{s}$ 的映射。我们将假设一个全卷积网络(FCN)，以一幅图像作为输入，预测另一幅作为输出</li>
+<li>在这里，我们想对这样一个网络采取稍微不同但相同的观点：
+<ul>
+<li>CNN的<strong>输出中每个像素预测 $\hat {\boldsymbol{s}}<em>i$ 具有输入像素的一定receptive field 接受场 $\boldsymbol{x}</em>{RF(i)}$ ，即影响像素预测的像素集合</strong>。一个像素的接受场通常是像素周围的一个正方形区域</li>
+<li><strong>基于此考虑，我们也可以将CNN看作一个函数，以patch  $\boldsymbol{x}_{RF(i)}$ 作为输入，对patch中心的单个像素 $i$ 输出预测 $\hat {\boldsymbol{s}}_i$</strong></li>
+</ul>
+</li>
+<li>按照这个思路，可以通过提取重叠的小块，并将其逐个输入到网络中，来实现对整个图像的去噪。因此，我们可以将CNN定义为函数
+<ul>
+<li>$f(\boldsymbol{x}_{RF(i)};\theta) = \hat {\boldsymbol{s}}_i$</li>
+<li>其中 $\theta$ 为我们要训练的CNN参数的向量</li>
+</ul>
+</li>
+<li>在传统的监督训练中，我们得到一组训练对 $\left(\boldsymbol{x}^{j}, \boldsymbol{s}^{j}\right)$ ，每个训练对由一个有噪声的输入图像 $x^j$ 和一个干净的ground truth目标 $s^j$ 组成</li>
+<li>通过应用我们基于patch的CNN视图，我们可以看到我们的训练数据成对 $\left(\boldsymbol{x}_{RF(i)}^{j}, \boldsymbol{s}_i^{j}\right)$
+<ul>
+<li>其中 $\boldsymbol{x}_{RF(i)}^j$ 是从训练输入图像 $\boldsymbol{x}^j$ 中提取的像素 $i$ 周围的一个patch， $\boldsymbol{s}_i^j$ 为对应的目标像素值（从同位置的ground truth图像 $\boldsymbol{s}^j$ 中提取）</li>
+</ul>
+</li>
+<li>我们现在使用这些对来调整参数 $\theta$  以最小化像素损失
+<ul>
+<li>$\underset{\boldsymbol{\theta}}{\arg \min } \sum_{j} \sum_{i} L\left(f\left(\boldsymbol{x}<em>{\mathrm{RF}(i)}^{j} ; \boldsymbol{\theta}\right)=\hat{\boldsymbol{s}}</em>{i}^{j}, \boldsymbol{s}_{i}^{j}\right)$</li>
+<li>这里我们考虑标准的均方误差损失MSE loss</li>
+<li>$L\left(\hat{s}<em>{i}^{j}, s</em>{i}^{j}\right)=\left(\hat{s}<em>{i}^{j}-s</em>{i}^{j}\right)^{2}$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Noise2Noise Training：</strong></p>
+<ul>
+<li>N2N使我们能够应付没有ground truth训练数据的情况。 相反，我们从嘈杂的图像对 $(\boldsymbol{x}^j, \boldsymbol{x}^{\prime j})$开始，其中
+<ul>
+<li>$\boldsymbol{x}^{j}=\boldsymbol{s}^{j}+\boldsymbol{n}^{j}$ and $\boldsymbol{x}^{\prime j}=\boldsymbol{s}^{j}+\boldsymbol{n}^{\prime j}$,</li>
+<li>也就是说，这两幅训练图像在噪声分量 $\boldsymbol{n}^{j}$ 和 $\boldsymbol{n}^{\prime j}$ 上是相同的，在我们的图像生成模型中，它们只是来自同一分布的两个独立样本</li>
+</ul>
+</li>
+<li>现在，我们可以再次应用基于patch的视角，将训练数据视为对 $\left(\boldsymbol{x}_{RF(i)}^{j}, \boldsymbol{x}_i^{\prime j}\right)$ ，由从 $\boldsymbol{x}<em>j$ 提取的噪声输入patch $\boldsymbol{x}</em>{RF(i)}^j$ 和从 $\boldsymbol{x}^{\prime j}$ 的位置 $i$ 提取的噪声目标 $\boldsymbol{x}_i^{\prime j}$ 组成</li>
+<li>使用 $\underset{\boldsymbol{\theta}}{\arg \min } \sum_{j} \sum_{i} L\left(f\left(\boldsymbol{x}<em>{\mathrm{RF}(i)}^{j} ; \boldsymbol{\theta}\right)=\hat{\boldsymbol{s}}</em>{i}^{j}, \boldsymbol{s}_{i}^{j}\right)$ 来最小化损失，但这里使用的是噪声目标 $\boldsymbol{x}_i^{\prime j}$ ，而不是ground truth  $\boldsymbol{s}_i^j$
+<ul>
+<li>即使我们试图学习从噪声输入到噪声目标的映射，训练仍然会收敛到正确的解</li>
+<li>这一现象的关键在于<strong>噪声输入的期望值等于干净的信号</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Noise2Void Training：</strong></p>
+<p><img src="/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/3.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>这里我们更进一步。我们建议<strong>从单一的有噪声的训练图像 $\boldsymbol{x}^j$ 中获得我们的训练样本的两个部分：输入和目标</strong></li>
+<li>如果我们简单地提取一个patch作为输入，并使用它的中心像素作为目标。那么我们的网络将直接将<strong>输入色块中心的值映射到输出</strong>中来学习标识</li>
+<li>为此我们假设该网络的接收域  $\tilde{ \boldsymbol{x}}_{RF(i)}^j$ 在<strong>其中心有一个blind-spot 盲点</strong></li>
+<li>这样改网络受正方形邻域内除其所在位置的输入像素 $\boldsymbol{x}_i$ 之外的所有输入像素的影响
+<ul>
+<li>我们把这种网络称为盲点网络</li>
+</ul>
+</li>
+<li>盲点网络可以使用上述任何一种训练方案进行训练
+<ul>
+<li>与普通的网络一样，我们可以分别使用一个干净的目标或一个有噪声的目标来进行传统的训练或N2N</li>
+<li>盲点网络可用于预测的信息要少一些，我们可以预期，与正常网络相比盲点网络的准确性会略微下降</li>
+<li>然而考虑到整个接受场中只有一个像素被移除，我们可以假设它仍然表现得相当好</li>
+</ul>
+</li>
+<li>盲点体系结构的基本优点是它无法学习自身（ The essential advantage of the blind-spot architecture is its inability to learn the identity ）
+<ul>
+<li>由于我们假设<strong>噪声在给定信号的情况下是逐像素独立的，因此相邻像素不携带有关 $\boldsymbol{n}_i$ 值的信息</strong></li>
+<li>因此，网络不可能产生优于其先验期望值的估计值</li>
+<li>然而，<strong>信号被假定包含统计相关性。因此，网络仍然可以通过观察其周围环境来估计一个像素的信号</strong>  $\boldsymbol{s}_i$</li>
+</ul>
+</li>
+<li>因此，盲点网络允许我们<strong>从相同的有噪声的训练图像中提取输入的patch和目标值</strong>。我们可以通过最小化经验风险来训练它
+<ul>
+<li>$\underset{\boldsymbol{\theta}}{\arg \min } \sum_{j} \sum_{i} L\left(f\left(\tilde{\boldsymbol{x}}<em>{\mathrm{RF}(i)}^{j} ; \boldsymbol{\theta}\right), \boldsymbol{x}</em>{i}^{j}\right)$</li>
+</ul>
+</li>
+<li>我们已经看到盲点网络原则上可以只用单个的有噪声的训练图像来训练，为此作者提出了一种mask方案，用任何标准的CNN都能达到相同的性能：我们用<strong>从周围区域随机选取的值来替换每个输入patch中心的值</strong>。这有效地消除了像素的信息，并防止网络学习到自身</li>
+</ul>
+</li>
+<li>
+<p><strong>Implementation Details：</strong></p>
+<ul>
+<li>如果我们天真地执行上面的训练方案，不幸的是它仍然不是非常有效：我们必须处理整个patch来计算单个输出像素的梯度。为了缓解这个问题，我们使用下面的近似技术
+<ul>
+<li>给定一个有噪声的训练图像 $\boldsymbol{x}_i$ ，我们随机提取大小为64 × 64像素的小块，这比我们网络的感受野大</li>
+<li>在每个patch中，我们随机选择N个像素，采用分层采样避免聚类</li>
+<li>然后我们屏蔽这些像素，并<strong>使用原始的噪声输入值作为它们所在位置的目标</strong></li>
+<li>这样我们可以同时计算它们所有的梯度，同时忽略预测图像的其余部分</li>
+<li>这是通过使用标准的Keras流水线实现的，该流水线带有专门的损失函数，除选定的像素外，该函数对所有像素都为零</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Experiment">Experiment</h3>
+<ul>
+<li>实验实现的部分就不写了，效果没有很大的提升，不过在一些特殊领域中，可以发挥他的作用</li>
+</ul>
+<p><img src="/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/4.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>图5:N2V训练网络的故障案例
+<ul>
+<li>(a)地面真值测试图像中单个像素误差最大的作物(用红色箭头表示)</li>
+<li>(b)传统训练的网络在同一图像上的结果</li>
+<li>©我们N2V训练网络的结果。网络无法预测这个明亮和孤立的像素</li>
+<li>(d)总误差最大的ground  truth测试图像中的作物</li>
+<li>(e)传统训练的网络在同一图像上的结果</li>
+<li>(f)我们N2V训练网络的结果</li>
+<li>两种网络都不能保留图像的颗粒结构，但N2V训练的网络丢失了更多的高频细节</li>
+</ul>
+</li>
+<li>在这一部分最后，作者也指出了该方法的很多问题
+<ul>
+<li>传统网络和N2V都不能保留图像的颗粒结构</li>
+<li>N2V训练的网络丢失了更多的高频细节</li>
+</ul>
+</li>
+<li>作者认为这些错误是一个很好的说明，说明了N2V方法的局限性——<strong>N2V的一个基本假设是信号的可预测性</strong>
+<ul>
+<li>图5中显示的两个测试图像都包含了难以预测的高度不规则性</li>
+<li><strong>从周围环境预测一个像素的信号越困难，N2V预测的误差预计就越大</strong>，当然，对于传统训练和N2N也是如此</li>
+<li>然而，传统方法可以利用感受野中心像素的值，但这个值被N2V mask了</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/5.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>图6:结构噪声对N2V训练网络预测的影响结构噪声违背了我们认为噪声与像素无关的假设(参见公式3)。
+<ul>
+<li>(a)一张被结构噪声污染的照片。隐藏的棋盘图案几乎看不见</li>
+<li>(b)传统训练的CNN去噪结果</li>
+<li>©  N2V训练的CNN去噪结果。噪声的独立成分被去除，但结构成分保留</li>
+<li>(d)真实显微镜数据中的结构化噪声</li>
+<li>(e)经过N2V训练的CNN去噪结果。噪音中隐藏的模式被揭示出来了</li>
+<li>注意，由于缺乏训练数据，在这种情况下不可能使用N2N或传统的训练方案</li>
+</ul>
+</li>
+<li>在图6中，我们说明了我们方法的另一个限制——<strong>N2V无法区分违背像素独立性假设的信号和结构噪声</strong>
+<ul>
+<li>我们通过将人工生成的结构噪声应用于图像来演示这一行为</li>
+<li>N2V训练的CNN去除了噪声中不可预测的成分，但揭示了隐藏的模式</li>
+<li>有趣的是，我们在Fluo-C2DL-MSC数据集的真实显微镜数据中发现了同样的现象</li>
+<li>用N2V训练的CNN去噪揭示了<strong>成像系统的系统性错误，可见为条纹图案</strong></li>
+</ul>
+</li>
+<li><img src="/2021/04/11/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x14/6.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>总结：
+<ul>
+<li>作者提出了NOISE2VOID，一种新的训练方案，它只需要单一的噪声采集来训练去噪的cnn
+<ul>
+<li>证明了N2V在各种成像方式上的适用性，如摄影、荧光显微镜和低温透射电子显微镜</li>
+<li>只要我们的信号可预测和像素独立噪声的初始假设得到满足，N2V训练的网络就可以与传统的和N2N训练的网络竞争</li>
+<li>此外，我们还分析了违反这些假设时N2V训练的行为</li>
+</ul>
+</li>
+<li>作者相信，正如我们在这里提出的NOISE2VOID训练方案，将允许我们训练强大的去噪网络
+<ul>
+<li>我们已经展示了多个例子，如何在首先要处理的同一数据体上训练去噪网络</li>
+<li>因此，N2V训练将为大量应用打开大门，例如生物医学图像数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="😝😜😋-2">😝😜😋</h3>
+<p>这样也是篇很神奇的文章，在N2N的基础上更进了一步。其实文章的主题把这个已经介绍的很详细了，我就不想在单独写了，相关工作部分也说了很多。不过主要思想其实就是那个图，使用一个mask思想加上N2N，真的很巧妙。</p>
+<p>虽然实验结果不是很棒，但他的应用场景还是很多的，而且效果也要好于非训练方法。</p>
+<p>这两篇文章的思想真的都特别创新感觉，尤其是N2N，然后在此基础上进一步设计得到N2V，可能直觉感觉不太可能，但如果去看数学理论部分的话，真的是可以实现的，而且效果也是有的。同时这几个实验也都做的好棒，还能对应的到一些有趣的现象解释，真的神奇~</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A2%9E%E5%BC%BA%E4%B8%8E%E5%9B%BE%E5%83%8F%E6%81%A2%E5%A4%8D/" class="print-no-link">#图像增强与图像恢复</a>
+      
+        <a href="/tags/%E9%AB%98%E5%85%89%E8%B0%B1%E5%9B%BE%E5%83%8F%E5%8E%BB%E5%99%AA/" class="print-no-link">#高光谱图像去噪</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>论文阅读-0x14</div>
+      <div>http://example.com/2021/04/11/论文阅读-0x14/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年4月11日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x15/" title="论文阅读-0x15">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">论文阅读-0x15</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/06/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x13/" title="论文阅读-0x13">
+                        <span class="hidden-mobile">论文阅读-0x13</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

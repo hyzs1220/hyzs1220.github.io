@@ -1,0 +1,896 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="论文的阅读笔记： 《 NBNet: Noise Basis Learning for Image Denoising with Subspace Projection 》, [code] ,   CVPR 2021 《 Invertible Denoising Network: A Light Solution for Real Noise Removal 》,   [code],  CVPR 2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读-0x18">
+<meta property="og:url" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="论文的阅读笔记： 《 NBNet: Noise Basis Learning for Image Denoising with Subspace Projection 》, [code] ,   CVPR 2021 《 Invertible Denoising Network: A Light Solution for Real Noise Removal 》,   [code],  CVPR 2">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/1.png">
+<meta property="og:image" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/1.png">
+<meta property="og:image" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/2.png">
+<meta property="og:image" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/3.png">
+<meta property="og:image" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/4.png">
+<meta property="og:image" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/5.png">
+<meta property="og:image" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/6.png">
+<meta property="og:image" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/7.png">
+<meta property="og:image" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/8.png">
+<meta property="og:image" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/9.png">
+<meta property="article:published_time" content="2021-05-22T12:49:06.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.572Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="图像增强与图像恢复">
+<meta property="article:tag" content="高光谱图像去噪">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/1.png">
+  
+  
+  
+  <title>论文阅读-0x18 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="论文阅读-0x18"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-05-22 20:49" pubdate>
+          2021年5月22日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">论文阅读-0x18</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>论文的阅读笔记：</p>
+<p>《 NBNet: Noise Basis Learning for Image Denoising with Subspace Projection 》, <a target="_blank" rel="noopener" href="https://github.com/megvii-research/NBNet">[code]</a> ,   CVPR 2021</p>
+<p>《 Invertible Denoising Network: A Light Solution for Real Noise Removal 》,   <a target="_blank" rel="noopener" href="https://github.com/Yang-Liu1082/InvDN">[code]</a>,  CVPR 2021</p>
+<span id="more"></span>
+<h2 id="NBNet-Noise-Basis-Learning-for-Image-Denoising-with-Subspace-Projection">NBNet: Noise Basis Learning for Image Denoising with Subspace Projection</h2>
+<h3 id="Abstract">Abstract</h3>
+<ul>
+<li>
+<p>一种新的图像去噪框架——NBNet</p>
+</li>
+<li>
+<p>不同于以往的工作，作者提出从一个新的角度解决这一具有挑战性的问题:<strong>通过图像自适应投影来降噪</strong></p>
+<ul>
+<li>具体来说，我们提出通过<strong>在特征空间中学习一组重构基</strong>，训练出一个能分离信号和噪声的网络</li>
+<li>然后，通过选择信号子空间对应的基，将输入投影到该空间，实现图像去噪</li>
+</ul>
+</li>
+<li>
+<blockquote>
+<p>子空间方法用于图像分析是相当经典的，经常见到的是傅立叶变换、小波去噪、SVD。基本原理就是把图像拆分为一组基，只要找到噪声所处的基，把这部分去掉就可以了。</p>
+</blockquote>
+</li>
+<li>
+<p>作者认为投影可以自然地保持输入信号的局部结构，特别是在光线较暗或纹理较弱的区域。为此，作者提出了SSA，这是一个非局部子空间注意力模块，明确设计用于学习基的生成和子空间投影</p>
+</li>
+<li>
+<p>进一步将SSA与NBNet结合，NBNet是一种用于端到端图像去噪的UNet结构网络</p>
+</li>
+<li>
+<p>作者对基准进行了评估，包括SIDD和DND,  NBNet在PSNR和SSIM上实现了最先进的性能，且计算成本显著降低</p>
+</li>
+<li>
+<p>图像去噪主要是从有噪声污染的 $y$ 中恢复出 干净信号 $x$ ，去除噪声信息 $n$</p>
+<ul>
+<li>$y = x + n$</li>
+</ul>
+</li>
+<li>
+<p>但如果<strong>干净信号 $x$ ，去除噪声信息 $n$ 两者都未知或者难以分离</strong>，那么这种问题是不适用上述方法的</p>
+<ul>
+<li>为此，许多去噪方法利用图像先验和噪声模型从噪声观测中估计图像或噪声</li>
+<li>传统的NLM和BM3D方法利用了图像的局部相似性和噪声的独立性</li>
+<li>小波去噪方法利用了图像在变换域的稀疏性</li>
+<li>最近的基于深度神经网络(DNN)的去噪方法通常隐式地利用从大量成对训练数据中学习到的图像先验和噪声分布
+<ul>
+<li>但在诸如<strong>弱纹理或高频细节等困难场景</strong>中恢复高质量图像仍然具有挑战性</li>
+<li>作者观察到，卷积网络通常依赖于局部滤波器对噪声和信号分离的响应。而在低信噪比(SNR)的情况下，如果没有额外的全局结构信息，局部响应很容易被混淆</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/1.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>在本文中，作者通过投影来利用非局部的图像信息，投影方式如上图所示
+<ul>
+<li>由输入图像生成一组图像基向量，然后在这些基向量张成的子空间中重构图像</li>
+<li><strong>由于自然图像通常处于低秩信号子空间中，通过适当地学习和生成基向量，重建图像可以保留大部分原始信息，抑制与生成基集无关的噪声</strong></li>
+</ul>
+</li>
+<li>基于这种思想，作者提出了NBNet，NBNet的总体架构是一个常用的UNet，除了关键成分子空间注意力(SSA)模块，该模块以端到端方式学习子空间基和图像投影</li>
+<li>总结如下：
+<ul>
+<li>从<strong>子空间投影</strong>的新角度分析了图像去噪问题，设计了一个简单有效的SSA模块来学习子空间投影，该模块可以插入到普通的CNN中</li>
+<li>提出NBNet，一个<strong>带有SSA模块的UNet</strong>，用于基于投影的图像去噪</li>
+<li>在许多流行的基准上，NBNet在PSNR和SSIM方面都实现了最先进的性能</li>
+<li>对基于投影的图像去噪进行了深入的分析，证明了这是一个有前途的探索方向</li>
+</ul>
+</li>
+<li>网络架构设计和噪声建模是基于CNN方法的两个主要方向
+<ul>
+<li>DnCNN演示了残差学习和批归一化对深度cnn去噪网络的有效性</li>
+<li>后来，为了扩大接收场或平衡效率，又提出了更多的网络结构，如扩张卷积、跳跃连接的自动编码器、ResNet、递归分支反卷积网络(RBDN)</li>
+</ul>
+</li>
+<li>在这项工作中，作者采用了一个<strong>UNet风格的体系结构与一个新的子空间注意模块</strong>。不同于使用注意模块进行区域或特征选择的方法，<strong>SSA的设计目的是学习子空间基和图像投影</strong></li>
+<li>真实图像噪声的合成问题也得到了广泛的研究
+<ul>
+<li>为了接近真实噪声，之前的工作中已经探讨了多种合成噪声，如高斯-泊松、摄像机内过程仿真、高斯混合模型(GMM)和gan产生的噪声等</li>
+<li>已经证明，从合成数据中适当训练的网络可以很好地概括到真实数据</li>
+<li>不同于以往的噪声建模，该方法研究了<strong>子空间基的生成，并通过投影来提高降噪效果</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="Method">Method</h3>
+<h4 id="Subspace-Projection-with-Neural-Network">Subspace Projection with Neural Network</h4>
+<p><img src="/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/1.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>如上图，投影方法主要有两个步骤：
+<ul>
+<li><strong>Basis generation：从图像特征生成子空间的基向量</strong></li>
+<li><strong>Projection：将特征映射变换到信号子空间</strong></li>
+</ul>
+</li>
+<li>假设 $\boldsymbol{X}<em>{1}, \boldsymbol{X}</em>{2} \in \mathbb{R}^{H \times W \times C}$ 是从一幅图像中得到的两个特征向量，它们是一个CNN的中间激活，可以在不同的层，但具有相同的大小
+<ul>
+<li>首先基于 $\boldsymbol{X}<em>{1}, \boldsymbol{X}</em>{2}$ 估计 $K$ 个基向量 $[v_1,v_2,\dots,v_K]$ ，向量 $v_i \in \mathbb{R}^{N}$ 是信号子空间的基向量，其中 $N=HW$</li>
+<li>然后将 $\boldsymbol{X}_{1}$ 变换到子空间 ${ v }$</li>
+</ul>
+</li>
+<li>设θ参数化的函数 $f_{\theta}:\left(\mathbb{R}^{H \times W \times C}, \mathbb{R}^{H \times W \times C}\right) \rightarrow \mathbb{R}^{N \times K}$ ，基向量的生成可以表示成：
+<ul>
+<li>$V = f_\theta (X_1,X_2 )$</li>
+<li>这里作者用一个小型卷积网络来实现该函数</li>
+<li>这里的实现就是沿着通道轴将 $\boldsymbol{X}<em>{1}, \boldsymbol{X}</em>{2}$ 拼接，然后送到一个浅层残差卷积块中，输出通道为K</li>
+<li>在训练过程中以端到端方式更新基向量生成块的权重和偏差</li>
+<li><img src="/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/2.png" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+<li>已知上述的 其列是K维信号子空间 $\mathcal{V} \subset \mathbb{R}^{N}$ 的基向量 的矩阵 $\boldsymbol{V} \subset \mathbb{R}^{N}$
+<ul>
+<li>可以通过正交线性投影将图像特征向量 $\boldsymbol{X}_1$ 投影到 $\mathcal{V}$ 上</li>
+<li>设 $\boldsymbol{P}: \mathbb{R}^{N} \rightarrow \mathcal{V}$ 是变换到信号子空间的正交投影矩阵，可以通过 $\boldsymbol{V}$ 计算得到
+<ul>
+<li>$\boldsymbol{P}=\boldsymbol{V}\left(\boldsymbol{V}^{\boldsymbol{\top}} \boldsymbol{V}\right)^{-1} \boldsymbol{V}^{\boldsymbol{\top}}$</li>
+<li>这里为了是基向量比此正交，所以需要正规化项 $\left(\boldsymbol{V}^{\boldsymbol{\top}} \boldsymbol{V}\right)^{-1}$</li>
+</ul>
+</li>
+<li>最后，图像特征表示 $\boldsymbol{X}_1$ 可以在信号子空间中被重构为 $\boldsymbol{Y}$
+<ul>
+<li>$\boldsymbol{Y} = \boldsymbol{P}\boldsymbol{X}_1$</li>
+</ul>
+</li>
+<li>投影中的操作是带有某些适当重塑的纯线性矩阵操作，这是完全可微的，并且可以在现代神经网络框架中轻松实现</li>
+</ul>
+</li>
+<li>结合基生成和子空间投影，作者构造了所提出的SSA模块的结构</li>
+<li><img src="/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/3.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>这样回过头来看看这部分的实现，感觉还是蛮简单的，感觉就是加了几层卷积层，然后来学习一个所谓的基向量，然后基向量来对特征向量进行重构，确实很像是个注意力模块，但和注意力模块的功能也不太一样，它主要是为了进行重构嘛，，确实和作者说的一样</li>
+</ul>
+<h4 id="NBNet-Architecture-and-Loss-Function">NBNet Architecture and Loss Function</h4>
+<p><img src="/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/4.png" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>提出的SSA模块被放置在每个跳跃连接中
+<ul>
+<li>由于来自底层的特征映射包含更详细的原始图像信息，将底层特征映射作为 $X_1$ ，高级特征作为 $X_2$ ，并将它们输入到SSA模块中</li>
+<li>换句话说，<strong>在上采样的高级特征的引导下，将跳跃连接的低级特征映射到信号子空间</strong></li>
+<li>在输出到下一个解码器阶段之前，投影的特征与原始的高级特征融合</li>
+</ul>
+</li>
+<li>与传统的类unet体系结构在每个译码阶段直接融合低层和高层特征图相比，NBNet的主要区别在于融合前通过SSA模块对低层特征进行投影</li>
+<li>然后网络结构中的具体实现细节就不写了，直接看上面的图吧</li>
+<li>损失函数也很简单
+<ul>
+<li>$\mathcal{L}(G, \boldsymbol{x}, \boldsymbol{y})=|\boldsymbol{x}-G(\boldsymbol{y})|_{1}$</li>
+</ul>
+</li>
+</ul>
+<h3 id="Experiment">Experiment</h3>
+<p>主要写一下消融实验部分</p>
+<ul>
+<li><img src="/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/5.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>跳跃连接中的Blocks和SSA都对网络性能有提升，不过单加SSA和单加Blocks性能十分相近，但计算成本要低很多</li>
+<li><img src="/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/6.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>UNet+Blocks+SSA作为基线，然后用其他替代方案替换SSA模块，如non-local , Attention-UNet和SSA（点积，其中投影被点积操作替代）</li>
+<li><img src="/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/7.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>K值的影响
+<ul>
+<li>当基向量的个数K为32时，模型不收敛
+<ul>
+<li>在这个设置中，由于第一阶段的通道数也是32个，SSA模块不能有效地作为子空间投影，因为K等于全维大小</li>
+<li>另一方面，子空间的高维可能会增加模型拟合的难度，从而造成训练的不稳定性</li>
+</ul>
+</li>
+<li>如果K =  1，则子空间中保留的信息不足，在跳连过程中会造成严重的信息丢失</li>
+<li>将K设置为8和16可以获得类似的性能，并且SSA模块可能创建低维、紧凑或可分类的子空间</li>
+<li>由此可见，子空间维数K是一个合理范围内的鲁棒超参数</li>
+</ul>
+</li>
+<li><img src="/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/8.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>关于投影的不同选项:如何生成基向量以及如何为投影选择特征映射</li>
+<li><img src="/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/9.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>选取一个样本图像并检查由SSA模块生成的子空间，可以看到 细微的纹理在基底上较好的学了出来，NBNet在弱纹理区域表现优于其他方法，能够 更好的实现图像细节的修复
+<ul>
+<li>上图左侧所示，16个通道中有许多包含均匀地跨越整个图像patch的点模式</li>
+<li>这种改进应归因于SSA模块创建的非局部相关性：<strong>上部的弱纹理由图像其他部分中类似的出现所支持</strong>，并且投影通过组合图像来重构纹理 全局确定的系数的基础</li>
+<li>与此相反，传统的卷积神经网络依赖于固定值局部滤波器的响应和来自降采样特征的粗糙信息。当过滤响应不显著且粗糙信息模糊时，例如在弱纹理区域，非局部信息几乎不能改善局部响应</li>
+</ul>
+</li>
+</ul>
+<h3 id="😝😜😋">😝😜😋</h3>
+<p>这样整篇读完，还是感觉比较简单的，但是这种想法或者说是说法吧，确实挺有道理的，去子空间做去噪任务，而且看作者的效果确实很棒</p>
+<h2 id="Invertible-Denoising-Network-A-Light-Solution-for-Real-Noise-Removal">Invertible Denoising Network: A Light Solution for Real Noise Removal</h2>
+<h3 id="Abstract-2">Abstract</h3>
+<ul>
+<li>可逆网络（Invertible networks ）在图像去噪方面有各种各样的好处，因为它们是轻量级的，信息无损的，并且在反向传播过程中节省内存</li>
+<li>然而，应用可逆模型去噪具有挑战性，因为输入是有噪声的，而可逆输出是干净的，遵循两种不同的分布</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A2%9E%E5%BC%BA%E4%B8%8E%E5%9B%BE%E5%83%8F%E6%81%A2%E5%A4%8D/" class="print-no-link">#图像增强与图像恢复</a>
+      
+        <a href="/tags/%E9%AB%98%E5%85%89%E8%B0%B1%E5%9B%BE%E5%83%8F%E5%8E%BB%E5%99%AA/" class="print-no-link">#高光谱图像去噪</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>论文阅读-0x18</div>
+      <div>http://example.com/2021/05/22/论文阅读-0x18/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年5月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/06/05/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x19/" title="论文阅读-0x19">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">论文阅读-0x19</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/10/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x17/" title="论文阅读-0x17">
+                        <span class="hidden-mobile">论文阅读-0x17</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

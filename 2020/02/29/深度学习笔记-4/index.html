@@ -1,0 +1,1140 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="生成式对抗网络&amp;实践">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习笔记-4">
+<meta property="og:url" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="生成式对抗网络&amp;实践">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582617712264.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582632077385.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582632804680.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582632769055.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582730872597.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582632289057.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582730150790.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582633035617.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582730817910.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582633084889.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582723689966.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582723814551.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582728272282.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582732893033.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582789203990.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582789168180.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582730817910.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582872903044.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582874596249.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582881754386.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582882144751.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582883657973.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582883701722.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582888577293.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582888937806.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582890752823.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582891406092.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582897625212.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582898041996.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582962063550.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582962144960.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582962180368.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582962229023.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582962960739.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582963179840.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582963316159.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582963520300.png">
+<meta property="og:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582964132072.png">
+<meta property="article:published_time" content="2020-02-29T08:23:01.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.569Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582617712264.png">
+  
+  
+  
+  <title>深度学习笔记-4 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="深度学习笔记-4"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-29 16:23" pubdate>
+          2020年2月29日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">深度学习笔记-4</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>生成式对抗网络&amp;实践</p>
+<span id="more"></span>
+<h2 id="生成式对抗网络">生成式对抗网络</h2>
+<h3 id="GAN">GAN</h3>
+<p>Generative Adversarial Nets, 生成式对抗网络</p>
+<ul>
+<li>生成模型
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582617712264.png" srcset="/img/loading.gif" lazyload alt="1582617712264"></li>
+<li>生成式对抗网络（GAN）的目的是训练这样一个生成模型，生成我们想要的数据</li>
+</ul>
+</li>
+<li>GAN框架
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582632077385.png" srcset="/img/loading.gif" lazyload alt="1582632077385"></li>
+<li>判别器(Discriminator)：区分真实(real)样本和虚假(fake)样本。对于真实样本，尽可能给<br>
+出高的评分1；对于虚假数据，尽可能给出低个评分0
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582632804680.png" srcset="/img/loading.gif" lazyload alt="1582632804680"></li>
+</ul>
+</li>
+<li>生成器(Generator)：<strong>欺骗判别器</strong>。生成虚假数据，使得判别器D能够尽可能给出高的评分1
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582632769055.png" srcset="/img/loading.gif" lazyload alt="1582632769055"></li>
+</ul>
+</li>
+<li>随机噪声z：从一个先验分布（人为定义，一般是均匀分布或者正态分布）中随机采样的向量（输入的向量维度越高，其生成图像的种类越多）</li>
+<li>真实样本x：从数据库中采样的样本</li>
+<li>合成样本G(z)：生成模型G输出的样本</li>
+<li>目标函数：
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582730872597.png" srcset="/img/loading.gif" lazyload alt="1582730872597"></li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582632289057.png" srcset="/img/loading.gif" lazyload alt="1582632289057"></li>
+<li>让真实样本的输出值尽可能大，同时让生成样本的输出值尽可能小</li>
+<li>所以判别器D最大化的目标函数就是对于真实样本尽可能输出1，对于生成器的生成样本输出0</li>
+<li>生成器G最小化目标函数就是让生成样本能够欺骗判别器，让其尽量输出1</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>训练算法
+<ul>
+<li>随机初始化生成器和判别器</li>
+<li>交替训练判别器D 和生成器G，直到收敛
+<ul>
+<li>固定生成器G，训练判别器D区分真实图像与合成图像</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582730150790.png" srcset="/img/loading.gif" lazyload alt="1582730150790">
+<ul>
+<li>一个样本x来自真实分布 $P_{data}$ 和生成分布 $P_g$ 概率的相对比例</li>
+<li>如果来自生成分布的概率为0（$P_g = 0$），那么就给出概率1，即确定该样本是真的</li>
+<li>如果来自真实分布的概率为0（$P_{data} = 0$），那么就给出概率0，即确定该样本是假的</li>
+<li>因为最优判别器的输出属于[0,1] ，所以判别器的输出用sigmoid激活</li>
+</ul>
+</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582633035617.png" srcset="/img/loading.gif" lazyload alt="1582633035617"></li>
+<li>固定判别器D，训练生成器G欺骗判别器D
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582730817910.png" srcset="/img/loading.gif" lazyload alt="1582730817910"></li>
+</ul>
+</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582633084889.png" srcset="/img/loading.gif" lazyload alt="1582633084889"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>KL散度：一种衡量两个概率分布的匹配程度的指标
+<ul>
+<li>当 $P_1 = P_2$ 时，KL散度为零</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582723689966.png" srcset="/img/loading.gif" lazyload alt="1582723689966"></li>
+<li>具有非负性，但存在不对称性（在优化的时候，会因为不对称性优化出不同的结果）</li>
+<li><strong>极大似然估计 等价于 最小化生成数据分布和真实分布的KL散度</strong></li>
+</ul>
+</li>
+<li>JS散度
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582723814551.png" srcset="/img/loading.gif" lazyload alt="1582723814551"></li>
+<li>具有非负性，以及对称性</li>
+</ul>
+</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582728272282.png" srcset="/img/loading.gif" lazyload alt="1582728272282">
+<ul>
+<li>但存在问题：生成数据和真实数据分布的表达形式我们不知道，无法计算散度，也就没有目标函数，<br>
+无法优化生成器</li>
+<li>GAN：生成式对抗网络通过对抗训练，间接计算出散度(JS)，使得模型可以优化</li>
+<li><strong>最大化判别器损失，等价于计算合成数据分布和真实数据分布的JS散度</strong></li>
+<li><strong>最小化生成器损失，等价于最小化JS散度（也就是优化生成模型）</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="cGAN">cGAN</h3>
+<p>Conditional GAN, 条件生成式对抗网络</p>
+<ul>
+<li>网络结构
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582732893033.png" srcset="/img/loading.gif" lazyload alt="1582732893033"></li>
+<li>为了能够满足条件生成，所以需要添加一个class标签</li>
+<li>对于生成器而言，没啥变化，只是增加了一个label输入</li>
+<li>对于判别器而言，输入为图片以及对应标签；判别器不仅判断图片是否为真，同时也要判断时候和标签匹配
+<ul>
+<li>真实图片+正确label==》1</li>
+<li>真实图片+错误label==》0</li>
+<li>合成图片+任意label==》0</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="DCGAN">DCGAN</h3>
+<p>Deep Convlutional GAN, 深度卷积生成式对抗网络</p>
+<ul>
+<li>原始GAN，使用全连接网络作为判别器和生成器
+<ul>
+<li>不利于建模图像信息</li>
+<li>参数量大，需要大量的计算资源，难以优化</li>
+</ul>
+</li>
+<li>DCGAN，使用卷积神经网络作为判别器和生成器</li>
+<li>通过大量的<strong>工程实践</strong>，经验性地提出一系列的网络结构和优化策略，来有效的建模图像数据</li>
+<li>判别器
+<ul>
+<li>通过Pooling下采样，Pooling是不可学习的，这可能造成GAN训练困难</li>
+<li>使用滑动卷积（步长大于1），让其可以学习自己的下采样策略</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582789203990.png" srcset="/img/loading.gif" lazyload alt="1582789203990"></li>
+</ul>
+</li>
+<li>生成器：滑动反卷积
+<ul>
+<li>通过插值法上采样，插值方法是固定的，不可学习的，这可能给训练造成困难</li>
+<li>使用滑动反卷积（进行扩展），让其可以学习自己的上采样策略</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582789168180.png" srcset="/img/loading.gif" lazyload alt="1582789168180"></li>
+</ul>
+</li>
+</ul>
+<h3 id="WGAN-WGAN-GP">WGAN/WGAN-GP</h3>
+<p>Wasserstein GAN with Weight Clipping/ Gradient Penalty</p>
+<ul>
+<li>
+<p>原始GAN存在的问题</p>
+<ul>
+<li>训练困难：生成器无法生成想要的数据</li>
+<li>模式崩塌：生成器无法学习到完整的数据分布</li>
+</ul>
+</li>
+<li>
+<p>JS散度</p>
+<ul>
+<li>已知GAN网络的目标函数
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582730817910.png" srcset="/img/loading.gif" lazyload alt="1582730817910"></li>
+</ul>
+</li>
+<li>所以可以看到GAN网络的训练效果是和JS散度相关联的</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582872903044.png" srcset="/img/loading.gif" lazyload alt="1582872903044">
+<ul>
+<li>分析任意一个点x对JS散度的贡献：
+<ul>
+<li>当 $P_1(x) = 0$ and $P_2(x)=0$（即该数据既没有在真实数据中出现，也没有在生成数据中出现）
+<ul>
+<li>$JS(P_1||P_2)=0$，对计算JS散度无贡献</li>
+</ul>
+</li>
+<li>当 $P_1(x) \not= 0$ and $P_2(x)=0$ 或 $P_1(x) = 0$ and $P_2(x) \not=0$
+<ul>
+<li>贡献等与常数 $log2$ ，但梯度等于零</li>
+</ul>
+</li>
+<li>当 $P_1(x) \not= 0$ and $P_2(x)\not=0$
+<ul>
+<li>对计算JS散度有贡献且不为常熟，因此梯度不为零</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>但 $P_{data}(x)$ 与 $P_g(x)$ 发生不重叠（或重叠部分可忽略）的可能性非常大，即$P_1(x) \not= 0$ and $P_2(x)\not=0$这种情况发生概率很小</li>
+<li>GAN：真实数据分布 $P_{data}$ 和生成数据分布 $P_G$ 是高维空间中的维度流形，它们重叠的区域可以忽略不记（<strong>能够提供梯度信息的数据</strong>可以忽略不记） == =》所以无论它们相距多少，其JS散度都是常数（仅当完全重合时，JS散度为零），导致生成器的梯度（近似）为零，造成梯度消失===》GAN优化困难</li>
+</ul>
+</li>
+<li>
+<p>Wasserstein距离</p>
+<ul>
+<li>
+<p><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582874596249.png" srcset="/img/loading.gif" lazyload alt="1582874596249"></p>
+</li>
+<li>
+<p>$W(P_1,P_2) = inf_{γ\sim\prod(P_1,P_2) E_{(x,y)\simγ}[||x-y||]}$</p>
+<ul>
+<li>
+<p>$\prod(P_1,P_2)$ ：P1和P2组合起来的<strong>所有可能的联合分布的集合</strong></p>
+</li>
+<li>
+<p>$|| x - y ||$ ：样本x和y的距离</p>
+</li>
+<li>
+<p>inf：所有可能的下界</p>
+</li>
+<li>
+<p>假设对于P1和P2上的点x，y有一个联合分布γ；在这个联合分布上取一对点(x,y)，计算他们的距离 $||x-y||$ ，然后通过很多的点，计算出它的期望；然后我们再遍历所有可能的联合分布，得到一个最小的距离，就是我们定义的W距离。</p>
+<ul>
+<li>
+<p>e.g</p>
+</li>
+<li>
+<p>假设有两个离散的分布，每个分布只包含两个点（A、B和C、D），每个点的出现概率相等，横竖距离均为1</p>
+</li>
+<li>
+<p><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582881754386.png" srcset="/img/loading.gif" lazyload alt="1582881754386"></p>
+</li>
+<li>
+<p>通过这个分布，可以计算出距离 $||x-y||$</p>
+<ul>
+<li>
+<table>
+<thead>
+<tr>
+<th>距离</th>
+<th>C</th>
+<th>D</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>1</td>
+<td>$\sqrt{2}$</td>
+</tr>
+<tr>
+<td>B</td>
+<td>$\sqrt{2}$</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+<li>
+<p>下面讨论所有可能出现的联合分布形式，下面仅举例其中可能的两种</p>
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582882144751.png" srcset="/img/loading.gif" lazyload alt="1582882144751"></li>
+<li>在联合分布1下，可以计算出期望 $2\sqrt2$</li>
+<li>同理，在联合分布2下，计算得出期望为2（可以得到是所有可能的联合分布中最小的期望值）</li>
+</ul>
+</li>
+<li>
+<p>所以得到W距离为2</p>
+</li>
+</ul>
+</li>
+<li>
+<p>可以理解为：将分布P1移动到分布P2，已知彼此距离 $||x-y||$ ，选择一个合适的移动方案γ（联合分布），让走的路径最小，就是W距离。</p>
+<ul>
+<li>在最优的路径规划γ下，把土堆从P1移动到P2所需的路径（最短距离消耗）</li>
+</ul>
+</li>
+<li>
+<p>但inf（穷举所有可能，取下界）项无法直接求解</p>
+</li>
+</ul>
+</li>
+<li>
+<p><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582883657973.png" srcset="/img/loading.gif" lazyload alt="1582883657973"></p>
+<ul>
+<li>为了解决其中李普希思系数存在的限制，使用了权重截断的方法</li>
+<li>权重截断：在每次优化判别器D之后，把D的权重的绝对值限制在某个范围</li>
+</ul>
+</li>
+<li>
+<p><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582883701722.png" srcset="/img/loading.gif" lazyload alt="1582883701722"></p>
+</li>
+</ul>
+</li>
+<li>
+<p>WGAN-GP</p>
+<ul>
+<li>WGAN存在的问题
+<ul>
+<li>权重二值化：WGAN几乎所有参数都是正负0.01，浪费神经网络的拟合能力（权重截断）</li>
+<li>梯度衰减、爆炸（权重截断的截断阈值）
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582888577293.png" srcset="/img/loading.gif" lazyload alt="1582888577293"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>WGAN-GP：把Lipschitz限制作为一个正则项加到Wasserstein损失上，在优化GAN损失的同时，尽可能满足Lipschitz限制
+<ul>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582888937806.png" srcset="/img/loading.gif" lazyload alt="1582888937806"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Progressive-GAN">Progressive GAN</h3>
+<p><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582890752823.png" srcset="/img/loading.gif" lazyload alt="1582890752823"></p>
+<h3 id="SN-GAN">SN-GAN</h3>
+<p>谱归一化层实现利普希茨连续</p>
+<ul>
+<li>WGAN：权重截断–&gt; 权重二值化、梯度消失/爆炸</li>
+<li>WGAN-GP：惩罚项–&gt; 收敛速度仍然慢于DCGAN</li>
+<li>SN-GAN：每层权重除以该层矩阵谱范数即可满足利普希茨连续</li>
+</ul>
+<h3 id="Self-Attention-GAN">Self-Attention GAN</h3>
+<p>建模长距离依赖关系</p>
+<ul>
+<li>原始GAN存在的问题
+<ul>
+<li>局部效果很逼真，全局效果不逼真</li>
+</ul>
+</li>
+<li>引入自注意力机制
+<ul>
+<li>建立一个长距离依赖关系</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582891406092.png" srcset="/img/loading.gif" lazyload alt="1582891406092"></li>
+<li>让最终的输出每一部分不仅仅是和对应的感受野相关，也和整体全局相关联</li>
+</ul>
+</li>
+</ul>
+<h3 id="BigGAN">BigGAN</h3>
+<ul>
+<li>增大Batch Size</li>
+<li>噪声不单单加在输入层，还加在中间层</li>
+<li>截断技巧
+<ul>
+<li>在一个分布中采样噪声，如果噪声超过阈值，则丢弃再次采样</li>
+<li>阈值越大，图片多样性越好，但图片质量会略微下降</li>
+<li>阈值越小，图片多样性越差，但图像质量更好</li>
+</ul>
+</li>
+</ul>
+<h3 id="实战项目-基础">实战项目-基础</h3>
+<ul>
+<li>图像翻译
+<ul>
+<li>学习图像到图像的映射
+<ul>
+<li>黑白图像–&gt;彩色图像：学习彩色图像的条件分布</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>U-NET
+<ul>
+<li>神经网络中，浅层卷积核提取Low-Level特征，深层卷积核提取High-Level特征</li>
+<li>High-Level特征：分类、检测需要对图像深层理解等任务</li>
+<li>Low-Level特征：保留更多图像细节</li>
+<li>图像翻译任务：需要Low-Level和High-Level 特征</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582897625212.png" srcset="/img/loading.gif" lazyload alt="1582897625212"></li>
+<li>ResGenerator
+<ul>
+<li>在残差网络中，通过残差的形式，不断向后传递</li>
+<li>同时还解决了退化的问题</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582898041996.png" srcset="/img/loading.gif" lazyload alt="1582898041996"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Pixel2Pixel">Pixel2Pixel</h3>
+<p>用cGAN实现图像翻译</p>
+<ul>
+<li>已知我们有一一对应的数据集（例如：轮廓&lt;–&gt;建筑）</li>
+<li>使用cGAN
+<ul>
+<li>首先输入轮廓和随机噪声，通过生成器生成建筑图像，再将输入和建筑图像输入到判别其中</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582962063550.png" srcset="/img/loading.gif" lazyload alt="1582962063550"></li>
+<li>判别器进行判断，输出判别值</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582962144960.png" srcset="/img/loading.gif" lazyload alt="1582962144960"></li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582962180368.png" srcset="/img/loading.gif" lazyload alt="1582962180368"></li>
+</ul>
+</li>
+</ul>
+<h3 id="深度学习三要素">深度学习三要素</h3>
+<p><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582962229023.png" srcset="/img/loading.gif" lazyload alt="1582962229023"></p>
+<h3 id="CycleGAN">CycleGAN</h3>
+<p>无须paired数据，学习图像翻译</p>
+<ul>
+<li>有两组数组，但彼此之间并不是一一对应</li>
+<li>因为没有很好的全局损失信息，可能会出现生成的结果不能保持对应的位置信息等</li>
+<li>eg
+<ul>
+<li>CycleGAN中，首先将斑马生成马，然后再将马重新返回生成斑马，然后比对原始斑马和生成的斑马的损失，即可以保存一定的位置等信息</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582962960739.png" srcset="/img/loading.gif" lazyload alt="1582962960739"></li>
+</ul>
+</li>
+<li>循环一致性损失
+<ul>
+<li>·对于输入图像：将生成图像重建回输入图像，应当让原始输入图像和重建的输入图像尽可能相似</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582963179840.png" srcset="/img/loading.gif" lazyload alt="1582963179840"></li>
+<li>同理，有</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582963316159.png" srcset="/img/loading.gif" lazyload alt="1582963316159"></li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582963520300.png" srcset="/img/loading.gif" lazyload alt="1582963520300"></li>
+</ul>
+</li>
+</ul>
+<h3 id="StarGAN">StarGAN</h3>
+<p>一个GAN，多种数据，任意变换</p>
+<ul>
+<li>与GAN相比，其输入多了一个Target domain，输出多了一个Domain classification，用来分类表情的种类</li>
+<li>于此同时还增加了一个循环一致性损失
+<ul>
+<li>对于生成器生成的Fake image，和期望表情的标签一起返回给生成器，让其尽可能地再次还原出原始的输入图像</li>
+</ul>
+</li>
+<li><img src="/2020/02/29/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-4/1582964132072.png" srcset="/img/loading.gif" lazyload alt="1582964132072"></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="print-no-link">#深度学习</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>深度学习笔记-4</div>
+      <div>http://example.com/2020/02/29/深度学习笔记-4/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/26/Google-Inception-MobileNets/" title="Google:Inception&amp;MobileNets">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Google:Inception&amp;MobileNets</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-3/" title="深度学习笔记-3">
+                        <span class="hidden-mobile">深度学习笔记-3</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,789 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="最近在做一个图形学的实验，关于区域填充（逐点法填充、有序边表填充、图案填充以及种子填充），还有补充的多边形三角剖分。在做这几个实验的时候，学习到了很多知识，也掉了很多头发，在这里集中整理一下，也方便以后回顾学习。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="区域填充">
+<meta property="og:url" content="http://example.com/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="最近在做一个图形学的实验，关于区域填充（逐点法填充、有序边表填充、图案填充以及种子填充），还有补充的多边形三角剖分。在做这几个实验的时候，学习到了很多知识，也掉了很多头发，在这里集中整理一下，也方便以后回顾学习。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/12.jpg">
+<meta property="og:image" content="http://example.com/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E6%9C%89%E5%BA%8F%E8%BE%B9%E8%A1%A8%E6%B3%95-%E6%95%88%E6%9E%9C.jpg">
+<meta property="og:image" content="http://example.com/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E5%9B%BE%E6%A1%88%E5%A1%AB%E5%85%85-%E6%95%88%E6%9E%9C.jpg">
+<meta property="og:image" content="http://example.com/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E9%80%90%E7%82%B9%E6%B3%95-%E6%95%88%E6%9E%9C.jpg">
+<meta property="og:image" content="http://example.com/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E7%A7%8D%E5%AD%90%E5%A1%AB%E5%85%85-1.png">
+<meta property="og:image" content="http://example.com/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E7%A7%8D%E5%AD%90%E5%A1%AB%E5%85%85-2.png">
+<meta property="og:image" content="http://example.com/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E7%A7%8D%E5%AD%90%E5%A1%AB%E5%85%85-3.png">
+<meta property="og:image" content="http://example.com/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E7%A7%8D%E5%AD%90%E5%A1%AB%E5%85%85-%E6%95%88%E6%9E%9C.jpg">
+<meta property="og:image" content="http://example.com/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E4%B8%89%E8%A7%92%E5%89%96%E5%88%86-%E6%95%88%E6%9E%9C.jpg">
+<meta property="article:published_time" content="2019-11-18T01:18:08.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.576Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="MFC">
+<meta property="article:tag" content="c++">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/12.jpg">
+  
+  
+  
+  <title>区域填充 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="区域填充"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-11-18 09:18" pubdate>
+          2019年11月18日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          33 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">区域填充</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>最近在做一个图形学的实验，关于区域填充（逐点法填充、有序边表填充、图案填充以及种子填充），还有补充的多边形三角剖分。在做这几个实验的时候，学习到了很多知识，也掉了很多头发，在这里集中整理一下，也方便以后回顾学习。</p>
+<span id="more"></span>
+<h2 id="橡皮筋效果">橡皮筋效果</h2>
+<p>本次实验的环境是使用vs提供的MFC框架，在鼠标交互输入中使用橡皮筋算法来实现多边形的输入。首先定义相应变量来保存输入的数据。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">int</span> m_pNumbers;                               <span class="hljs-comment">//输入点的个数</span><br>CPoint m_pAccord[N], m_mousePoint;			<span class="hljs-comment">//保存输入的顶点信息和当前的鼠标所处位置</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>每次进行鼠标点击的时候，便调用OnLButtonDown(UINT nFlags, CPoint point)函数，若输入的顶点个数不超过规定最大值，便保存当前输入点的信息。</li>
+<li>在输入第一个点之后，移动鼠标，便会有一条线从上一个输入点A连接到鼠标当前位置，由OnMouseMove(UINT nFlags, CPoint point)函数实现该功能。每次鼠标移动时t1时刻，再一次绘制上一个点A到t1时刻鼠标位置的线段，将该直线隐藏。然后更新m_mousePoint的值，然后绘制当前t2时刻，上一个输入点A到当前t2时刻鼠标位置的线段。</li>
+<li>在用户输入完成之后，双击完成输入。 <strong>在这次也是发现了MFC的 一个隐藏的知识点，就是在用户双击的时候，MFC会先触发单击事件函数，然后调用双击事件函数，</strong> 所以这样我们就不用在双击时间函数中去保存双击的输入点信息，只需要将最后的输入点和起点相连即可。</li>
+<li>以上操作便完成了橡皮筋效果。在完成多边形的绘制之后，便根据用户的选择来进行相应操作。</li>
+</ul>
+<p>代码实现如下~</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::OnMouseMove</span><span class="hljs-params">(UINT nFlags, CPoint point)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> 在此添加消息处理程序代码和/或调用默认值</span><br>	<span class="hljs-keyword">if</span> (m_pNumbers) &#123;<br><br>		m_pDC-&gt;<span class="hljs-built_in">SetROP2</span>(<span class="hljs-number">2</span>);<br>		m_pDC-&gt;<span class="hljs-built_in">MoveTo</span>(m_pAccord[m_pNumbers - <span class="hljs-number">1</span>]);<br>		m_pDC-&gt;<span class="hljs-built_in">LineTo</span>(m_mousePoint);<br><br>		m_mousePoint = point;<br>		m_pDC-&gt;<span class="hljs-built_in">MoveTo</span>(m_pAccord[m_pNumbers - <span class="hljs-number">1</span>]);<br>		m_pDC-&gt;<span class="hljs-built_in">LineTo</span>(m_mousePoint);<br>	&#125;<br><br>	CView::<span class="hljs-built_in">OnMouseMove</span>(nFlags, point);<br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::OnLButtonDblClk</span><span class="hljs-params">(UINT nFlags, CPoint point)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> 在此添加消息处理程序代码和/或调用默认值</span><br>	m_pDC-&gt;<span class="hljs-built_in">MoveTo</span>(m_pAccord[m_pNumbers - <span class="hljs-number">1</span>]);<br>	m_pDC-&gt;<span class="hljs-built_in">LineTo</span>(m_pAccord[<span class="hljs-number">0</span>]);<br><br>	m_pAccord[m_pNumbers] = m_pAccord[<span class="hljs-number">0</span>];<br>	m_pNumbers++;<br><br>	CcgPDHFillPolyDoc *pDoc = <span class="hljs-built_in">GetDocument</span>();<br>	<span class="hljs-keyword">if</span>( pDoc-&gt;m_drawMode == <span class="hljs-number">0</span> || pDoc-&gt;m_drawMode == <span class="hljs-number">1</span>)	<span class="hljs-comment">//有序边表法、图案填充算法</span><br>		<span class="hljs-built_in">Fillpolygon</span>(m_pNumbers, m_pAccord, m_pDC);<br>	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(pDoc-&gt;m_drawMode == <span class="hljs-number">2</span>)&#123;<br>		<span class="hljs-built_in">PointFillpoly</span>(m_pNumbers, m_pAccord, m_pDC);	<span class="hljs-comment">// 逐点法</span><br>	&#125;<br>	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pDoc-&gt;m_drawMode == <span class="hljs-number">3</span>) &#123;<br>		seedFlag = <span class="hljs-literal">true</span>;<br>	&#125;<br>	<span class="hljs-keyword">else</span> &#123;<br><br>		<span class="hljs-built_in">Triangulation</span>(m_pAccord, m_pNumbers<span class="hljs-number">-1</span>, m_pNumbers - <span class="hljs-number">1</span>);	<span class="hljs-comment">//多边形顶点集合，当前多边形顶点数，多边形顶点数</span><br>	&#125;<br><br>	m_pNumbers = <span class="hljs-number">0</span>;<br><br>	CView::<span class="hljs-built_in">OnLButtonDblClk</span>(nFlags, point);<br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::OnLButtonDown</span><span class="hljs-params">(UINT nFlags, CPoint point)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> 在此添加消息处理程序代码和/或调用默认值</span><br>	<span class="hljs-keyword">if</span> (seedFlag) &#123;<br>		seedPoint = point;<br>		<span class="hljs-built_in">ScanLineFill4</span>(seedPoint.x, seedPoint.y, <span class="hljs-number">0</span>, m_pDC);<br>		seedFlag = <span class="hljs-literal">false</span>;<br>		<br>	&#125;<br>	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (m_pNumbers &lt; N) &#123;<br>		m_pAccord[m_pNumbers] = point;<br>		m_pNumbers++;<br><br>		m_mousePoint = point;<br>	&#125;<br><br>	CView::<span class="hljs-built_in">OnLButtonDown</span>(nFlags, point);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="有序边表法填充">有序边表法填充</h2>
+<p>首先给出有序边表法中定义使用的变量。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">int</span> m_Begin, m_End, m_edgeNumbers, m_Scan;       <span class="hljs-comment">//求交边集指针，有效边数，当前扫描位置</span><br><span class="hljs-type">float</span> m_yMax[N], m_yMin[N], m_Xa[N], m_Dx[N];	<span class="hljs-comment">//每条边y最大值，y最小值，每条边与扫描线x的交点，每条边斜率倒数</span><br></code></pre></td></tr></table></figure>
+<p>基本思想：用水平扫描线从上到下（或从下到上）扫描由多条首尾相连的线段构成的多边形，每根扫描线与多边形的某些边产生一系列交点。将这些交点按照x坐标排序，将排序后的点两两成对，作为线段的两个端点，以所填的颜色画水平直线。</p>
+<p><img src="/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/12.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>在实现中首先需要对多边形的每一条边进行处理操作，因为是采用水平线扫描填充，所以对于水平线不做处理。对其余边根据端点的y值大小进行排序，保存yMax，yMin，Xa(相对应的x坐标)以及Dx(斜率的倒数)。</li>
+<li>在进行扫描的过程中，很重要的一部分操作便是<strong>求交边集指针的移动</strong>。初始状态位0，在扫描线开始向下移动后，调用Include()函数，检查是否有边进入扫描线交集(即判断所有y最大值大于扫描线当前y值的边线)，此时将m_End++，即尾指针向后移动。在Include()函数中，也会调整起始点位置，将Dx调整为位移量。</li>
+<li>之后调用UpdateXvalue()函数，判断是否有边退出求交边集。
+<ul>
+<li>如果没有边退出，则移动x，并根据x值大小进行排序。</li>
+<li>有边退出，更新数组，删除该边，m_Begin++，即头指针向后移动。</li>
+</ul>
+</li>
+<li>调用pFillScan(pDC)函数，进行填充。</li>
+<li>m_Scan–，回到第二步进行循环，直到m_Begin==m_End。</li>
+</ul>
+<p>实现代码如下~</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::Fillpolygon</span><span class="hljs-params">(<span class="hljs-type">int</span> pNumbers, CPoint *points, CDC *pDC)</span></span><br><span class="hljs-function"></span>&#123;<br><br>	m_edgeNumbers = <span class="hljs-number">0</span>;<br>	<span class="hljs-built_in">pLoadPolygon</span>(pNumbers, points);   <span class="hljs-comment">// Polygon Loading, calculates every edge&#x27;s m_yMax[],m_yMin[],m_Xa[],m_Dx[]</span><br><br>	<span class="hljs-comment">//求交边集范围，因为数组已经根据y值大小进行边的排序，所以end向后移动即代表有边进入，start向后移动，代表有边退出</span><br>	m_Begin = m_End = <span class="hljs-number">0</span>;          <br>	m_Scan = (<span class="hljs-type">int</span>)m_yMax[<span class="hljs-number">0</span>];          <span class="hljs-comment">//从顶向下扫描</span><br>	<span class="hljs-built_in">Include</span>();                        <span class="hljs-comment">//检查是否有边进入扫描线</span><br>	<span class="hljs-built_in">UpdateXvalue</span>();                   <span class="hljs-comment">//检查是否有边退出扫描线</span><br>	<span class="hljs-keyword">while</span> (m_Begin != m_End) &#123;<br>		<span class="hljs-built_in">pFillScan</span>(pDC);<br>		m_Scan--;<br>		<span class="hljs-built_in">Include</span>();<br>		<span class="hljs-built_in">UpdateXvalue</span>();<br>	&#125;<br><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::pLoadPolygon</span><span class="hljs-params">(<span class="hljs-type">int</span> pNumbers, CPoint *points)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-type">float</span> x1,y1,x2,y2;<br><br>	x1 = points[<span class="hljs-number">0</span>].x;    y1 = points[<span class="hljs-number">0</span>].y+<span class="hljs-number">0.5</span>;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; pNumbers; i++) &#123;<br>		x2 = points[i].x;    y2 = points[i].y+<span class="hljs-number">0.5</span>;<br>		<span class="hljs-keyword">if</span> (<span class="hljs-built_in">abs</span>(<span class="hljs-built_in">int</span>(y2 - y1)) &gt;= <span class="hljs-number">5</span>)	<span class="hljs-comment">//水平线不做处理</span><br>		&#123;<br>			<span class="hljs-built_in">pInsertLine</span>(x1, y1, x2, y2);<br>			x1 = x2;      y1 = y2;<br>		&#125;<br>		<span class="hljs-keyword">else</span><br>			x2 = x1;	<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::pInsertLine</span><span class="hljs-params">(<span class="hljs-type">float</span> x1, <span class="hljs-type">float</span> y1, <span class="hljs-type">float</span> x2, <span class="hljs-type">float</span> y2)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-type">int</span> i;<br>	<span class="hljs-type">float</span> Ymax,Ymin;<br><br>	Ymax = (y2 &gt; y1) ? y2 : y1;<br>	Ymin = (y2 &lt; y1) ? y2 : y1;<br>	i = m_edgeNumbers;<br>	<span class="hljs-comment">//根据y值的大小，进行排序插入，大的在前面</span><br>	<span class="hljs-keyword">while</span> ( i!=<span class="hljs-number">0</span> &amp;&amp; m_yMax[i<span class="hljs-number">-1</span>]&lt;Ymax ) &#123;<br>		m_yMax[i] = m_yMax[i<span class="hljs-number">-1</span>];<br>		m_yMin[i] = m_yMin[i<span class="hljs-number">-1</span>];<br>		m_Xa[i] = m_Xa[i<span class="hljs-number">-1</span>];<br>		m_Dx[i] = m_Dx[i<span class="hljs-number">-1</span>];<br>		i--;<br>	&#125;<br>	m_yMax[i] = Ymax;<br>	m_yMin[i] = Ymin;<br>	<span class="hljs-keyword">if</span> (y2 &gt; y1) m_Xa[i] = x2;	<span class="hljs-comment">//根据y大小确定Xa的值，y大的会先于扫描线相交</span><br>	<span class="hljs-keyword">else</span>         m_Xa[i] = x1;<br><br>	m_Dx[i] = (x2-x1)/(y2-y1);	<span class="hljs-comment">//斜率的倒数</span><br>	m_edgeNumbers++;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::Include</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">//end向后移动，找出所有边最高点y值大于当前扫描线的边，看是否有新的边进入交集</span><br>	<span class="hljs-keyword">while</span> ( m_End&lt;m_edgeNumbers &amp;&amp; m_yMax[m_End]&gt;=m_Scan ) &#123;<br>		<span class="hljs-comment">//有边进入，调整起始点位置，然后将Dx调整为位移量</span><br>		m_Xa[m_End] = m_Xa[m_End] + (<span class="hljs-number">-0.5</span>)*m_Dx[m_End];<br>		m_Dx[m_End] = -m_Dx[m_End];<br>		m_End++;<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::UpdateXvalue</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-type">int</span> i,start = m_Begin;<br><br>	<span class="hljs-keyword">for</span> (i = start; i &lt; m_End; i++) &#123;<br>		<span class="hljs-keyword">if</span> ( m_Scan &gt; m_yMin[i]) &#123;<br>			<span class="hljs-comment">//当前边没有退出，则移动x，然后在进行排序</span><br>			m_Xa[i] += m_Dx[i];<br>			<span class="hljs-built_in">pXsort</span>(m_Begin, i);<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			<span class="hljs-comment">//有边退出，更新数组，然后begin++</span><br>			<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = i; j &gt; m_Begin; j--) &#123;<br>				m_yMin[j] = m_yMin[j<span class="hljs-number">-1</span>];<br>				m_Xa[j] = m_Xa[j<span class="hljs-number">-1</span>];<br>				m_Dx[j] = m_Dx[j<span class="hljs-number">-1</span>];<br>			&#125;<br>			m_Begin++;<br>		&#125;<br>	&#125;<br><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::pXsort</span><span class="hljs-params">(<span class="hljs-type">int</span> Begin, <span class="hljs-type">int</span> i)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-type">float</span> temp;<br><br>	<span class="hljs-keyword">while</span> (i &gt; Begin &amp;&amp; m_Xa[i] &lt; m_Xa[i<span class="hljs-number">-1</span>]) &#123;<br>		temp = m_Xa[i];   m_Xa[i]   = m_Xa[i<span class="hljs-number">-1</span>];   m_Xa[i<span class="hljs-number">-1</span>] = temp;<br>		temp = m_Dx[i];   m_Dx[i]   = m_Dx[i<span class="hljs-number">-1</span>];   m_Dx[i<span class="hljs-number">-1</span>] = temp;<br>		temp = m_yMin[i]; m_yMin[i] = m_yMin[i<span class="hljs-number">-1</span>]; m_yMin[i<span class="hljs-number">-1</span>] = temp;<br>		i--;<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::pFillScan</span><span class="hljs-params">(CDC* pDC)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-type">int</span> x,y;<br>	CcgPDHFillPolyDoc* pDoc = <span class="hljs-built_in">GetDocument</span>();<br><br>	pDC-&gt;<span class="hljs-built_in">SetROP2</span>(<span class="hljs-number">10</span>);<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = m_Begin; i &lt; m_End; i += <span class="hljs-number">2</span>) &#123;	<span class="hljs-comment">//成对取交点</span><br><br>		<span class="hljs-keyword">if</span> (pDoc-&gt;m_drawMode == <span class="hljs-number">0</span>) &#123;<br>			pDC-&gt;<span class="hljs-built_in">MoveTo</span>(m_Xa[i],   m_Scan);<br>			pDC-&gt;<span class="hljs-built_in">LineTo</span>(m_Xa[i+<span class="hljs-number">1</span>], m_Scan);<br><br>		&#125; <span class="hljs-keyword">else</span> &#123;	<span class="hljs-comment">//图案填充</span><br>		  y = m_Scan;<br>		  <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> x = m_Xa[i]; x &lt; m_Xa[i+<span class="hljs-number">1</span>]; x++) <br>			<span class="hljs-keyword">if</span> (m_patternData[y%<span class="hljs-number">12</span>][x%<span class="hljs-number">12</span>])<br>				pDC-&gt;<span class="hljs-built_in">SetPixel</span>(x, y, <span class="hljs-built_in">RGB</span>(<span class="hljs-number">255</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>));<br><br>		&#125;<br><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>不过这样的填充效果一般，不过写代码的时候，从中学到很多知识以及代码技巧。对这个算法也是深入了解T_T</p>
+<p><img src="/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E6%9C%89%E5%BA%8F%E8%BE%B9%E8%A1%A8%E6%B3%95-%E6%95%88%E6%9E%9C.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="图案填充">图案填充</h2>
+<p>图案填充的准备内容和上面的一样，代码也在上面给出，我们只需要给出填充的图案，然后存放在二维数组m_patternData中即可，在本次实验中，我给了一个“A”的图案。我也是对模运算越来越觉得神奇，当初学的时候还没啥感觉~</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">int</span> m_patternData[<span class="hljs-number">12</span>][<span class="hljs-number">12</span>] = &#123;<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span> &#125;,<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span> &#125;,<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span> &#125;,<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span> &#125;,<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span> &#125;,<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span> &#125;,<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span> &#125;,<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span> &#125;,<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span> &#125;,<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span> &#125;,<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span> &#125;,<br>    &#123; <span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span> &#125;<br><br>&#125;;	<span class="hljs-comment">//图案</span><br></code></pre></td></tr></table></figure>
+<p><img src="/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E5%9B%BE%E6%A1%88%E5%A1%AB%E5%85%85-%E6%95%88%E6%9E%9C.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="逐点法">逐点法</h2>
+<p>在逐点法实现中，用到了两个老师给好的函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">BoxRect_t</span> &#123;<br>	<span class="hljs-type">int</span> minX;<br>	<span class="hljs-type">int</span> minY;<br>	<span class="hljs-type">int</span> maxX;<br>	<span class="hljs-type">int</span> maxY;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::PointFillpoly</span><span class="hljs-params">(<span class="hljs-type">int</span> pNumbers, CPoint *points, CDC *pDC)</span></span><br><span class="hljs-function"></span>&#123;<br> 	BoxRect_t polyRect;<br> <br> 	polyRect = <span class="hljs-built_in">GetPolygonRect</span>(pNumbers, points);<br> <br> 	m_pDC-&gt;<span class="hljs-built_in">MoveTo</span>(polyRect.minX, polyRect.minY);<br> 	m_pDC-&gt;<span class="hljs-built_in">LineTo</span>(polyRect.minX, polyRect.maxY);<br> 	m_pDC-&gt;<span class="hljs-built_in">LineTo</span>(polyRect.maxX, polyRect.maxY);<br> 	m_pDC-&gt;<span class="hljs-built_in">LineTo</span>(polyRect.maxX, polyRect.minY);<br> 	m_pDC-&gt;<span class="hljs-built_in">LineTo</span>(polyRect.minX, polyRect.minY);<br> <br> 	CPoint testPoint;<br> 	<span class="hljs-comment">//从最小点到最大点一次判断，如果在该多边形内部，则进行填充</span><br> 	<span class="hljs-keyword">for</span> (testPoint.x = polyRect.minX; testPoint.x &lt; polyRect.maxX; testPoint.x++) <br> 		<span class="hljs-keyword">for</span> (testPoint.y = polyRect.minY; testPoint.y &lt; polyRect.maxY; testPoint.y++) &#123;<br> 			<span class="hljs-keyword">if</span> (<span class="hljs-built_in">PointInPolygon</span>(m_pNumbers, m_pAccord, testPoint))<br> 				pDC-&gt;<span class="hljs-built_in">SetPixel</span>(testPoint.x, testPoint.y, <span class="hljs-built_in">RGB</span>(<span class="hljs-number">255</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>));<br>      &#125;<br>&#125;<br><br><span class="hljs-comment">//得到该多边形的最大、最小的y、x值</span><br><span class="hljs-function">BoxRect_t <span class="hljs-title">CcgPDHFillPolyView::GetPolygonRect</span><span class="hljs-params">(<span class="hljs-type">int</span> pointNumOfPolygon, CPoint* tarPolygon)</span></span><br><span class="hljs-function"></span>&#123;<br>	BoxRect_t boxRect;<br><br>	boxRect.minX = <span class="hljs-number">50000</span>;<br>	boxRect.minY = <span class="hljs-number">50000</span>;<br>	boxRect.maxX = <span class="hljs-number">-50000</span>;<br>	boxRect.maxY = <span class="hljs-number">-50000</span>;<br><br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; pointNumOfPolygon; i++) &#123;<br>		<span class="hljs-keyword">if</span> (tarPolygon[i].x &lt; boxRect.minX) boxRect.minX = tarPolygon[i].x;<br>		<span class="hljs-keyword">if</span> (tarPolygon[i].y &lt; boxRect.minY) boxRect.minY = tarPolygon[i].y;<br>		<span class="hljs-keyword">if</span> (tarPolygon[i].x &gt; boxRect.maxX) boxRect.maxX = tarPolygon[i].x;<br>		<span class="hljs-keyword">if</span> (tarPolygon[i].y &gt; boxRect.maxY) boxRect.maxY = tarPolygon[i].y;<br>	&#125;<br>	<span class="hljs-keyword">return</span> boxRect;<br>&#125;<br><br><span class="hljs-comment">//判断点是否位于区域内</span><br><span class="hljs-function">BOOL <span class="hljs-title">CcgPDHFillPolyView::PointInPolygon</span><span class="hljs-params">(<span class="hljs-type">int</span> pointNumOfPolygon, CPoint tarPolygon[], CPoint testPoint)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-keyword">if</span> (pointNumOfPolygon &lt; <span class="hljs-number">3</span>)<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br><br>	<span class="hljs-type">bool</span>  inSide = FALSE;<br>	<span class="hljs-type">float</span> lineSlope,interSectX;<br>	<span class="hljs-type">int</span>   i = <span class="hljs-number">0</span>, j = pointNumOfPolygon<span class="hljs-number">-1</span>;<br><br>	<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; pointNumOfPolygon; i++) &#123;<br>		<span class="hljs-keyword">if</span> ((tarPolygon[i].y &lt; testPoint.y &amp;&amp; tarPolygon[j].y &gt;= testPoint.y  ||<br>		tarPolygon[j].y &lt; testPoint.y &amp;&amp; tarPolygon[i].y &gt;= testPoint.y) &amp;&amp;<br>		(tarPolygon[i].x &lt;= testPoint.x || tarPolygon[j].x &lt;= testPoint.x)) &#123;<br>			<span class="hljs-keyword">if</span> (tarPolygon[j].x != tarPolygon[i].x) &#123;<br>				lineSlope = (<span class="hljs-type">float</span>)(tarPolygon[j].y-tarPolygon[i].y)/(tarPolygon[j].x-tarPolygon[i].x);<br>				interSectX = (<span class="hljs-type">int</span>)(tarPolygon[i].x + (testPoint.y-tarPolygon[i].y) / lineSlope);<br>			&#125; <span class="hljs-keyword">else</span> <br>				interSectX = tarPolygon[i].x;<br>			<span class="hljs-keyword">if</span> (interSectX &lt; testPoint.x)<br>				inSide = !inSide;<br>		&#125;<br>		j = i;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> inSide;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>其中的实现原理十分简单，不过PointInPolygon(int pointNumOfPolygon, CPoint tarPolygon[], CPoint testPoint)函数的实现比较复杂，不过这个函数也十分实用，在后面的三角剖分中我也有使用。</p>
+<p><img src="/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E9%80%90%E7%82%B9%E6%B3%95-%E6%95%88%E6%9E%9C.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="种子填充">种子填充</h2>
+<p>点填充有好几种方法，其中比较简单实现的是四连通泛填充算法。基本思路就是给定种子，然后去填充种子上下左右四个方向的像素点，如果为空，则进行填充。</p>
+<p>实现代码如下~</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">FloodFill4</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y, <span class="hljs-type">int</span> fillColor, <span class="hljs-type">int</span> oldColor)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> current;<br>    current = <span class="hljs-built_in">GetPixel</span>(x,y);<br>    <span class="hljs-keyword">if</span>( current == oldColor )&#123;<br>        <span class="hljs-built_in">SetPixel</span>(x,y,fillColor);<br>        <span class="hljs-built_in">FloodFill4</span>(x+<span class="hljs-number">1</span>,y,fillColor,oldColor);<br>        <span class="hljs-built_in">FloodFill4</span>(x<span class="hljs-number">-1</span>,y,fillColor,oldColor);<br>        <span class="hljs-built_in">FloodFill4</span>(x,y+<span class="hljs-number">1</span>,fillColor,oldColor);<br>        <span class="hljs-built_in">FloodFill4</span>(x,y<span class="hljs-number">-1</span>,fillColor,oldColor);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>不过如果运行这一段代码很容易就会导致栈溢出，，，虽然代码简单，但是没法用。</p>
+<p>所以更多的是使用扫描线种子填充算法。</p>
+<ul>
+<li>种子像素入栈。</li>
+<li>当栈非空时，重复执行一下操作。
+<ul>
+<li>栈顶像素出栈。</li>
+<li>沿扫描线对出栈像素的左右像素进行填充，直到遇到边界像素为止。</li>
+<li>将上述区间内的最左、最右像素记为 $x_{left}$ 和 $x_{right}$</li>
+<li>在区间[ $x_{left}$ , $x_{right}$ ]内检查与当前扫描线相邻的上下两条扫描线是否全为边界像素或已填充的像素，若为非边界和未填充，则把每一区间的最右像素$x_{right}$作为种子像素压入堆栈，重复执行上述操作。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E7%A7%8D%E5%AD%90%E5%A1%AB%E5%85%85-1.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E7%A7%8D%E5%AD%90%E5%A1%AB%E5%85%85-2.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E7%A7%8D%E5%AD%90%E5%A1%AB%E5%85%85-3.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>实现代码如下~</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//扫描线种子填充</span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">SetRP</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y, COLORREF color, COLORREF mColor, CDC *pDC)</span> </span>&#123;<br>	<span class="hljs-keyword">while</span> (pDC-&gt;<span class="hljs-built_in">GetPixel</span>(<span class="hljs-built_in">CPoint</span>(x, y)) == mColor) &#123;<br>		pDC-&gt;<span class="hljs-built_in">SetPixel</span>(x, y, color);<br>		x++;<br>	&#125;<br>	<span class="hljs-keyword">return</span> x - <span class="hljs-number">1</span>;<br>&#125;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">SetLP</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y, COLORREF color, COLORREF mColor, CDC *pDC)</span> </span>&#123;<br>	<span class="hljs-keyword">while</span> (pDC-&gt;<span class="hljs-built_in">GetPixel</span>(<span class="hljs-built_in">CPoint</span>(x - <span class="hljs-number">1</span>, y)) == mColor) &#123;<br>		pDC-&gt;<span class="hljs-built_in">SetPixel</span>(--x, y, color);<br>	&#125;<br>	<span class="hljs-keyword">return</span> x+<span class="hljs-number">1</span>;<br>&#125;<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">NewLineSeed</span><span class="hljs-params">(std::stack&lt;CPoint&gt; *stk, <span class="hljs-type">int</span> lx, <span class="hljs-type">int</span> rx, <span class="hljs-type">int</span> y, COLORREF color, COLORREF mColor, CDC *pDC)</span> </span>&#123;<br>	<span class="hljs-type">int</span> x, e;<br>	<span class="hljs-keyword">for</span> (x = lx + <span class="hljs-number">1</span>, e = rx + <span class="hljs-number">1</span>; x&lt;e; x++) &#123;<br>		<span class="hljs-comment">//找出每一个区间的最右像素，入栈</span><br>		<span class="hljs-keyword">if</span> (pDC-&gt;<span class="hljs-built_in">GetPixel</span>(<span class="hljs-built_in">CPoint</span>(x, y)) != mColor) &#123;<br>			<span class="hljs-keyword">if</span> (pDC-&gt;<span class="hljs-built_in">GetPixel</span>(<span class="hljs-built_in">CPoint</span>(x - <span class="hljs-number">1</span>, y)) == mColor)<br>				stk-&gt;<span class="hljs-built_in">push</span>(<span class="hljs-built_in">CPoint</span>(x - <span class="hljs-number">1</span>, y));<br>		&#125;<br>	&#125;<br>	<span class="hljs-comment">//把rx所在点入栈</span><br>	<span class="hljs-keyword">if</span> (pDC-&gt;<span class="hljs-built_in">GetPixel</span>(<span class="hljs-built_in">CPoint</span>(x - <span class="hljs-number">1</span>, y)) == mColor)<br>		stk-&gt;<span class="hljs-built_in">push</span>(<span class="hljs-built_in">CPoint</span>(x - <span class="hljs-number">1</span>, y));<br>&#125;<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::ScanLineFill4</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y, COLORREF color, CDC *pDC)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-type">int</span> pRight, pLeft;<br>	std::stack&lt;CPoint&gt; stk;<br>	<span class="hljs-type">int</span> mColor = pDC-&gt;<span class="hljs-built_in">GetPixel</span>(x, y);	<span class="hljs-comment">//给定种子</span><br><br>	stk.<span class="hljs-built_in">push</span>(<span class="hljs-built_in">CPoint</span>(x, y));<br>	<span class="hljs-keyword">while</span> (!stk.<span class="hljs-built_in">empty</span>()) &#123;<br>		CPoint p = stk.<span class="hljs-built_in">top</span>();	<span class="hljs-comment">//栈顶像素出栈</span><br>		stk.<span class="hljs-built_in">pop</span>();<br><br>		pRight = <span class="hljs-built_in">SetRP</span>(p.x, p.y, color, mColor, pDC);	<span class="hljs-comment">//向左向右进行填充</span><br>		pLeft = <span class="hljs-built_in">SetLP</span>(p.x, p.y, color, mColor, pDC);<br><br>        <span class="hljs-comment">//上下两条扫描线处理</span><br>		<span class="hljs-built_in">NewLineSeed</span>(&amp;stk, pLeft, pRight, p.y + <span class="hljs-number">1</span>, color, mColor, pDC);<br>		<span class="hljs-built_in">NewLineSeed</span>(&amp;stk, pLeft, pRight, p.y - <span class="hljs-number">1</span>, color, mColor, pDC);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>扫描线种子填充算法的填充效果很好，不过填充速度会慢很多，，能够在屏幕上看到一个个像素点在填充。</p>
+<p><img src="/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E7%A7%8D%E5%AD%90%E5%A1%AB%E5%85%85-%E6%95%88%E6%9E%9C.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="多边形三角剖分">多边形三角剖分</h2>
+<p>关于这个拓展功能的实现，当时在网上看了不少资料，，然后大部分都没有看懂。不过上课的时候老师给了一种使用递归实现的方法，后来发现和网上的耳切法比较相似。老师给出的实现思路如下~</p>
+<ul>
+<li>选择多边形的最左顶点L+前后顶点，构成一个三角形。</li>
+<li>检查该三角形内是否有其他顶点。
+<ul>
+<li>不包含其他顶点。则分割该三角形，递归调用第一步。</li>
+<li>若包含其他顶点。则连接L与进入的顶点中最左侧的点，这样便会分割该多边形，然后对两个多边形再递归调用第一步。</li>
+</ul>
+</li>
+</ul>
+<p>实现代码如下~</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">CcgPDHFillPolyView::Triangulation</span><span class="hljs-params">(CPoint* points, <span class="hljs-type">int</span> pNumbers, <span class="hljs-type">int</span> number)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-keyword">if</span> (pNumbers == <span class="hljs-number">3</span>) &#123;	<span class="hljs-comment">//出口</span><br>		<span class="hljs-keyword">return</span>;<br>	&#125;<br><br>	<span class="hljs-type">int</span> k, xMin = <span class="hljs-number">1000</span>;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; pNumbers; j++)	<span class="hljs-comment">//找出当前多边形的最左侧顶点</span><br>	&#123;<br>		<span class="hljs-keyword">if</span> (points[j].x &lt; xMin) &#123;<br>			k = j;<br>			xMin = points[j].x;<br>		&#125;<br>	&#125;<br><br>	CPoint arry[<span class="hljs-number">3</span>];<br>	arry[<span class="hljs-number">0</span>] = points[k];	<span class="hljs-comment">//最左侧顶点</span><br>	<span class="hljs-type">int</span> next = (k + <span class="hljs-number">1</span>) % pNumbers;<br>	arry[<span class="hljs-number">1</span>] = points[next];	<span class="hljs-comment">//后一个顶点</span><br>	<span class="hljs-type">int</span> pre = k - <span class="hljs-number">1</span>;<br>	<span class="hljs-keyword">if</span> (pre &lt; <span class="hljs-number">0</span>) <br>		pre += pNumbers;<br>	arry[<span class="hljs-number">2</span>] = points[pre];	<span class="hljs-comment">//前一个顶点</span><br><br>	<span class="hljs-comment">//围成的该三角形内是否有其他顶点</span><br>	CPoint in_point[N];<br>	<span class="hljs-type">int</span> in_number = <span class="hljs-number">0</span>, i = <span class="hljs-number">0</span>;<br>	xMin = <span class="hljs-number">1000</span>; <br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; pNumbers; j++)<br>	&#123;<br>		<span class="hljs-keyword">if</span> (j == k || j == next || j == pre)	<span class="hljs-comment">//三角形的三个顶点不算</span><br>			<span class="hljs-keyword">continue</span>;<br>		<span class="hljs-keyword">if</span> (<span class="hljs-built_in">PointInPolygon</span>(<span class="hljs-number">3</span>,arry, points[j])) &#123;	<span class="hljs-comment">//找出在该三角形内的顶点，并找到其中的最左侧顶点</span><br>			in_point[in_number] = points[j];<br>			<span class="hljs-keyword">if</span> (in_point[in_number].x &lt; xMin) &#123;<br>				i = j;<br>				xMin = in_point[in_number].x;<br>			&#125;<br>			in_number++;<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">if</span> (in_number &gt;= <span class="hljs-number">1</span>) &#123;	<span class="hljs-comment">//若存在，则链接三角形内的最左侧点，分割多边形，递归调用</span><br><br>		m_pDC-&gt;<span class="hljs-built_in">MoveTo</span>(arry[<span class="hljs-number">0</span>].x, arry[<span class="hljs-number">0</span>].y);	<span class="hljs-comment">//连接线到该最左侧顶点</span><br>		m_pDC-&gt;<span class="hljs-built_in">LineTo</span>(points[i].x, points[i].y);<br><br>		CPoint arry_1[N], arry_2[N];	<span class="hljs-comment">//分割成两个多边形</span><br>		<span class="hljs-type">int</span> pNumbers_1 = <span class="hljs-number">0</span>, pNumbers_2 = <span class="hljs-number">0</span>;<br><br>		<span class="hljs-keyword">if</span> (k &gt; i) &#123;<br>			<span class="hljs-type">int</span> temp = i; i = k; k = temp;<br>		&#125;<br><br>		<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; pNumbers; j++)<br>		&#123;<br>			<span class="hljs-keyword">if</span> (j &gt;= k&amp;&amp;j &lt;= i) &#123;<br>				arry_1[pNumbers_1++] = points[j];<br>			&#125;<br>			<span class="hljs-keyword">if</span> (j &lt;= k || j &gt;= i) &#123;<br>				arry_2[pNumbers_2++] = points[j];<br>			&#125;<br>		&#125;<br>		<span class="hljs-built_in">Triangulation</span>(arry_1, pNumbers_1, pNumbers_1);<br>		<span class="hljs-built_in">Triangulation</span>(arry_2, pNumbers_2, pNumbers_2);<br>	&#125;<br>	<span class="hljs-keyword">else</span> &#123;	<span class="hljs-comment">//若不存在，则分割该三角形，递归调用</span><br>		m_pDC-&gt;<span class="hljs-built_in">MoveTo</span>(arry[<span class="hljs-number">1</span>].x, arry[<span class="hljs-number">1</span>].y);	<span class="hljs-comment">//剖分线</span><br>		m_pDC-&gt;<span class="hljs-built_in">LineTo</span>(arry[<span class="hljs-number">2</span>].x, arry[<span class="hljs-number">2</span>].y);<br><br>		<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = k; j &lt; pNumbers - <span class="hljs-number">1</span>; j++)	<span class="hljs-comment">//删除k顶点</span><br>		&#123;<br>			points[j] = points[j + <span class="hljs-number">1</span>];<br>		&#125;<br>		pNumbers--;<br><br>		<span class="hljs-built_in">Triangulation</span>(points, pNumbers, number);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这一部分代码在编写的时候，还是比较掉头发的，当时在处理多边形分割的时候遇到了很多问题，后来也是通过单步调试解决的。最后成功之后，还是蛮有成就感的！</p>
+<p><img src="/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/%E4%B8%89%E8%A7%92%E5%89%96%E5%88%86-%E6%95%88%E6%9E%9C.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MFC/" class="print-no-link">#MFC</a>
+      
+        <a href="/tags/c/" class="print-no-link">#c++</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>区域填充</div>
+      <div>http://example.com/2019/11/18/区域填充/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年11月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" title="Hadoop+HBase安装配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hadoop+HBase安装配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/11/18/%E7%A9%BA%E9%97%B4%E5%9F%9F%E4%B8%8E%E9%A2%91%E7%8E%87%E5%9F%9F%E6%BB%A4%E6%B3%A2-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" title="空间域与频率域滤波-基础知识">
+                        <span class="hidden-mobile">空间域与频率域滤波-基础知识</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

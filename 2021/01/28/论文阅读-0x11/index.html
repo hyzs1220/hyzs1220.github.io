@@ -1,0 +1,839 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="左旺孟老师视频里面涉及的最后一篇论文 论文的阅读笔记： 《 Unpaired Learning of Deep Image Denoising 》 左旺孟，ECCV 2020">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读-0x11">
+<meta property="og:url" content="http://example.com/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="左旺孟老师视频里面涉及的最后一篇论文 论文的阅读笔记： 《 Unpaired Learning of Deep Image Denoising 》 左旺孟，ECCV 2020">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/1.png">
+<meta property="og:image" content="http://example.com/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/2.png">
+<meta property="og:image" content="http://example.com/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/3.png">
+<meta property="og:image" content="http://example.com/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/4.png">
+<meta property="og:image" content="http://example.com/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/5.png">
+<meta property="article:published_time" content="2021-01-28T08:06:35.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.572Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="自监督学习">
+<meta property="article:tag" content="底层视觉应用">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/1.png">
+  
+  
+  
+  <title>论文阅读-0x11 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="论文阅读-0x11"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-01-28 16:06" pubdate>
+          2021年1月28日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          27 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">论文阅读-0x11</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>左旺孟老师视频里面涉及的最后一篇论文</p>
+<p>论文的阅读笔记：</p>
+<p>《 Unpaired Learning of Deep Image Denoising 》 左旺孟，ECCV 2020</p>
+<span id="more"></span>
+<h2 id="Unpaired-Learning-of-Deep-Image-Denoising">Unpaired Learning of Deep Image Denoising</h2>
+<h3 id="Abstract">Abstract</h3>
+<ul>
+<li>作者研究了从一组未配对的干净和有噪声图像中学习图像盲去噪网络的任务</li>
+<li>作者进一步假设噪声可以是依赖于信号的，但空间上是不相关的</li>
+<li>提出了一种结合自监督学习和知识精馏的两阶段学习方法
+<ul>
+<li>对于自我监督学习，使用扩张盲点网络(D-BSN)来学习真实噪声图像去噪。由于噪声的空间独立性，采用堆叠1  ×  1卷积层的网络来估计每幅图像的噪声水平图。D-BSN和图像特定噪声模型(CNNest)都可以通过最大化约束的数似然率进行联合训练。给定D-BSN的输出和估计的噪声水平图，基于贝叶斯规则可以进一步获得更好的去噪性能</li>
+<li>至于知识蒸馏，首先将学习到的噪声模型应用于清洁图像，以合成一对训练图像，然后在第一阶段使用真实的噪声图像和相应的去噪结果来形成另一组配对。然后可以通过使用这两个配对集训练现有的去噪网络来蒸馏得到最终降噪模型</li>
+</ul>
+</li>
+<li>目前深度卷积神经网络在图像去噪领域进步很大，先是针对高斯白噪声（WGN），然后使用CNN针对真实噪声去噪，虽然已经取得了性能的提升，但现有的大多数CNN去噪器的成功很大程度上依赖于有监督学习和大量成对的噪声干净图像（获取？）
+<ul>
+<li>一方面，给定噪声模型的形式和参数，可以从无噪声的干净图像中合成出噪声图像，以构成成对的训练集。但是，实际的噪声通常很复杂，并且现实摄影中的相机内信号处理（ISP）流水线进一步增加了噪声的复杂性，所以很难用基本的参数完全表征噪声模型</li>
+<li>另一方面，可以通过设计合适的方法来构建配对集，以获取对应于给定真实噪声图像的几乎无噪声（或清晰）的图像。对于现实世界的摄影，可以通过平均多个噪声图像或校准和后处理低ISO图像来获取几乎无噪点的图像。不过这种几乎无噪声的图像可能会存在过度平滑的问题，而且获取成本昂贵。此外，这种几乎无噪声的图像采集可能不适用于其他成像机制(如显微镜或医学成像)</li>
+</ul>
+</li>
+<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/1.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>Noise2Noise  (N2N)模型来从成对的噪声实例中学习映射，而不是使用成对训练集的监督学习
+<ul>
+<li>不过它要求每对图像中底层的干净图像是完全相同的，噪声是独立地从相同的分布中提取的，这限制了它的实用性</li>
+</ul>
+</li>
+<li>Noise2Void  (N2V)模型，该模型采用<strong>盲点网络(BSN)</strong>，仅从有噪声的图像中学习CNN去噪器
+<ul>
+<li>不过BSN在训练时的计算效率非常低，并且没有利用盲点处的像素值，导致去噪性能下降</li>
+</ul>
+</li>
+<li>提出了一个两阶段的方案，即自监督学习和知识蒸馏，从一组不成对的干净的和有噪声图像来学习图像盲去噪网络（不是基于GAN的非成对学习）
+<ul>
+<li>首先只利用噪声图像学习BSN和特定图像的噪声水平估计网络cnnest，进行图像去噪和噪声建模</li>
+<li>然后将学习到的噪声模型应用于干净图像来合成成对的训练图像集</li>
+<li>同时在第一阶段也将真实噪声图像和对应的去噪结果形成另一组成对图像</li>
+<li>至于知识蒸馏，作者仅使用上述两个配对集就可以训练出最先进的CNN去噪器，例如MWCNN</li>
+</ul>
+</li>
+<li>假设干净的图像是空间相关的，使得利用BSN体系结构仅从有噪图像学习盲去噪网络是可行的。为了提高训练效率，提出了一种利用扩张卷积和全卷积网络(FCN)的新型扩张BSN(即D-BSN)，在训练过程中通过一次前向传递来预测所有像素的去噪结果</li>
+<li>进一步假设噪声是像素无关的，但也可以是信号相关的。因此，一个像素的噪声级别可以是一个常量，也可以只取决于单个像素值。考虑到不同图像的噪声模型和参数可能有所不同， $CNN_{est}$ 通过堆叠1×1卷积层来满足上述要求。利用无组织的噪声图像集合，D-BSN和 $CNN_{est}$ 都可以通过最大化约束的对数似然进行联合训练。给定D-BSN和CNNest的输出，使用贝叶斯规则来获得第一阶段的去噪结果。对于第二阶段给定的干净图像，随机选取特定图像的 $CNN_{est}$ 合成有噪声的图像</li>
+<li>论文贡献：
+<ul>
+<li>提出了一种结合自监督学习和知识蒸馏的两阶段学习方法，从无配对的干净和噪声图像中学习盲去噪网络。特别是采用自监督学习进行图像去噪和噪声建模，从而形成两个互补的成对集合，提取出最终的去噪网络</li>
+<li>为了提高训练效率和满足假设的噪声特性，提出了一种新的扩张型盲点网络(D-BSN)和一种基于图像的噪声水平估计网络( $CNN_{est}$ )。利用无组织的噪声图像集合，D-BSN和cnnest可以通过最大化约束的对数似然来联合训练</li>
+<li>在不同类型的合成噪声上的实验表明，该非成对学习方法优于N2V和Laine19，与完全监督学习方法不相上下。MWCNN(unpaired)也在真实照片上表现良好，在DND数据集上显著超过基于GAN的unpaired  learning (GCBD)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Proposed-Method">Proposed Method</h3>
+<ul>
+<li>给定噪声图像 $\mathbf{y}$ ，干净图像 $\mathbf{x}$ ，用 $\widetilde {\mathbf{x}}$ 表示  $\mathbf{y}$ 的干净图像
+<ul>
+<li>$\mathbf{y} = \widetilde {\mathbf{x}} + \mathbf{n}$</li>
+<li>其中 $\mathbf{n}$ 表示噪声信息</li>
+<li>假设图像 $\mathbf{x}$ 是空间相关的，噪声 $\mathbf{n}$ 是像素无关、信号依赖的高斯分布，即像素 $i$ 的噪声方差（噪声水平）仅由底层无噪声图像 $\widetilde {\mathbf{x}}$ 在像素 $i$ 处的值决定</li>
+<li>$var(n_i) = g_{\widetilde {\mathbf{x}}}( {\mathbf{\widetilde x}_i})$
+<ul>
+<li>$g_{\widetilde {\mathbf{x}}}( {\mathbf{\widetilde x}<em>i})$ 可以看作是多元异方差高斯模型中的一种噪声水平函数(noise level function,  NLF)。与线性NLF不同， $g</em>{\widetilde {\mathbf{x}}}( {\mathbf{\widetilde x}_i})$ 可以是任何非线性函数，因此在噪声建模中更具表现力</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/2.png" srcset="/img/loading.gif" lazyload alt>
+<ul>
+<li>在第一阶段，构建了一个新的盲点网络D-BSN，以及一个图像特定的噪声模型CNNest
+<ul>
+<li>引入自监督损耗，通过最大化约束的对数似然，在 $\mathbf{y}$ 的基础上联合训练D-BSN和 $CNN_{est}$</li>
+<li>对于给定的真实噪声图像 $\mathbf{y}$ ,  D-BSN和 $CNN_{est}$ 协作得到第一级去噪结果 $\mathbf{\hat x_{\mathbf{y}}}$ 和估计的NLF $g_{\mathbf{y}}(\mathbf{y})$</li>
+</ul>
+</li>
+<li>在第二阶段，采用知识蒸馏（Knowledge Distillation）策略，利用 $\mathcal{X}, \mathcal{Y}, \hat{\mathcal{X}}^{(1)}=\left{\hat{\mathbf{x}}<em>{\mathbf{y}} \mid \mathbf{y} \in \mathcal{Y}\right}$ （噪声图像 $\mathbf{y}$ ，干净图像 $\mathbf{x}$ 和第一级去噪结果 $\mathbf{\hat x</em>{\mathbf{y}}}$ ）和一组特定图像的 $NLFs{ g_{\mathbf{y}}(\mathbf{y})\mid \mathbf{y} \in \mathcal{Y} }$ （噪声估计），以完监督的方式提取最先进的深度去噪网络
+<ul>
+<li>对于给定的干净图像 $\mathbf{x}$ ，随机选择图像特定的NLF $g_{\mathbf{y}}(\mathbf{y})$ ，利用 $g_{\mathbf{y}}(\mathbf{y})$ 生成 $\mathbf{x}$ 的NLF。用 $\mathbf{n}_{0} \sim \mathcal{N}(0,1)$ 表示均值为零、方差为一的随机高斯噪声</li>
+<li>因此可以得到对应的合成噪声图像（其实就是干净图像 $\mathbf{x}$ 加上噪声信息，不过这里的噪声信息通过一个 $g_{\mathbf{y}}(\mathbf{y})$ 生成的NLF噪声估计水平进行了处理）</li>
+<li>$\tilde{\mathbf{y}}=\mathbf{x}+g_{\mathbf{y}}(\mathbf{x}) \cdot \mathbf{n}_{0}$</li>
+<li>同时利用噪声图像 $\mathbf{y}$ ，和他在第一阶段得到的去噪结果 $\mathbf{\hat x_{\mathbf{y}}}$ 就构成了第二对noisy-clean图像对</li>
+</ul>
+</li>
+<li>然后就是用上面两组noisy-clean图像对来进行训练学习，损失为
+<ul>
+<li>$\mathcal{L}<em>{\text {distill }}=\sum</em>{\mathbf{x} \in \mathcal{X}}|\operatorname{CDN}(\tilde{\mathbf{y}})-\mathbf{x}|^{2}+\lambda \sum_{\mathbf{y} \in \mathcal{Y}}\left|\mathrm{CDN}(\mathbf{y})-\hat{\mathbf{x}}_{\mathbf{y}}\right|^{2}$</li>
+<li>也很好理解这个东西</li>
+</ul>
+</li>
+<li>上面第二阶段的卷积去噪网络CDN可以是任何现有的CNN去噪器，作者在实现中以MWCNN为例</li>
+</ul>
+</li>
+<li>D-BSN
+<ul>
+<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/3.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>对于某一位置的输出，BSN的核心是排除当前位置输入值的影响(即盲点要求)</li>
+<li>对于第一层卷积，可以很容易地使用掩蔽卷积来做到，对于噪声图像 $\mathbf{y}$ ，$\mathbf{w}_k$ 表示第k层的3x3卷积，对应mask $\mathbf{m}$ ，将其中心位置赋0，其他位置为1</li>
+<li>$\mathbf{f}^{(1)}_k = \mathbf{y} * (\mathbf{w}_k \circ \mathbf{m})$
+<ul>
+<li>其中 $*,\circ$ 表示卷积核元素相乘</li>
+<li>不过随着卷积层的堆叠，最后还是会用到这个位置的信息</li>
+</ul>
+</li>
+<li>所以作者在第一层之后就使用空洞卷积（dilated convolution），在3x3卷积上使用膨胀因子为2（在5x5卷积上，膨胀因子为3），这样的话，就不会用到当前位置的信息
+<ul>
+<li>第一层仍然是普通的mask卷积</li>
+<li>后面作者有解释，其实就是卷积之后正好跳过了当前点的信息</li>
+</ul>
+</li>
+<li>同时如果使用1x1卷积和跳跃连接，也不会破坏这个盲点要求，因此可以使用这几个方法来构建FCN，即D-BSN</li>
+<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/4.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>网络的具体结构如上</li>
+<li>multiple dilated convolution (MDC)多尺度空洞卷积，使用到了残差连接，两个网络分支的结果最终直接连接起来，经过四个1x1卷积来得到最终的特征表达</li>
+</ul>
+</li>
+<li>$CNN_{est}$</li>
+<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/5.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>给定真实噪声图像 $\mathbf{y}$ 底层的干净图像 $\widetilde {\mathbf{x}}$ ，假定噪声在条件上独立于像素</li>
+<li>假设噪声是信号依赖的多元高斯信号，并进一步要求NLF $g_{\mathbf{\widetilde x}}(\mathbf{\widetilde x})$ 是图像特有的，以提高模型的灵活性</li>
+<li>然后作者这里使用了1x1卷积的FCN框架来学习噪声模型，这样的话也可以保证某一位置的噪声水平只依赖于同一位置的输入值</li>
+<li>不过对于 $g_{\mathbf{\widetilde x}}(\mathbf{\widetilde x})$ ，它的输入要求是干净图像，所以 $CNN_{est}$ 以噪声图像作为输入，学习 $g_{\mathbf{y}}(\mathbf{y})$ ，来进行近似</li>
+<li>这里作者提出每个图象在 $CNN_{est}$ 中都有自己的网络参数来学习特定图像的NLF</li>
+<li>Self-Supervised Loss and Bayes Denoising
+<ul>
+<li>因为真实噪声图像 $\mathbf{y}$ 底层的干净图像 $\widetilde {\mathbf{x}}$ 和真实噪声图像 $\mathbf{y}$ 的真实NLF不可用，所以选择自监督学习</li>
+<li>对于给定位置 $i$ ，有 $y_i = \widetilde x_i + n_i$ ，其中 $n_{i} \sim \mathcal{N}\left(\mathbf{0}, \mathbf{\Sigma}_{i}^{\mathbf{n}}\right)$
+<ul>
+<li>其中 $y_i,\widetilde x_i,n_i,\mathbf{0}$ 都是C x 1向量</li>
+</ul>
+</li>
+<li>$\boldsymbol{\mu}$ 是D-BSN直接预测得到的干净图像，假设 $\boldsymbol{\mu} = \widetilde {\mathbf{x}} + \mathbf{n^{\boldsymbol \mu}}$ ，其中 $n_{i}^{\boldsymbol \mu} \sim \mathcal{N}\left(\mathbf{0}, \mathbf{\Sigma}_{i}^{\boldsymbol{\mu}}\right)$</li>
+<li>进一步假设 $n_i$ 和 $\mu_{i}$ 是独立的，可以看到 $\boldsymbol{\mu}$ 要比真实噪声图像 $\mathbf{y}$ 更接近 $\widetilde {\mathbf{x}}$ ，$\left|\boldsymbol{\Sigma}<em>{i}^{\mathbf{n}}\right| \gg\left|\boldsymbol{\Sigma}</em>{i}^{\boldsymbol{\mu}}\right| \approx 0$</li>
+<li>不过 $\widetilde {\mathbf{x}}<em>i$ 不可用，所以引入 $\epsilon</em>{i}=y_{i}-\mu_{i}$ ，其中 $\epsilon_{i} \sim \mathcal{N}\left(\mathbf{0}, \mathbf{\Sigma}<em>{i}^{\mathbf{n}}+\mathbf{\Sigma}</em>{i}^{\boldsymbol{\mu}}\right)$</li>
+<li>emmm后面就看不懂了，就是推导出了在贝叶斯框架下的loss</li>
+</ul>
+</li>
+<li>不过将其应用于真实噪声时，由于真实照片中的噪声是空间相关的，违反了像素独立的噪声假设，从而限制了该方法的直接应用。不过作者认为这种假设在分离信号(空间相关)和噪声(像素无关)时是十分重要的</li>
+</ul>
+<h3 id="😝😜😋">😝😜😋</h3>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%87%AA%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/" class="print-no-link">#自监督学习</a>
+      
+        <a href="/tags/%E5%BA%95%E5%B1%82%E8%A7%86%E8%A7%89%E5%BA%94%E7%94%A8/" class="print-no-link">#底层视觉应用</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>论文阅读-0x11</div>
+      <div>http://example.com/2021/01/28/论文阅读-0x11/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年1月28日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/03/08/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x12/" title="论文阅读-0x12">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">论文阅读-0x12</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/" title="论文阅读-0x10">
+                        <span class="hidden-mobile">论文阅读-0x10</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

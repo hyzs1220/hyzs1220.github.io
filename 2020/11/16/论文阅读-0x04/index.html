@@ -1,0 +1,871 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="论文的阅读笔记（Wenqi Ren 任文琦老师）：《Gated Fusion Network for Single Image Dehazing》[code] , CVPR 2018">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读-0x04">
+<meta property="og:url" content="http://example.com/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="论文的阅读笔记（Wenqi Ren 任文琦老师）：《Gated Fusion Network for Single Image Dehazing》[code] , CVPR 2018">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/1.png">
+<meta property="og:image" content="http://example.com/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/2.png">
+<meta property="og:image" content="http://example.com/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/3.png">
+<meta property="og:image" content="http://example.com/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/4.png">
+<meta property="og:image" content="http://example.com/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/5.png">
+<meta property="og:image" content="http://example.com/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/6.png">
+<meta property="article:published_time" content="2020-11-16T12:29:25.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.572Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="图像去雾去云相关">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/1.png">
+  
+  
+  
+  <title>论文阅读-0x04 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="论文阅读-0x04"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-11-16 20:29" pubdate>
+          2020年11月16日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">论文阅读-0x04</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>论文的阅读笔记（Wenqi Ren 任文琦老师）：《Gated Fusion Network for Single Image Dehazing》<a target="_blank" rel="noopener" href="https://github.com/rwenqi/GFN-dehazing">[code]</a> , CVPR 2018</p>
+<span id="more"></span>
+<h2 id="Gated-Fusion-Network-for-Single-Image-Dehazing">Gated Fusion Network for Single Image Dehazing</h2>
+<h3 id="Introduction">Introduction</h3>
+<ul>
+<li>基于一个端到端可训练的神经网络，该网络由 encoder and a decoder 组成</li>
+<li>该网络采用融合策略，通过白平衡、对比度增强和伽马校正，从原始的模糊图像中提取3个输入
+<ul>
+<li>White Balance (WB), Contrast Enhancing (CE), and Gamma Correction (GC)</li>
+</ul>
+</li>
+<li>基于这些不同输入之间的差异计算像素级置信图，以混合派生输入的信息，并保持良好的区域可见度</li>
+<li>最终的去噪图像是通过限制输入的重要特征而得到的</li>
+<li>同时为了训练网络，引入了一种多尺度方法来避免晕轮效应</li>
+<li>早期的方法专注于根据清晰图像的统计数据来开发手工制作的特征
+<ul>
+<li>暗通道先验和局部最大对比度（dark channel prior and local max contrast）</li>
+</ul>
+</li>
+<li>在去雾化文献中，去雾化过程通常被描述为
+<ul>
+<li>$I(x) = J(x)t(x) + A(1-t(x))$
+<ul>
+<li>I(x) 观测到的雾霾图像; J(x)是无雾场景</li>
+<li>A是全局大气光照</li>
+<li>t(x)是描述未散射并到达摄像机传感器的那部分光的场景传输率</li>
+</ul>
+</li>
+<li>不过实际上，光的传播和大气光是未知的。给定一个模糊的图像，大多数去雾方法试图估计透射t(x)和大气光A</li>
+</ul>
+</li>
+<li>作者认为从模糊图像中估计传输是一个严重病态问题
+<ul>
+<li>一些方法尝试使用视觉线索来捕获模糊图像的确定性和统计特性</li>
+<li>显然这些传输近似是不准确的，特别是在场景中，物体的颜色本质上与大气光的颜色相似的情况下</li>
+<li>所以这种错误的传输估计就会直接影响到恢复质量</li>
+</ul>
+</li>
+<li>为此作者提出了一种新的端到端的可训练神经网络，它不显式估计传输和大气光，因此可以避免由传输估计误差引起的伪影</li>
+<li>模糊图像中有两个主要的因素需要处理：
+<ul>
+<li>一是由大气光引入的颜色投射</li>
+<li>二是由于衰减造成的能见度不足</li>
+</ul>
+</li>
+<li><img src="/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/1.png" srcset="/img/loading.gif" lazyload alt>
+<ul>
+<li>第一个输入通过消除大气光引起的色散确保了输出的自然再现(图1(b))</li>
+<li>第二种对比度增强的输入产生了更好的全局可见性，但主要是在厚的模糊区域(如图1©中的后墙)</li>
+<li>然而，对比度增强后的图像在光线模糊的区域太暗。因此，为了恢复轻度模糊区域，我们发现gamma校正后的图像很好地恢复了轻度模糊区域的信息(如图1(d)中的前草坪)</li>
+</ul>
+</li>
+<li>主要贡献
+<ul>
+<li>提出了一种深度端到端可训练的中立网络，它可以恢复清晰的图像（无需对场景传输和大气光线进行任何限制）</li>
+<li>证明了GFN在单一图像去雾的效用和有效性，利用从原始模糊图像的导出输入</li>
+<li>用多尺度的方法训练所提出的模型，以消除影响图像去雾的光环伪影</li>
+</ul>
+</li>
+<li>图像去雾的方法主要有三种:基于多图像的方法、基于手工先验的方法和数据驱动的方法
+<ul>
+<li>基于多图像的方法：这些方法都做了相同的假设，即在同一场景中使用多幅图像</li>
+<li>基于手工先验的方法：强烈依赖于假设图像先验的准确性，因此当假设先验不足以描述真实图像时，可能会表现不佳。因此，这些方法往往会引入不需要的人工现象，如颜色失真。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Gated-Fusion-Network—GFN">Gated Fusion Network—GFN</h3>
+<ul>
+<li><img src="/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/2.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>使用原始的模糊图像和三个衍生图像作为输入</li>
+<li>其核心思想是学习置信度映射，通过保留图像中最重要的特征，将多个输入图像合并为一个单一的图像
+<ul>
+<li>首先，由于大气光的影响，模糊图像的颜色经常发生变化；二是遥远地区由于散射和衰减现象造成的能见度不足</li>
+<li>基于这些观察，我们生成三个输入，从最初的模糊图像中恢复整个图像的颜色和能见度
+<ul>
+<li>白平衡：对模糊输入进行估计，恢复图像潜色，消除大气色造成的色差
+<ul>
+<li>灰色世界假设技术：给定一幅颜色变化量足够大的图像，图像中红、绿、蓝分量的平均值应该平均为一个普通灰度值</li>
+<li>这一假设在任何给定的现实场景中基本上都是有效的，因为颜色的变化是随机的和独立的。可以说，在样本数量较大的情况下，平均值应该趋向于收敛于均值，均值是灰色的</li>
+<li>虽然白平衡可以消除大气光引起的色移，但结果仍然是低对比度</li>
+</ul>
+</li>
+<li>然后利用对比度增强和伽马校正来获取更好的全局信息
+<ul>
+<li>Ancuti and Ancuti 从模糊输入中减去整幅图像$I$的平均亮度值$\widetilde I$，得到对比度增强图像</li>
+<li>然后利用一个因子$\mu$ 来对恢复的模糊区域的亮度进行线性增加</li>
+<li>$\mathbf{I}_{c e}=\mu(\mathbf{I}-\tilde{I})$</li>
+<li>其中$\mu=2(0.5+\tilde{I})$</li>
+<li>不过在雾霾比较密集的地区。主要原因是随着图像亮度指标$\widetilde I$的增加，$(\mathbf{I}-\tilde{I})$的负值可能会主导对比度增强输入，导致图像的暗区往往是黑色的</li>
+</ul>
+</li>
+<li>伽马校正
+<ul>
+<li>为了克服上述情况，使用伽马校正来创建另一种对比度增强</li>
+<li>$\mathbf{I}_{g c}=\alpha \mathbf{I}^{\gamma}$</li>
+<li>伽玛校正是一种非线性操作，用于对图像内容中的亮度或三色值进行编码($\gamma$&lt; 1)和解码($\gamma$&gt; 1)</li>
+<li>本文中，作者使用了$\alpha = 1,\gamma = 2.5$，能有效地解决上述情况</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>网络使用了一个encoder-decoder network model ，并且带有残差结构以及跳跃连接
+<ul>
+<li>在输入层中保留场景颜色的主要信息，同时消除输入中不重要的颜色</li>
+<li>然后将反卷积层的输出组合起来，以恢复三个导出输入的权重图
+<ul>
+<li>即反卷积层的输出是衍生输入图像$I_{wb}, I_{ce}$ 和 $I_{gc}$的置信度映射（权重图）</li>
+</ul>
+</li>
+<li>将反卷积得到的置信度映射与三个衍生输入相乘，得到每个尺度下的最终去雾图像</li>
+<li>$J=C_{w b} \circ \mathbf{I}<em>{w b}+C</em>{c e} \circ \mathbf{I}<em>{c e}+C</em>{g c} \circ \mathbf{I}_{g c}$</li>
+</ul>
+</li>
+<li>为了在不丢失局部细节的情况下利用更多的上下文，使用扩展网络来扩大卷积层中的接受域。在每个卷积层或反卷积层之后添加校正层</li>
+<li><img src="/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/3.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>多尺度结构
+<ul>
+<li>如图所示，首先在粗尺度上进行去雨去雾操作，然后将结果上采样再进一步操作</li>
+<li>卷积层以连接的形式从前一阶段获取清晰的图像以及它自己的模糊图像和派生的输入</li>
+<li>每个输入大小是其粗尺度网络大小的两倍</li>
+<li>在下一阶段之前有一个上采样层。在更精细的尺度上，恢复原始的高分辨率图像</li>
+<li>通过encoder-decoder结构，构建了一个金字塔结构网络，适用MSE准则</li>
+<li>$\mathcal{L}<em>{\text {cont}}(\Theta, k)=\frac{1}{N} \sum</em>{i=1}^{N}\left|\mathcal{F}\left(\mathbf{I}<em>{i, k}, \Theta, k\right)-\mathbf{J}</em>{i, k}\right|^{2}$</li>
+</ul>
+</li>
+<li>对抗损失
+<ul>
+<li>建立一个鉴别器，以最精细尺度或ground-truth锐化图像的输出作为输入</li>
+<li>$\begin{aligned} \mathcal{L}<em>{a d v}=&amp; \underset{\mathbf{J} \sim p</em>{\text {clear }}(\mathbf{J})}{\mathbb{E}}[\log D(\mathbf{J})]  &amp;+\underset{\mathbf{I} \sim p_{\text {hazy }}(\mathbf{I})}{\mathbb{E}}[\log (1-D(\mathcal{F}(\mathbf{I})))] \end{aligned}$</li>
+<li>其中F为上图中的多尺度网络，D为鉴别器</li>
+<li>$\mathcal{L}<em>{\text {total}}=\mathcal{L}</em>{\text {cont}}+0.001 \mathcal{L}_{\text {adv}}$</li>
+</ul>
+</li>
+</ul>
+<h3 id="Experiments">Experiments</h3>
+<ul>
+<li>在合成数据集和真实的模糊图像上定量地评估了所提出的算法</li>
+<li>给定一个清晰的图像 J ,随机大气光A∈(0.8,1.0)和真实深度d,我们使用$t(x) =e^{−βd  (x)}$合成变化映射，然后利用物理模型生成模糊图像。对于散射系数β∈(0.5,1.5)</li>
+<li>对每一张干净的图像使用7种不同的校正器，这样就可以为每一张输入图像合成不同的雾霾浓度图像</li>
+<li>此外，在每个模糊输入中加入1%高斯噪声，增强训练后网络的鲁棒性</li>
+<li>结构相似性(SSIM)和峰值信噪比(PSNR)</li>
+<li><img src="/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/4.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>图像融合是一种保留最有用的特征，将多幅图像融合为一幅图像的方法
+<ul>
+<li>通过计算相应的置信度图来过滤重要的输入信息，从而有效地融合了输入信息</li>
+<li>因此，在GFN中，衍生的输入通过三个像素级置信映射进行权重控制，以保持区域的良好可视性</li>
+<li>GFN有两个优点
+<ul>
+<li>通过单像素的操作可以减少基于块的伪影(例如黑信道优先)</li>
+<li>消除传输和大气光估计造成的影响</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/5.png" srcset="/img/loading.gif" lazyload alt>
+<ul>
+<li>多尺度方法的有效性。第一和第二行分别是单尺度网络和多尺度网络的结果</li>
+</ul>
+</li>
+<li><img src="/2020/11/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x04/6.png" srcset="/img/loading.gif" lazyload alt>
+<ul>
+<li>训练了一个没有融合过程的端到端网络。该网络与DFN具有相同的结构，只是输入是模糊图像，输出是不需要置信映射学习的去雾结果</li>
+<li>没有门控的方法会产生图8( b )中的非常暗的图像</li>
+<li>没有融合策略的方法会产生颜色失真和暗区域的结果，如图8( c )</li>
+</ul>
+</li>
+<li>局限性是DFN不能处理有很大雾的已损坏图像。由于重度雾霾严重地干扰了大气光(大气光不是恒定的)，雾霾模型不适用于此类例子</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%8E%BB%E9%9B%BE%E5%8E%BB%E4%BA%91%E7%9B%B8%E5%85%B3/" class="print-no-link">#图像去雾去云相关</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>论文阅读-0x04</div>
+      <div>http://example.com/2020/11/16/论文阅读-0x04/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年11月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/11/21/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x05/" title="论文阅读-0x05">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">论文阅读-0x05</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x03/" title="论文阅读-0x03">
+                        <span class="hidden-mobile">论文阅读-0x03</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,871 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="这篇论文其实自己之前有学习过，不过没有整理，所以在记录整理一下，并且在看实现代码的过程中，对上采样也有了新的学习了解，并做一下记录。 《 Toward Convolutional Blind Denoising of Real Photographs 》， CVPR 2019">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CBDNt&amp;卷积上采样">
+<meta property="og:url" content="http://example.com/2020/10/15/CBDNet-%E5%8D%B7%E7%A7%AF%E4%B8%8A%E9%87%87%E6%A0%B7/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="这篇论文其实自己之前有学习过，不过没有整理，所以在记录整理一下，并且在看实现代码的过程中，对上采样也有了新的学习了解，并做一下记录。 《 Toward Convolutional Blind Denoising of Real Photographs 》， CVPR 2019">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/10/15/CBDNet-%E5%8D%B7%E7%A7%AF%E4%B8%8A%E9%87%87%E6%A0%B7/1.jpg">
+<meta property="og:image" content="http://example.com/2020/10/15/CBDNet-%E5%8D%B7%E7%A7%AF%E4%B8%8A%E9%87%87%E6%A0%B7/2.png">
+<meta property="og:image" content="http://example.com/2020/10/15/CBDNet-%E5%8D%B7%E7%A7%AF%E4%B8%8A%E9%87%87%E6%A0%B7/3.png">
+<meta property="og:image" content="http://example.com/2020/10/15/CBDNet-%E5%8D%B7%E7%A7%AF%E4%B8%8A%E9%87%87%E6%A0%B7/4.png">
+<meta property="article:published_time" content="2020-10-15T14:14:08.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.564Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2020/10/15/CBDNet-%E5%8D%B7%E7%A7%AF%E4%B8%8A%E9%87%87%E6%A0%B7/1.jpg">
+  
+  
+  
+  <title>CBDNt&amp;卷积上采样 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="CBDNt&amp;卷积上采样"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-10-15 22:14" pubdate>
+          2020年10月15日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">CBDNt&amp;卷积上采样</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>这篇论文其实自己之前有学习过，不过没有整理，所以在记录整理一下，并且在看实现代码的过程中，对上采样也有了新的学习了解，并做一下记录。</p>
+<p>《 Toward Convolutional Blind Denoising of Real Photographs 》， <em>CVPR</em> 2019</p>
+<span id="more"></span>
+<h2 id="CBDNet">CBDNet</h2>
+<p>论文主要在以下四个部分做出了创新改进：</p>
+<ul>
+<li>论文不再单纯针对高斯噪声进行去噪，而是主要针对真实噪声，考虑了信号依赖噪声和ISP流程对噪声的影响，展示了图像噪声模型在真实噪声图像中起着关键作用，使用高斯-泊松模型来进行噪声模拟。</li>
+<li>提出了CBDNet模型，其包括了一个噪声估计子网络和一个非盲去噪子网络，可以实现图像的盲去噪（即未知噪声水平）</li>
+<li>提出了非对称学习（asymmetric learning）的损失函数，并允许用户交互式调整去噪结果，增强了去噪结果的鲁棒性</li>
+<li>将合成噪声图像与真实噪声图像一起用于网络的训练，提升网络的去噪效果和泛化能力</li>
+</ul>
+<h3 id="真实噪声模型">真实噪声模型</h3>
+<ul>
+<li>
+<p>真实噪声分布可以用异方差高斯近似 $n(L)∼N(0,σ^2(L))$</p>
+<ul>
+<li>${\sigma ^2}({\mathbf{L}}) = {\mathbf{L}} \cdot \sigma _s^2 + \sigma _c^2$</li>
+</ul>
+</li>
+<li>
+<p>其中L为辐照图像。$n(L) = n_s(L) + n_c$,  包含了信号依赖噪声部分 $n_s$ 和平稳噪声部分 $n_c$ 。其中 $n_c$常常建模为方差为 $\sigma _s^2$ 的高斯白噪声，而 $n_s$ 常常与图像亮度有关</p>
+</li>
+<li>
+<p>再次基础上进一步考虑ISP流程</p>
+<ul>
+<li>$y = f( { \mathbf{DM} } ( {\mathbf{L}} + n({\mathbf{L} )} ) )$</li>
+</ul>
+</li>
+<li>
+<p>y 就是我们需要的合成噪声图像， f(⋅) 代表了相机响应函数（CRF）, $ L = Mf^{−1}(x) $ 从干净图像生成辐照图像， M(⋅) 表示将sRGB图像转化为Bayer图像 ， DM(•)  实现了去除马赛克功能。</p>
+</li>
+<li>
+<p>去马赛克函数中的线性插值运算涉及到了不同颜色通道的像素，所以合成的噪声是通道依赖的</p>
+</li>
+<li>
+<p>再考虑JPEG压缩</p>
+<ul>
+<li>$y = JPEG( f({\mathbf{DM}}( {\mathbf{L}} + {\mathbf{n}}({\mathbf{L}})) ) )$</li>
+</ul>
+</li>
+</ul>
+<h3 id="网络模型">网络模型</h3>
+<p><img src="/2020/10/15/CBDNet-%E5%8D%B7%E7%A7%AF%E4%B8%8A%E9%87%87%E6%A0%B7/1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<ul>
+<li>CBDNet包含了两个子网络：噪声估计子网络和非盲去噪子网络</li>
+<li>噪声估计子网
+<ul>
+<li>将噪声观测图像y转换为估计的噪声水平图 $\hatσ(y)$</li>
+<li>使用五层全卷积网络，卷积核为3×3×32， 使用了1个像素的padding来保证尺寸一致,并且不进行pooling和batch normalization</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">FCN</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(FCN, self).__init__()<br><br>        <span class="hljs-comment"># 3 ==&gt; 32 的输入卷积</span><br>        self.inc = nn.Sequential(<br>            nn.Conv2d(<span class="hljs-number">3</span>, <span class="hljs-number">32</span>, <span class="hljs-number">3</span>, padding=<span class="hljs-number">1</span>),<br>            nn.ReLU(inplace=<span class="hljs-literal">True</span>))<br>    <br>        <span class="hljs-comment"># 32 ==&gt; 32 的中间卷积</span><br>        self.conv = nn.Sequential(<br>            nn.Conv2d(<span class="hljs-number">32</span>, <span class="hljs-number">32</span>, <span class="hljs-number">3</span>, padding=<span class="hljs-number">1</span>),<br>            nn.ReLU(inplace=<span class="hljs-literal">True</span>)<br>        )<br>    <br>        <span class="hljs-comment"># 32 ==&gt; 3 的输出卷积 </span><br>        self.outc = nn.Sequential(<br>            nn.Conv2d(<span class="hljs-number">32</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, padding=<span class="hljs-number">1</span>),<br>            nn.ReLU(inplace=<span class="hljs-literal">True</span>)<br>        )<br>  <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-comment"># 第 1 次卷积</span><br>        conv1 = self.inc(x)<br>        <span class="hljs-comment"># 第 2 次卷积</span><br>        conv2 = self.conv(conv1)<br>        <span class="hljs-comment"># 第 3 次卷积</span><br>        conv3 = self.conv(conv2)<br>        <span class="hljs-comment"># 第 4 次卷积</span><br>        conv4 = self.conv(conv3)<br>        <span class="hljs-comment"># 第 5 次卷积</span><br>        conv5 = self.outc(conv4)<br>        <span class="hljs-keyword">return</span> conv5<br></code></pre></td></tr></table></figure>
+<ul>
+<li>非盲去噪子网
+<ul>
+<li>将 y 和 $\hatσ(y)$ 作为输入得到最终的去噪结果 $\hat x$</li>
+<li>除此之外，噪声估计子网络允许用户在估计的噪声水平图  $\hatσ(y)$ 输入到非盲去噪子网络之前对应进行调整</li>
+<li>使用16层的U-Net结构，且使用残差学习的方式学习残差映射 ，从而得到干净的图像</li>
+<li>并且实验发现，<strong>BN对真实噪声的去除帮助微乎其微</strong>。可能的原因是真实噪声非高斯分布。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><code class="hljs python"><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">single_conv</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, in_ch, out_ch</span>):<br>        <span class="hljs-built_in">super</span>(single_conv, self).__init__()<br>        self.conv = nn.Sequential(<br>            nn.Conv2d(in_ch, out_ch, <span class="hljs-number">3</span>, padding=<span class="hljs-number">1</span>),<br>            nn.ReLU(inplace=<span class="hljs-literal">True</span>))<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        x = self.conv(x)<br>        <span class="hljs-keyword">return</span> x<br>  <br><span class="hljs-comment"># 上采样</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">up</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, in_ch</span>):<br>        <span class="hljs-built_in">super</span>(up, self).__init__()<br>        self.up = nn.ConvTranspose2d(in_ch, in_ch//<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, stride=<span class="hljs-number">2</span>)<br><br>    <span class="hljs-comment"># forward 需要两个输入，x1 是需要上采样的小尺寸 feature map</span><br>    <span class="hljs-comment"># x2 是以前的大尺寸 feature map，因为中间的 pooling 可能损失了边缘像素，</span><br>    <span class="hljs-comment"># 所以上采样以后的 x1 可能会比 x2 尺寸小</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x1, x2</span>):<br>        <span class="hljs-comment"># x1 上采样</span><br>        x1 = self.up(x1)<br>    <br>        <span class="hljs-comment"># 输入数据是四维的，第一个维度是样本数，剩下的三个维度是 CHW</span><br>        <span class="hljs-comment"># 所以 Y 方向上的悄寸差别在 [2],  X 方向上的尺寸差别在 [3] </span><br>        diffY = x2.size()[<span class="hljs-number">2</span>] - x1.size()[<span class="hljs-number">2</span>]<br>        diffX = x2.size()[<span class="hljs-number">3</span>] - x1.size()[<span class="hljs-number">3</span>]<br>        <span class="hljs-comment"># 给 x1 进行 padding 操作</span><br>        x1 = F.pad(x1, (diffX // <span class="hljs-number">2</span>, diffX - diffX//<span class="hljs-number">2</span>,<br>                        diffY // <span class="hljs-number">2</span>, diffY - diffY//<span class="hljs-number">2</span>))<br>        <span class="hljs-comment"># 把 x2 加到反卷积后的 feature map</span><br>        x = x2 + x1<br>        <span class="hljs-keyword">return</span> x<br>  <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">outconv</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, in_ch, out_ch</span>):<br>        <span class="hljs-built_in">super</span>(outconv, self).__init__()<br>        self.conv = nn.Conv2d(in_ch, out_ch, <span class="hljs-number">1</span>)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        x = self.conv(x)<br>        <span class="hljs-keyword">return</span> x<br>  <br>  <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UNet</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(UNet, self).__init__()<br><br>        self.inc = nn.Sequential(<br>            single_conv(<span class="hljs-number">6</span>, <span class="hljs-number">64</span>),<br>            single_conv(<span class="hljs-number">64</span>, <span class="hljs-number">64</span>))<br><br>        self.down1 = nn.AvgPool2d(<span class="hljs-number">2</span>)<br>        self.conv1 = nn.Sequential(<br>            single_conv(<span class="hljs-number">64</span>, <span class="hljs-number">128</span>),<br>            single_conv(<span class="hljs-number">128</span>, <span class="hljs-number">128</span>),<br>            single_conv(<span class="hljs-number">128</span>, <span class="hljs-number">128</span>))<br><br>        self.down2 = nn.AvgPool2d(<span class="hljs-number">2</span>)<br>        self.conv2 = nn.Sequential(<br>            single_conv(<span class="hljs-number">128</span>, <span class="hljs-number">256</span>),<br>            single_conv(<span class="hljs-number">256</span>, <span class="hljs-number">256</span>),<br>            single_conv(<span class="hljs-number">256</span>, <span class="hljs-number">256</span>),<br>            single_conv(<span class="hljs-number">256</span>, <span class="hljs-number">256</span>),<br>            single_conv(<span class="hljs-number">256</span>, <span class="hljs-number">256</span>),<br>            single_conv(<span class="hljs-number">256</span>, <span class="hljs-number">256</span>))<br><br>        self.up1 = up(<span class="hljs-number">256</span>)<br>        self.conv3 = nn.Sequential(<br>            single_conv(<span class="hljs-number">128</span>, <span class="hljs-number">128</span>),<br>            single_conv(<span class="hljs-number">128</span>, <span class="hljs-number">128</span>),<br>            single_conv(<span class="hljs-number">128</span>, <span class="hljs-number">128</span>))<br><br>        self.up2 = up(<span class="hljs-number">128</span>)<br>        self.conv4 = nn.Sequential(<br>            single_conv(<span class="hljs-number">64</span>, <span class="hljs-number">64</span>),<br>            single_conv(<span class="hljs-number">64</span>, <span class="hljs-number">64</span>))<br><br>        self.outc = outconv(<span class="hljs-number">64</span>, <span class="hljs-number">3</span>)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-comment"># input conv : 6 ==&gt; 64 ==&gt; 64</span><br>        inx = self.inc(x)<br><br>        <span class="hljs-comment"># 均值 pooling, 然后 conv1 : 64 ==&gt; 128 ==&gt; 128 ==&gt; 128</span><br>        down1 = self.down1(inx)<br>        conv1 = self.conv1(down1)<br><br>        <span class="hljs-comment"># 均值 pooling，然后 conv2 : 128 ==&gt; 256 ==&gt; 256 ==&gt; 256 ==&gt; 256 ==&gt; 256 ==&gt; 256</span><br>        down2 = self.down2(conv1)<br>        conv2 = self.conv2(down2)<br><br>        <span class="hljs-comment"># up1 : conv2 反卷积，和 conv1 的结果相加，输入256，输出128</span><br>        up1 = self.up1(conv2, conv1)<br>        <span class="hljs-comment"># conv3 : 128 ==&gt; 128 ==&gt; 128 ==&gt; 128</span><br>        conv3 = self.conv3(up1)<br><br>        <span class="hljs-comment"># up2 : conv3 反卷积，和 input conv 的结果相加，输入128，输出64</span><br>        up2 = self.up2(conv3, inx)<br>        <span class="hljs-comment"># conv4 : 64 ==&gt; 64 ==&gt; 64</span><br>        conv4 = self.conv4(up2)<br><br>        <span class="hljs-comment"># output conv: 65 ==&gt; 3，用1x1的卷积降维，得到降噪结果</span><br>        out = self.outc(conv4)<br>        <span class="hljs-keyword">return</span> out<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">CBDNet</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(CBDNet, self).__init__()<br>        self.fcn = FCN()<br>        self.unet = UNet()<br>  <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        noise_level = self.fcn(x)<br>        <span class="hljs-comment"># 将 3通道的原图像，和 noise_level 拼接在一起，作为 UNet 的输入</span><br>        concat_img = torch.cat([x, noise_level], dim=<span class="hljs-number">1</span>)<br>        out = self.unet(concat_img) + x<br>        <span class="hljs-keyword">return</span> noise_level, out<br></code></pre></td></tr></table></figure>
+<h3 id="非对称学习（Asymmetric-Learning）">非对称学习（Asymmetric Learning）</h3>
+<ul>
+<li>
+<p>作者观察到非盲去噪方法（如BM3D、FFDNet等）对噪声估计的误差具有非对称敏感性，即非盲去噪方法对低估误差比较敏感，而对高估的误差比较鲁棒</p>
+<ul>
+<li>当输入噪声的标准差与真实噪声的标准差一致时，去噪效果最好</li>
+<li>当输入噪声标准差低于真实值时，去噪结果包含可察觉的噪声</li>
+<li>而当输入噪声标准差高于真实值时，去噪结果仍能保持较好的结果，虽然也平滑了部分低对比度的纹理。</li>
+</ul>
+</li>
+<li>
+<p>为了消除这种非对称敏感性，设计了非对称损失函数。</p>
+<ul>
+<li>给定像素 $i$ 的估计噪声水平 $\hatσ(y_i)$ 和真实值 $σ(y_i)$ ，当 $\hatσ(y_i) &lt; σ(y_i)$ 时，应该对其MSE引入更多的惩罚</li>
+<li>${\mathcal{L} <em>{asymm}} = \sum\limits_i {| {\alpha - {\mathbb{I}</em>{( {\hat \sigma ( {y_i} ) - \sigma ( {y_i} )} ) &lt; 0}}} | \cdot {( {\hat \sigma ( {y_i} ) - \sigma ( {y_i} )} )^2}}$</li>
+<li>当 e&lt;0 时，$\mathbb{I}_e$ = 1，否则为0。通过设定0&lt;α&lt;0.5，我们可以对低估误差引入更多的惩罚</li>
+</ul>
+</li>
+<li>
+<p>引入全变分（TV）正则项约束 $σ(y_i)$ 的平滑性</p>
+<ul>
+<li>${\mathcal{L}_{\text{TV}}} = | {\nabla _h\hat \sigma (\mathbf{y})} |_2^2 + | {\nabla _v\hat \sigma (\mathbf{y})} |_2^2$</li>
+<li>$\nabla _h$ 为其中沿水平(垂直)方向的梯度算子</li>
+<li>对于去噪网络输入的 $\hat x$，定义重建误差</li>
+<li>${\mathcal{L}_{rec}} = | { \mathbf{\hat x} - \mathbf{x}} |_2^2$</li>
+<li>综上所述，整个CBDNet的目标损失函数为</li>
+<li>$\mathcal{L} = \mathcal{L}_{rec}  + \lambda _{asymm} \mathcal{L} _{asymm} + \lambda _{TV} \mathcal{L} _{TV}$</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">fixed_loss</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br>    <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, out_image, gt_image, est_noise, gt_noise, if_asym</span>):<br>        <span class="hljs-comment"># 分别得到图像的高度和宽度</span><br>        h_x = est_noise.size()[<span class="hljs-number">2</span>]<br>        w_x = est_noise.size()[<span class="hljs-number">3</span>]<br>        <span class="hljs-comment"># 每个样本为 CHW ，把 H 方向第一行的数据去掉，统计一下一共多少元素</span><br>        count_h = self._tensor_size(est_noise[:, :, <span class="hljs-number">1</span>:, :])<br>        <span class="hljs-comment"># 每个样本为 CHW ，把 W 方向第一列的数据去掉，统计一下一共多少元素</span><br>        count_w = self._tensor_size(est_noise[:, :, : ,<span class="hljs-number">1</span>:])<br>        <span class="hljs-comment"># H 方向，第一行去掉得后的矩阵，减去最后一行去掉后的矩阵，即下方像素减去上方像素，平方，然后求和</span><br>        h_tv = torch.<span class="hljs-built_in">pow</span>((est_noise[:, :, <span class="hljs-number">1</span>:, :] - est_noise[:, :, :h_x-<span class="hljs-number">1</span>, :]), <span class="hljs-number">2</span>).<span class="hljs-built_in">sum</span>()<br>        <span class="hljs-comment"># W 方向，第一列去掉得后的矩阵，减去最后一列去掉后的矩阵，即右方像素减去左方像素，平方，然后求和</span><br>        w_tv = torch.<span class="hljs-built_in">pow</span>((est_noise[:, :, :, <span class="hljs-number">1</span>:] - est_noise[:, :, :, :w_x-<span class="hljs-number">1</span>]), <span class="hljs-number">2</span>).<span class="hljs-built_in">sum</span>()<br>        <span class="hljs-comment"># 求平均，得到平均每个像素上的 tvloss</span><br>        tvloss = h_tv / count_h + w_tv / count_w<br><br>        loss = torch.mean( \<br>                <span class="hljs-comment"># 第三部分：重建损失</span><br>                torch.<span class="hljs-built_in">pow</span>((out_image - gt_image), <span class="hljs-number">2</span>)) + \<br>                <span class="hljs-comment"># 第一部分：对比损失</span><br>                if_asym * <span class="hljs-number">0.5</span> * torch.mean(torch.mul(torch.<span class="hljs-built_in">abs</span>(<span class="hljs-number">0.3</span> - F.relu(gt_noise - est_noise)), torch.<span class="hljs-built_in">pow</span>(est_noise - gt_noise, <span class="hljs-number">2</span>))) + \<br>                <span class="hljs-comment"># 第二部分：起平滑作用的 tvloss</span><br>                <span class="hljs-number">0.05</span> * tvloss<br>        <span class="hljs-keyword">return</span> loss<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_tensor_size</span>(<span class="hljs-params">self,t</span>):<br>        <span class="hljs-keyword">return</span> t.size()[<span class="hljs-number">1</span>]*t.size()[<span class="hljs-number">2</span>]*t.size()[<span class="hljs-number">3</span>]<br></code></pre></td></tr></table></figure>
+<h3 id="实验">实验</h3>
+<ul>
+<li>数据集： NC12、DND和·Nam</li>
+<li>损失函数：$α=0.3 , λ_1=0.5 , λ_2=0.05$</li>
+<li>使用ADAM算法训练网络：$β_1=0.9$</li>
+<li>最小batch的大小为32，图像块大小为128×128</li>
+<li>所有模型训练 40epochs，前20epochs使用 $10^{−3}$ 学习率，然后使用 $5 \times 10^{−4}$ 的学习率fine tune模型</li>
+</ul>
+<h2 id="卷积上采样">卷积上采样</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">torch</span>.nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride=<span class="hljs-number">1</span>, padding=<span class="hljs-number">0</span>, output_padding=<span class="hljs-number">0</span>, groups=<span class="hljs-number">1</span>, bias=<span class="hljs-literal">True</span>, dilation=<span class="hljs-number">1</span>)<br><br><span class="hljs-comment"># in_channels(int) – 输入信号的通道数</span><br><span class="hljs-comment"># out_channels(int) – 卷积产生的通道数</span><br><span class="hljs-comment"># kerner_size(int or tuple) - 卷积核的大小</span><br><span class="hljs-comment"># stride(int or tuple,optional) - 卷积步长，即要将输入扩大的倍数。</span><br><span class="hljs-comment"># padding(int or tuple, optional) - 输入的每一条边补充0的层数，高宽都增加2*padding</span><br><span class="hljs-comment"># output_padding(int or tuple, optional) - 输出边补充0的层数，高宽都增加padding</span><br><span class="hljs-comment"># groups(int, optional) – 从输入通道到输出通道的阻塞连接数</span><br><span class="hljs-comment"># bias(bool, optional) - 如果bias=True，添加偏置</span><br><span class="hljs-comment"># dilation(int or tuple, optional) – 卷积核元素之间的间距</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>卷积操作
+<ul>
+<li><img src="/2020/10/15/CBDNet-%E5%8D%B7%E7%A7%AF%E4%B8%8A%E9%87%87%E6%A0%B7/2.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><strong>计算公式</strong>
+<ul>
+<li>$out = (in - kernel + 2 \times padding) / stride + 1$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>反卷积
+<ul>
+<li>
+<p><strong>计算公式</strong></p>
+<ul>
+<li>$H_{out} = (H_{in} - 1) \times stride - 2 \times padding + kernelsize - 2 \times padding$</li>
+</ul>
+</li>
+<li>
+<p>当stride=1时，就不会进行插值操作，只会进行padding</p>
+</li>
+<li>
+<p><img src="/2020/10/15/CBDNet-%E5%8D%B7%E7%A7%AF%E4%B8%8A%E9%87%87%E6%A0%B7/3.png" srcset="/img/loading.gif" lazyload alt></p>
+</li>
+<li>
+<p>首先正向卷积计算，4x4 输入，卷积核 3x3，stride=1，得到 2x2。所以 padding=0</p>
+</li>
+<li>
+<p>计算可以得到输出为 $(2-1) \times 1 -2 \times 0 + 3 +0 = 4$</p>
+</li>
+<li>
+<p>可以看到上面在进行反卷积的时候进行了padding操作</p>
+</li>
+<li>
+<p>$padding_{new} = kernel\_size - padding -1 = 3 -0 -1 = 2$</p>
+</li>
+<li>
+<p>所以下方大小变为 $H_{in} + 2 \times padding_{new} = 2+2 \times 2=6$</p>
+</li>
+<li>
+<p>当stride=2时，进行插值和padding操作</p>
+</li>
+<li>
+<p><img src="/2020/10/15/CBDNet-%E5%8D%B7%E7%A7%AF%E4%B8%8A%E9%87%87%E6%A0%B7/4.png" srcset="/img/loading.gif" lazyload alt></p>
+</li>
+<li>
+<p>正向计算，5x5输入，卷积核 3x3，stride=2，得到 3x3。所以 padding=1</p>
+</li>
+<li>
+<p>计算可以得到输出为 $(3-1) \times 2 -2 \times 1 + 3 +0 = 5$</p>
+</li>
+<li>
+<p>$H_{in_new} = H_{in} + (stride-1) \times (H_{in}-1) = 3 + (2-1) \times (3-1) = 5$</p>
+</li>
+<li>
+<p>$padding_{new} = kernel\_size - padding -1 = 3 -1 -1 = 1$</p>
+</li>
+<li>
+<p>所以下方大小变为 $H_{in_ new} + 2 \times padding_{new} = 5+2 \times 1=7$</p>
+</li>
+</ul>
+</li>
+<li>其实没有特别理解，不过大概知道是怎么计算了，也是记录一下，以后可以翻出来再看看</li>
+<li>主要还是需要记住计算公式！！</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="print-no-link">#深度学习</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>CBDNt&amp;卷积上采样</div>
+      <div>http://example.com/2020/10/15/CBDNet-卷积上采样/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年10月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/10/16/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x02/" title="论文阅读-0x02">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">论文阅读-0x02</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/09/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x01/" title="论文阅读-0x01">
+                        <span class="hidden-mobile">论文阅读-0x01</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

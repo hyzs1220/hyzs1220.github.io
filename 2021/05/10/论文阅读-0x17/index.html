@@ -1,0 +1,906 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="论文的阅读笔记： 《 Localization Distillation for Object Detection 》,   [code],  CVPR 2021">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读-0x17">
+<meta property="og:url" content="http://example.com/2021/05/10/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x17/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="论文的阅读笔记： 《 Localization Distillation for Object Detection 》,   [code],  CVPR 2021">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/05/10/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x17/1.png">
+<meta property="og:image" content="http://example.com/2021/05/10/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x17/2.png">
+<meta property="og:image" content="http://example.com/2021/05/10/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x17/2.png">
+<meta property="og:image" content="http://example.com/2021/05/10/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x17/3.png">
+<meta property="article:published_time" content="2021-05-10T09:48:56.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.572Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="目标检测">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2021/05/10/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x17/1.png">
+  
+  
+  
+  <title>论文阅读-0x17 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="论文阅读-0x17"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-05-10 17:48" pubdate>
+          2021年5月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">论文阅读-0x17</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>论文的阅读笔记：</p>
+<p>《 Localization Distillation for Object Detection 》,   <a target="_blank" rel="noopener" href="https://github.com/HikariTJU/LD">[code]</a>,  CVPR 2021</p>
+<span id="more"></span>
+<h2 id="Localization-Distillation-for-Object-Detection">Localization Distillation for Object Detection</h2>
+<h3 id="Abstract">Abstract</h3>
+<ul>
+<li>知识蒸馏(Knowledge distillation,  KD)在深度学习领域对学习<strong>紧凑模型</strong>具有强大的能力，但在提取目标定位信息用于目标检测方面仍存在局限性</li>
+<li>现有的目标检测KD方法主要是<strong>模仿教师模型和学生模型之间的深度特征</strong>，不仅受具体模型架构的限制，而且无法提取定位模糊度localization ambiguity</li>
+<li>本文首先提出了基于定位蒸馏 localization distillation (LD) 的目标检测方法
+<ul>
+<li>LD可以通过<strong>采用边界框的通用定位表示</strong>来 表示为标准KD</li>
+<li>LD非常灵活，适用于提取任意架构的教师模型和学生模型的定位歧义</li>
+<li>此外，有趣的是，Self-LD，即提取教师模型本身，可以进一步提高当前模型水平</li>
+</ul>
+</li>
+<li>其次提出一种<strong>教师助理(TA)策略来填补教师模型和学生模型之间可能存在的差距</strong>，这样即使所选的教师模型不是最优的，也能保证蒸馏效果</li>
+<li>包围盒回归Bounding box regression 是目标检测中最常用的定位方式，其中Dirac delta分布表示直观
+<ul>
+<li>然而定位歧义是非常普遍的，<strong>对象不能确定定位边缘</strong></li>
+<li>为了对歧义进行建模，定位质量可以通过预测质量得分来衡量，这通常与分类或后处理NMS相结合
+<ul>
+<li>这里NMS就是非极大值抑制（Non-Maximum Suppression，NMS）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>在定位表示方面，建议用边界盒的高斯分布来模拟每个边的不确定性
+<ul>
+<li>最近进一步提出了边界盒的一般分布，即边缘用离散的概率分布表示，没有任何先验约束。尽管有明显的提高，但仍有一定的余地来提高模糊边缘的定位质量</li>
+</ul>
+</li>
+<li>本文提出知识精馏是提高目标检测定位质量的一种潜在方法，它可以<strong>通过优秀的教师模型捕获定位歧义，然后提炼出来训练学生模型</strong></li>
+<li>现有的KD方法主要是加强教师模型和学生模型之间深度特征的一致性
+<ul>
+<li>不过很多方法都是针对于专门设计的体系结构，不能明确地提取定位歧义</li>
+<li>有一个工作是Teacher Bounded Regression (TBR) loss ， 当学生的预测比教师的预测差一个阈值ε时，会受到额外的回归惩罚</li>
+<li>$\mathcal{L}<em>{\mathrm{add}}=\lambda \mathcal{L}</em>{\mathrm{reg}}\left(\boldsymbol{b}<em>{s}, \boldsymbol{b}^{g t}\right)$, if $\ell</em>{2}\left(\boldsymbol{b}<em>{s}, \boldsymbol{b}^{g t}\right)+\varepsilon \leqslant \ell</em>{2}\left(\boldsymbol{b}_{t}, \boldsymbol{b}^{g t}\right)$
+<ul>
+<li>这里的 $\mathcal{L}_{\mathrm{reg}}$ 是包围盒回归损失， $\lambda$ 是平衡参数</li>
+</ul>
+</li>
+<li>虽然不局限于特定的体系结构，但TBR损失不能提取定位歧义</li>
+</ul>
+</li>
+<li>本文首先提出了基于定位蒸馏(LD)的目标检测方法。<strong>基于边界框的一般分布，LD可以表述为标准KD</strong>，通过该方法，<strong>教师模型捕获的定位歧义可以很好地提炼为学生模型</strong>
+<ul>
+<li>与单一的ground-truth box注释相比，LD在培养学生模型时可以提供额外的本地化信息</li>
+</ul>
+</li>
+<li><img src="/2021/05/10/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x17/1.png" srcset="/img/loading.gif" lazyload alt>
+<ul>
+<li>主干ResNet-34的GFocal预测出了冗余box。由于“bird”与背景之间的相似性，出现了多个冗余框的定位歧义，这在默认的NMS中是无法抑制的</li>
+<li>使用教师检测器GFocal以ResNet-101-DCN作为主干蒸馏ResNet-34后，预测的边界框都具有较高的定位质量，并且默认NMS可以轻松抑制多余的框以提高对象检测性能</li>
+<li>而且，有趣的是发现Self-LD，即<strong>提炼教师模型本身，可以进一步增强最新的检测器</strong>，在该检测器中可以进一步捕获定位歧义</li>
+</ul>
+</li>
+<li>LD的第二个问题是如何选择好的教师模式。对教师模型的直观选择是准确率最高的检测器
+<ul>
+<li>但<strong>当学生和老师之间的差距太大时，LD可能就没有那么有效了</strong></li>
+<li>为了解决这个问题，我们进一步为LD引入了助教（TA）策略。 通过引入几种中间助理模型，可以弥补学生模型和教师模型之间可能存在的差距，因此带有TA的LD对教师模型的选择不敏感</li>
+</ul>
+</li>
+<li>将本文的贡献总结如下
+<ul>
+<li>定位精馏是一种提取定位歧义的方法，适用于任何结构的检测器。据我们所知，LD是第一个明确地将知识蒸馏应用于目标检测的定位分支的工作</li>
+<li>LD不仅可以帮助轻量级学生检测器的培训，而且可以通过使用Self-LD进一步提高最先进的检测器本身</li>
+<li>在教师模型不是最优的情况下，建议采用教师辅助策略保持LD的精馏效果</li>
+</ul>
+</li>
+</ul>
+<h3 id="Related-Work">Related Work</h3>
+<ul>
+<li>Bounding Box Regression
+<ul>
+<li>最近包围盒表示从Dirac  delta分布发展到高斯分布，并进一步发展到一般分布。边界盒的一般分布对于描述边界盒的不确定性更为全面。<strong>基于包围盒的一般表示，建立了一种标准的定位精馏机制，用于提取定位歧义</strong></li>
+</ul>
+</li>
+<li>Localization Quality Estimation
+<ul>
+<li>定位质量估计(LQE)预测一个分数，该分数衡量检测器预测的边界框的定位质量</li>
+<li>一方面，LQE在训练过程中通常用于配合分类任务，即<strong>增强分类与定位的一致性</strong></li>
+<li>另一方面，LQE可以应用于后处理时的联合决策，即<strong>在执行NMS时既考虑分类评分又考虑LQE</strong></li>
+</ul>
+</li>
+<li>Knowledge Distillation
+<ul>
+<li>知识精馏应用于越来越多的深度学习领域，其目的通常是<strong>在优秀教师模式的引导下学习紧凑高效的学生模式</strong></li>
+<li>在定位歧义方面，所有这些KD方法都只是从<strong>特征模仿的角度</strong>提高了学生的表现</li>
+<li>唯一的例外是TBR损失，它只在 学生的成绩在某种程度上低于老师时 惩罚网络</li>
+<li>TBR损失显然是一个初步的解决方案，它不能提取定位歧义</li>
+<li>本文首次提出了定位精馏的概念，该方法不仅可以改进紧凑的学生模型，而且可以提高检测器的性能</li>
+</ul>
+</li>
+</ul>
+<h3 id="The-Proposed-Method">The Proposed Method</h3>
+<h4 id="Revisit-of-Knowledge-Distillation">Revisit of Knowledge Distillation</h4>
+<ul>
+<li>KD最初是为了分类和识别而开发的，其中<strong>学生模型可以通过模仿更大的教师模型的软输出 soft output 来改进</strong></li>
+<li>设 $\boldsymbol{T}$ 为教师模型， $\boldsymbol{S}$ 为学生模型，$z_T, z_S \in \mathbb {R}^n$ 分别为 $\boldsymbol{T}$ 和 $\boldsymbol{S}$ 的<strong>输出对数output logits</strong>
+<ul>
+<li>对于分类任务，使用SoftMax函数将这些对数 $z_T, z_S$ 转换为它们对应的概率分布 $p_T, p_S$</li>
+</ul>
+</li>
+<li>在KD中，教师模型 $\boldsymbol{T}$ 是重量级的，并且通常在大规模数据集上进行训练以实现较高的准确性，然后可以使用该模型来提炼轻量级学生模型 $\boldsymbol{S}$ 的训练</li>
+<li>学生模型 $\boldsymbol{S}$ 的目的是模仿两者 ground-trurh 标签 $\boldsymbol{g}$ 和 soft label 软标签 $p_T$ ，通过最小化以下损失函数
+<ul>
+<li>$\mathcal{L}<em>{W</em>{S}}=\lambda_{1} \mathcal{L}<em>{\mathrm{CE}}\left(\boldsymbol{p}</em>{S}, \boldsymbol{g}\right)+\lambda_{2} \mathcal{L}<em>{\mathrm{KL}}\left(\boldsymbol{p}</em>{S}^{\tau}, \boldsymbol{p}_{T}^{\tau}\right)$
+<ul>
+<li>其中 $\tau$ 是蒸馏温度， $\mathcal{L}<em>{\mathrm{CE}},\mathcal{L}</em>{\mathrm{KL}}$ 是交叉熵损失和KL散度损失</li>
+<li>在学习学生模型的过程中，只更新 $\boldsymbol{S}$ 的参数  $\boldsymbol{W}_S$ ，冻结老师模型的参数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>一般情况下，模型压缩通常采用KD来减少推理时的计算负担，即  $\boldsymbol{W}_S$ 一般比  $\boldsymbol{W}_T$ 轻</li>
+<li>除了使用 ground-trurh 标签，soft label 软标签 $p_T$ 能够更好地转移教师模型获取的知识，从而引入 $\tau &gt; 0$ 来软化 $\boldsymbol{p}_S$ 和 $\boldsymbol{p}_T$ 的概率分布
+<ul>
+<li>$\begin{aligned} \boldsymbol{p}<em>{T}^{\tau} &amp;=\mathcal{S}\left(\boldsymbol{z}</em>{T}, \tau\right)=\operatorname{SoftMax}\left(\boldsymbol{z}<em>{T} / \tau\right), \ \boldsymbol{p}</em>{S}^{\tau} &amp;=\mathcal{S}\left(\boldsymbol{z}<em>{S}, \tau\right)=\operatorname{SoftMax}\left(\boldsymbol{z}</em>{S} / \tau\right) \end{aligned}$
+<ul>
+<li>这里注意到，如果 $\tau = 1$ ，其实就是原始的SoftMax函数</li>
+<li>当 $\tau \rightarrow 1$ 时，趋于Dirac delta分布：只有一个位置概率最高为1，其余位置的概率为零</li>
+<li>当 $\tau \rightarrow 1$ 时，趋于均匀分布：所有位置的概率 $p_{i}=\frac{1}{n}, \forall i$</li>
+<li>根据经验， $\tau &gt; 1$ 被设置为5、10和20，以软化分布，使 $p_T^{\tau}$ 携带更多信息</li>
+</ul>
+</li>
+<li>可以看这个图，其实就是用一个小型网络去学习大网络学习的数据分布知识</li>
+<li><img src="/2021/05/10/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x17/2.png" srcset="/img/loading.gif" lazyload alt></li>
+</ul>
+</li>
+</ul>
+<h4 id="Localization-Distillation">Localization Distillation</h4>
+<ul>
+<li>虽然KD算法在分类中取得了很大的成功，但在目标检测中提取定位信息却非常具有挑战性</li>
+<li>对于包围盒 $\mathcal{B}$ ，常规表示有两种形式:{x, y, w, h}和{t, B, l, r}(采样点到 $\mathcal{B}$ 的上、下、左、右边缘的距离)</li>
+<li>传统的两种表示形式实际上都遵循Dirac delta分布，只关注ground-truth位置，不能像图1所示的那样对边界盒的歧义进行建模</li>
+<li>为了建模歧义，提出了高斯分布表示，通过引入额外的方差来建模每个边缘的不确定性，但是高斯分布的定位信息不能反映边界框的真实分布</li>
+<li>我们利用 $\mathcal{B} = {t, B, l, r}$ 作为边界框的基本表示。假设 $e \in \mathcal{B}$ 是包围盒的一条边，其值一般可以表示为
+<ul>
+<li>$\hat{e}=\int_{e_{\min }}^{e_{\max }} x \operatorname{Pr}(x) d x, \quad e \in \mathcal{B}$,
+<ul>
+<li>其中x是在[emin, emax]范围内的回归坐标，Pr(x)是对应的概率</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>传统的Dirac delta表示是上式的一种特例，其中当 $x = e^{gt}$ 时 $Pr(x) = 1$ ，否则 $Pr(x) = 0$ ，即只关注ground-truth  edge $e^{gt}$</li>
+<li>所以与Dirac  delta表示相比，一般表示非常灵活，可以<strong>用概率分布来模拟边缘的不确定性</strong></li>
+<li>为了满足深度模型的离散输出，引入了一般分布的离散版本。将回归范围[emin, emax]划分为n个子区间
+<ul>
+<li>$e=\left[e_{1}, e_{2}, \cdots, e_{n}\right]^{\mathrm{T}} \in \mathbb{R}^{n}$ 其中 $e_{1}=e_{\min },e_{n}=e_{\max }$</li>
+</ul>
+</li>
+<li>为简便起见，对 $\forall i, j$ 采用均匀除法 $\Delta_{i}=e_{i+1}-e_{i}$ and $\Delta_{i}=\Delta_{j}$</li>
+<li>为了表示每个位置的概率，采用了SoftMax函数。特别地，回归模型对 $e$ 边缘的所有可能位置预测n  logits z。使用SoftMax将它们转换为概率 $p = SoftMax(z)$</li>
+<li>这样的话，预测回归值为
+<ul>
+<li>$\hat{e}=\boldsymbol{e}^{\mathrm{T}} \boldsymbol{p}=\sum_{i=1}^{n} e_{i} \operatorname{Pr}\left(e_{i}\right), \quad e \in \mathcal{B}$,</li>
+</ul>
+</li>
+<li>由此可计算出包围盒 $\mathcal{B}$ 的四条边为 $\hat{\boldsymbol{b}}=[\hat{t}, \hat{b}, \hat{l}, \hat{r}]^{\mathrm{T}}$ ，然后在预测盒 $\hat{\boldsymbol{b}}$ 和ground-truth  box $b^{gt}$ 之间计算包围盒回归损失</li>
+<li>同时 $\mathcal{B}$ 的每条边都可以表示为一个概率分布，即包围盒 $\mathcal{B}$ 可以表示为矩阵 $\boldsymbol{B}=\left[\boldsymbol{p}<em>{t}, \boldsymbol{p}</em>{b}, \boldsymbol{p}<em>{l}, \boldsymbol{p}</em>{r}\right] \in \mathbb{R}^{n \times 4}$</li>
+<li>给定边 $x$ 的输出对数 $z_T$ 和 $z_S$ ,  $\boldsymbol{T}$ 和 $\boldsymbol{S}$ 的边可以用概率分布 $p_T$ 和 $p_S$ 表示。类似于KD，边 $e$ 的定位知识可以通过kl -散度损失来提取
+<ul>
+<li>$\mathcal{L}<em>{\mathrm{LD}}^{e}=\mathcal{L}</em>{\mathrm{KL}}\left(\boldsymbol{p}<em>{S}^{\tau}, \boldsymbol{p}</em>{T}^{\tau}\right)=\mathcal{L}<em>{\mathrm{KL}}\left(\mathcal{S}\left(\boldsymbol{z}</em>{S}, \tau\right), \mathcal{S}\left(\boldsymbol{z}_{T}, \tau\right)\right)$</li>
+</ul>
+</li>
+<li>最后，包围盒B的所有四条边的LD可以表示为
+<ul>
+<li>$\mathcal{L}<em>{\mathrm{LD}}\left(\boldsymbol{B}</em>{S}, \boldsymbol{B}<em>{T}\right)=\sum</em>{e \in \mathcal{B}} \mathcal{L}_{\mathrm{LD}}^{e}$</li>
+</ul>
+</li>
+<li><img src="/2021/05/10/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x17/2.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>图1中的模糊边对应的是平坦的位置分布，泛化知识也可以从教师模型提炼到学生模型。因此，如果教师已经很好地掌握了定位歧义，通过定位精馏将这种能力转移到学生模型中是一种自然的方法</li>
+<li>总损失：
+<ul>
+<li>$\mathcal{L}<em>{W</em>{S}}=\lambda_{1} \mathcal{L}<em>{\text {reg }}\left(\hat{b}</em>{S}, b^{g t}\right)+\lambda_{2} \mathcal{L}<em>{\text {DFL }}\left(B</em>{S}\right)+\lambda_{3} \mathcal{L}<em>{\mathrm{LD}}\left(\boldsymbol{B}</em>{S}, \boldsymbol{B}_{T}\right)$
+<ul>
+<li>前两项和GFocal模型完全相同</li>
+<li><strong>所以上面说了这么多，其实就是最后这一部分，作者把边界信息用一种概率形式来表示，从而达到一种可以学习的状态，就是可能得到它中间的软输出，从而来向学生模型去传递这种学习信息，其实这样做也主要是为了针对作者提出的最初的那个定位歧义的问题</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>在KD中，学生模型S一般比教师模型T轻，这在学习紧凑高效的模型中很有用。相反，一个有趣的问题是这种“潜在知识”是否有利于教师模式本身?<strong>自蒸馏在分类中一直被观察到有积极的作用</strong>
+<ul>
+<li>对于目标检测，也可以看到S = T的Self-LD也可以为教师模型带来绩效收益，提高最先进的绩效</li>
+<li>由于自蒸馏可以促进模型精度的原因，[34]首先通过对希尔伯特空间中的自蒸馏进行理论分析，揭开了这一神秘面纱。证明了几轮自精馏可以减少过拟合，因为它能引起正则化。然而，持续的自我蒸馏可能会导致不适合</li>
+</ul>
+</li>
+<li>Teacher Assistant Strategy
+<ul>
+<li>在KD模型中，教师模型T被认为是最大的模型，并且期望能更好地提取出最小的学生模型s</li>
+<li>然而，LD中观察到悖论的例子，其中最好的模型不如折中的模型。在最近的工作中也提到了这种现象，即学生模型和教师模型之间的差距太大，蒸馏的好处就会减少</li>
+<li>因此，受[33]的启发，引入教师辅助策略，即使教师模型不是最优选择，也能保持LD的有效性</li>
+<li><img src="/2021/05/10/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x17/3.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>我们选择m名助教候选人，分别表示为A1, A2，···，Am，按模型容量递减</li>
+<li>从上图可以看出，有完全2条不同的LD路径。如果不使用任何教师助手，这意味着我们要经过最上面的路径，这相当于直接执行LD从教师T到学生S(最坏的情况)</li>
+<li>然后，可以选择使用一个或两个教师助理，或任意k &lt; m教师助理，或所有m助理(底部路径)</li>
+<li>根据[33]中的结论设置教师助理策略
+<ul>
+<li>如果没有培训时间限制，提高学生的最佳顺序是使用所有的教师助理</li>
+<li>在限制使用k &lt;  m个教师助理的情况下，学生的成绩一般会在上图中从上到下的路径范围内</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" class="print-no-link">#目标检测</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>论文阅读-0x17</div>
+      <div>http://example.com/2021/05/10/论文阅读-0x17/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年5月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/05/22/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x18/" title="论文阅读-0x18">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">论文阅读-0x18</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x16/" title="论文阅读-0x16">
+                        <span class="hidden-mobile">论文阅读-0x16</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,833 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hyzs1220">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="最近大数据学习，做实验接触到了hadoop的使用，不过在这个过程中，回想起来真的是一部辛酸史，，我都不知道为了实验踩了多少坑，这里把自己的配置过程和一些该注意的地方整理总结一下，也方便以后看看~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop+HBase安装配置">
+<meta property="og:url" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="hyzsのblog">
+<meta property="og:description" content="最近大数据学习，做实验接触到了hadoop的使用，不过在这个过程中，回想起来真的是一部辛酸史，，我都不知道为了实验踩了多少坑，这里把自己的配置过程和一些该注意的地方整理总结一下，也方便以后看看~">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/1.jpg">
+<meta property="og:image" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/2.jpg">
+<meta property="og:image" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/3.jpg">
+<meta property="og:image" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/4.jpg">
+<meta property="og:image" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/5.jpg">
+<meta property="og:image" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/6.jpg">
+<meta property="og:image" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/10.jpg">
+<meta property="og:image" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/7.jpg">
+<meta property="og:image" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/8.jpg">
+<meta property="og:image" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/9.jpg">
+<meta property="article:published_time" content="2019-12-02T12:40:18.000Z">
+<meta property="article:modified_time" content="2024-03-23T04:15:56.564Z">
+<meta property="article:author" content="hyzs1220">
+<meta property="article:tag" content="Hadoop&amp;HBase">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/1.jpg">
+  
+  
+  
+  <title>Hadoop+HBase安装配置 - hyzsのblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>hyzsのblog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Hadoop+HBase安装配置"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-12-02 20:40" pubdate>
+          2019年12月2日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Hadoop+HBase安装配置</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>最近大数据学习，做实验接触到了hadoop的使用，不过在这个过程中，回想起来真的是一部辛酸史，，我都不知道为了实验踩了多少坑，这里把自己的配置过程和一些该注意的地方整理总结一下，也方便以后看看~</p>
+<span id="more"></span>
+<h2 id="实验环境">实验环境</h2>
+<ul>
+<li>操作系统：CentOS7（Master * 1，Slave * 2）</li>
+<li>Hadoop版本：2.7.7</li>
+<li>JDK版本：1.8.0_211</li>
+<li>HBase版本：2.0.0-alpha4</li>
+</ul>
+<blockquote>
+<p>emm在整个实验中最好都要使用root用户，不然过程中还是会遇到一些麻烦的地方，，，（辛酸史😭）</p>
+</blockquote>
+<h2 id="设置静态ip及相关网络设置">设置静态ip及相关网络设置</h2>
+<h3 id="设置静态ip">设置静态ip</h3>
+<p>首先通过ifconfig和netstat -rn命令查看当前网络状态（其中eno16777736为本机的网卡名字，可以查看到当前的网络IP地址inet、子网掩码netmask和网关gateway）</p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>修改网络IP地址配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi /etc/sysconfig/network-scripts/ifcfg-eno16777736<br></code></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs text">HWADDR=00:0C:29:B9:DC:E8<br>TYPE=Ethernet<br>BOOTPROTO=static		# 使用静态IP地址，默认为dhcp<br>IPADDR=192.168.72.132	# 设置的静态IP地址<br>NETMASK=255.255.255.0	# 子网掩码<br>GATEWAY=192.168.72.2	# 网关地址<br>DNS1=8.8.8.8			# DNS服务器<br>DNS2=114.114.114.114<br>DEFROUTE=yes<br>PEERDNS=yes<br>PEERROUTES=yes<br>IPV4_FAILURE_FATAL=no<br>IPV6INIT=yes<br>IPV6_AUTOCONF=yes<br>IPV6_DEFROUTE=yes<br>IPV6_PEERDNS=yes<br>IPV6_PEERROUTES=yes<br>IPV6_FAILURE_FATAL=no<br>NAME=eno16777736<br>UUID=b66961b7-567e-408b-9d83-5b2046f8980b<br>ONBOOT=no				# 是否开机启用<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">service network restart	# 重启网络服务<br>systemctl status firewalld.service	# 查看防火墙状态，绿色字样标注的“active（running”，说明防火墙是开启状态；disavtive（dead）的字样，说明防火墙已经关闭<br>systemctl stop firewalld.service	# 关闭运行的防火墙<br>systemctl disable firewalld.service # 禁止防火墙开机启动<br></code></pre></td></tr></table></figure>
+<p>对实验使用的三台虚拟机分别进行上述操作，设置为静态ip。</p>
+<h3 id="配置hosts文件">配置hosts文件</h3>
+<p>在hosts文件中，为每台机器设置别名（三台机器都需要）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi /etc/hosts<br></code></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4<br>::1         localhost localhost.localdomain localhost6 localhost6.localdomain6<br><br>192.168.72.132 master<br>192.168.72.130 slave1<br>192.168.72.131 slave2<br></code></pre></td></tr></table></figure>
+<h3 id="配置SSH免密登录">配置SSH免密登录</h3>
+<p>三台机器都需要，成功后，可以通过ssh root@slave1命令直接登陆另一台机器。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">ssh-keygen	# 一路回车即可<br>ssh-copy-id -i .ssh/id_rsa.pub root@master	# 设置本机的免密登录<br>ssh-copy-id -i .ssh/id_rsa.pub root@slave1<br>ssh-copy-id -i .ssh/id_rsa.pub root@slave2<br></code></pre></td></tr></table></figure>
+<h2 id="JDK安装">JDK安装</h2>
+<p>在官网下载相应的JDK版本（注意要下载64位，hadoop-3.x版本要使用jdk1.8，相应的版本对应情况可以在网上直接查到），在虚拟机中解压即可（三台机器都需要配置）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">yum list  installed  | grep java        # 查看系统内自带的Java-jdk程序<br>yum  remove  -y  程序名称				# 将自带的java卸载掉<br><br>tar -zxvf jdk-8u221-linux-x64.tar.gz<br>mv ./jdk1.8.0_221 /opt/jdk/jdk1.8.0_231<br>rm -rf jdk-8u221-linux-x64.tar.gz<br></code></pre></td></tr></table></figure>
+<p>添加环境变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi ~/.bashrc	# 我用的时候，/etc/profile有时候会不起作用，所以为了省事都直接写到.bashrc中了<br></code></pre></td></tr></table></figure>
+<p>添加以下内容</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">export JAVA_HOME=/opt/jdk/jdk1.8.0_231<br>export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar<br>export PATH=$PATH:$JAVA_HOME/bin<br></code></pre></td></tr></table></figure>
+<p>即使生效</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">source ~/.bashrc<br><br>java -version	# 查看是否配置成功<br></code></pre></td></tr></table></figure>
+<h2 id="Haoop安装">Haoop安装</h2>
+<h3 id="环境配置">环境配置</h3>
+<p>下载相应的hadoop版本，解压到/opt/目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /opt<br>sudo tar -zxvf hadoop-2.7.7.tar.gz<br>sudo mv /opt/hadoop-2.7.7 /opt/hadoop<br></code></pre></td></tr></table></figure>
+<p>添加环境变量（在~/.bashrc中，如上）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">export HADOOP_HOME=/opt/hadoop<br>export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin<br></code></pre></td></tr></table></figure>
+<p>然后source ~/.bashrc 命令生效</p>
+<p>修改 <a target="_blank" rel="noopener" href="http://hadoop-env.sh">hadoop-env.sh</a> 和 yarn-env.sh文件（相关配置文件都在$HADOOP_HOME/etc/hadoop/目录下）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /opt/hadoop/etc/hadoop/<br>vi hadoop-env.sh<br>vi yarn-env.sh<br></code></pre></td></tr></table></figure>
+<p>添加JAVA_HOME</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">export JAVA_HOME=/opt/jdk/jdk1.8.0_221<br></code></pre></td></tr></table></figure>
+<h3 id="文件配置">文件配置</h3>
+<p>修改同在该目录下的slave文件，添加两个slave结点</p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>修改core-site.xml文件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>fs.defaultFS<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>hdfs://Master:9000<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hadoop.tmp.dir<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/home/hadoop/tmp<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>修改hdfs-site.xml 文件，因为副本数量不能超过结点数，设置副本为2，<br>
+DataNode的心跳间隔为2S，接口地址为<a target="_blank" rel="noopener" href="http://master:50070">http://master:50070</a></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.replication<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.http.address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>Master:50070<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.heartbeat.interval<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>修改mapred-site.xml文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">cp mapred-site.xml.template mapred-site.xml<br></code></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>mapreduce.framework.name<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>yarn<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>修改yarn-site.xml文件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>    <span class="hljs-comment">&lt;!-- Site specific YARN configuration properties --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>mapreduce_shuffle<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>将配置完成的hadoop发送给slave节点，并给slave节点配置HADOOP_HOME环境变量（如上）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">scp -r /opt/hadoop root@slave1:/opt/<br>scp -r /opt/hadoop root@slave2:/opt/<br></code></pre></td></tr></table></figure>
+<h3 id="启动使用">启动使用</h3>
+<p>在namenode（master）上格式化文件系统</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">hdfs namenode -format<br>start-all.sh		# 若格式化正常，没有error报错，便可启动hadoop系统<br>stop-all.sh			# 关闭Hadoop<br></code></pre></td></tr></table></figure>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>ps：在这一步的时候，如果要反复输入密码，则表示ssh免密登录配置有问题（包括本机的ssh免密登陆）</p>
+<p>正常启动之后，可以查看webUI</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">http://master:50070<br>http://master:8088<br></code></pre></td></tr></table></figure>
+<p>也可以通过jps命令查看各个节点的相关进程</p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<blockquote>
+<p>NameNode：HDFS的命名空间，里面存储着整个HDFS的所有文件的元数据信息，这些信息都会加载到内存中，元数据信息分为两部分，第一部分是文件系统树及整棵树内所有的文件和目录，第二部分是每个文件的各个组成块所在的数据节点信息。</p>
+<p>DataNode：文件系统的工作节点，它会根据需要存储并检索数据块，受NameNode调度，并且定期向NameNode发送该DataNode上存储的块的列表信息。</p>
+<p>SecondaryNode：辅助NameNode，它是用来定期合并NameNode产生的编辑日志（edits.log）和命名空间镜像文件(fsImage)，以防止edits.log过大。</p>
+<p>ResourceManager：负责集群中所有资源的统一管理和分配，它接收来自各个节点（NodeManager）的资源汇报信息，并把这些信息按照一定的策略分配给各个应用程序。</p>
+<p>NodeManager：每个节点上的代理，它管理hadoop集群中单个计算节点，包括与ResourceManger保持通信，监督container的生命周期管理，监控每个Container的资源使用（内存、CPU等）情况，追踪节点健康状况，管理日志和不同应用程序用到的附属服务。</p>
+</blockquote>
+<p>如果出现start-all.sh之后，在slave上没有出现datanode的话，可能是因为多次hdfs namenode -format 对文件系统格式化，在每次格式化的时候，都会生成新的clusterID , 而datanode还是保持原来的clusterID，所以无法正常启动datanode。</p>
+<p>解决方法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">cat /home/hadoop/tmp/dfs/data/current/VERSION	# 可以看到namenode的clusterID<br></code></pre></td></tr></table></figure>
+<p>然后用这个clusterID，替换掉所有slave结点上的该clusterID，然后重新启动即可。</p>
+<p>遇到各种问题，学会多查看log日志文件，真的能学到很多~</p>
+<h3 id="java-api接口">java api接口</h3>
+<p>网上有很多api接口使用的教程，我就不再写了，这一部分我在试验过程中没有遇到太大的问题。这里稍微说一点就是使用hadoop提供的java api接口的时候，需要导入的jar包如下（即common下3个，hdfs下3个和conmmon/lib下所有）:</p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/5.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="HBase安装">HBase安装</h2>
+<h3 id="环境配置-2">环境配置</h3>
+<p>下载相应的hbase版本，因为仅是实验使用，所以没有在单独下载zookeeper，使用的hbase中自带的zookeeper，解压到/opt/目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo tar -zxvf hbase-2.0.0-alpha4-bin.tar.gz<br>sudo mv /opt/hbase-2.0.0-alpha4 /opt/hbase<br></code></pre></td></tr></table></figure>
+<p>添加环境变量（在~/.bashrc中，如上）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">export HBASE_HOME=/opt/hbase<br>export PATH=$HBASE_HOME/bin:$PATH<br></code></pre></td></tr></table></figure>
+<p>然后source ~/.bashrc 命令生效</p>
+<h3 id="文件配置-2">文件配置</h3>
+<p>修改hbase-env.sh文件（仅修改下面两项即可）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi /opt/hbase/conf/hbase-env.sh<br></code></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">export JAVA_HOME=/opt/jdk/jdk1.8.0_221	# jdk安装路径<br>export HBASE_MANAGES_ZK=true		# 使用hbase自带的zookeeper,如果是独立的zookeeper的话，这里为false<br></code></pre></td></tr></table></figure>
+<p>修改hbase-site.xml文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi /opt/hbase/conf/hbase-site.xml<br></code></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.master<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>master:60000<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.rootdir<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>hdfs://master:9000/hbase<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.zookeeper.quorum<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>master,slave1,slave2<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.cluster.distributed<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.zookeeper.property.clientPort<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.zookeeper.property.dataDir<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/home/hadoop/zookeeper<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>修改regionservers文件</p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>在完成上面的所有修改之后，将hbase文件传输到各个slave节点上。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">scp -r /opt/hbase root@slave1:/opt/<br>scp -r /opt/hbase root@slave2:/opt/<br></code></pre></td></tr></table></figure>
+<p>同步服务器时间</p>
+<p>在使用hbase的时候，一定要保证各台机器的时间是同步的，不然hbase会出现很多错误。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">yum -y install ntp ntpdate	# 安装ntpdate工具<br>timedatectl		# 查看系统时间<br>ntpdate cn.pool.ntp.org	# 与网络时间同步，同步后可以在查看确认一下<br></code></pre></td></tr></table></figure>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/10.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="启动使用-2">启动使用</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">start-hbase.sh	# 启动habse（需要先启动hadoop）<br></code></pre></td></tr></table></figure>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>正常启动之后，可以查看webUI</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">http://master:16010<br></code></pre></td></tr></table></figure>
+<p>ps：我当时做到这一步的时候，遇到了一个问题，是webUI可以正常访问，但是网页上Region Sever下面是空的，没有正常显示slave结点，日志报错部分如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">Call to localhost/127.0.0.1:16000 failed on connection exception<br></code></pre></td></tr></table></figure>
+<p>我的问题是因为三台机器的主机名始终为localhost，虽然已经修改host文件，但是并没有生效，在修改完主机名之后，问题消失。</p>
+<p>也可以通过jps命令查看各个节点的相关进程</p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/8.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="java-api接口-2">java api接口</h3>
+<p>使用hadoop提供的java api接口的时候，需要导入/opt/hbase/lib路径下的所有jar包。</p>
+<h3 id="hbase使用">hbase使用</h3>
+<p>除了可以使用java api接口外，也可以使用hbase提供的shell命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hbase shell	# 进入hbase shell<br></code></pre></td></tr></table></figure>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h2 id="总结">总结</h2>
+<p>虽然在实验过程中，遇到了很多麻烦，但现在回想起来很多都是因为不理解导致的，如果能够明白每一项配置的作用和参数含义的话，其实整个实验都会顺利很多，但也正是在这个过程中不断学习进步的。</p>
+<p>继续加油啊~</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/study/" class="category-chain-item">study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Hadoop-HBase/" class="print-no-link">#Hadoop&HBase</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Hadoop+HBase安装配置</div>
+      <div>http://example.com/2019/12/02/Hadoop-HBase安装配置/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hyzs1220</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年12月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-1/" title="深度学习笔记-1">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">深度学习笔记-1</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/11/18/%E5%8C%BA%E5%9F%9F%E5%A1%AB%E5%85%85/" title="区域填充">
+                        <span class="hidden-mobile">区域填充</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
