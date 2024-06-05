@@ -298,8 +298,9 @@
 </blockquote>
 <h2 id="设置静态ip及相关网络设置">设置静态ip及相关网络设置</h2>
 <h3 id="设置静态ip">设置静态ip</h3>
-<p>首先通过ifconfig和netstat -rn命令查看当前网络状态（其中eno16777736为本机的网卡名字，可以查看到当前的网络IP地址inet、子网掩码netmask和网关gateway）</p>
-<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/1.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p>首先通过ifconfig和netstat
+-rn命令查看当前网络状态（其中eno16777736为本机的网卡名字，可以查看到当前的网络IP地址inet、子网掩码netmask和网关gateway）</p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/1.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>修改网络IP地址配置文件</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi /etc/sysconfig/network-scripts/ifcfg-eno16777736<br></code></pre></td></tr></table></figure>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs text">HWADDR=00:0C:29:B9:DC:E8<br>TYPE=Ethernet<br>BOOTPROTO=static		# 使用静态IP地址，默认为dhcp<br>IPADDR=192.168.72.132	# 设置的静态IP地址<br>NETMASK=255.255.255.0	# 子网掩码<br>GATEWAY=192.168.72.2	# 网关地址<br>DNS1=8.8.8.8			# DNS服务器<br>DNS2=114.114.114.114<br>DEFROUTE=yes<br>PEERDNS=yes<br>PEERROUTES=yes<br>IPV4_FAILURE_FATAL=no<br>IPV6INIT=yes<br>IPV6_AUTOCONF=yes<br>IPV6_DEFROUTE=yes<br>IPV6_PEERDNS=yes<br>IPV6_PEERROUTES=yes<br>IPV6_FAILURE_FATAL=no<br>NAME=eno16777736<br>UUID=b66961b7-567e-408b-9d83-5b2046f8980b<br>ONBOOT=no				# 是否开机启用<br></code></pre></td></tr></table></figure>
@@ -309,10 +310,11 @@
 <p>在hosts文件中，为每台机器设置别名（三台机器都需要）。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi /etc/hosts<br></code></pre></td></tr></table></figure>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4<br>::1         localhost localhost.localdomain localhost6 localhost6.localdomain6<br><br>192.168.72.132 master<br>192.168.72.130 slave1<br>192.168.72.131 slave2<br></code></pre></td></tr></table></figure>
-<h3 id="配置SSH免密登录">配置SSH免密登录</h3>
-<p>三台机器都需要，成功后，可以通过ssh root@slave1命令直接登陆另一台机器。</p>
+<h3 id="配置ssh免密登录">配置SSH免密登录</h3>
+<p>三台机器都需要，成功后，可以通过ssh
+root@slave1命令直接登陆另一台机器。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">ssh-keygen	# 一路回车即可<br>ssh-copy-id -i .ssh/id_rsa.pub root@master	# 设置本机的免密登录<br>ssh-copy-id -i .ssh/id_rsa.pub root@slave1<br>ssh-copy-id -i .ssh/id_rsa.pub root@slave2<br></code></pre></td></tr></table></figure>
-<h2 id="JDK安装">JDK安装</h2>
+<h2 id="jdk安装">JDK安装</h2>
 <p>在官网下载相应的JDK版本（注意要下载64位，hadoop-3.x版本要使用jdk1.8，相应的版本对应情况可以在网上直接查到），在虚拟机中解压即可（三台机器都需要配置）。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">yum list  installed  | grep java        # 查看系统内自带的Java-jdk程序<br>yum  remove  -y  程序名称				# 将自带的java卸载掉<br><br>tar -zxvf jdk-8u221-linux-x64.tar.gz<br>mv ./jdk1.8.0_221 /opt/jdk/jdk1.8.0_231<br>rm -rf jdk-8u221-linux-x64.tar.gz<br></code></pre></td></tr></table></figure>
 <p>添加环境变量</p>
@@ -321,24 +323,25 @@
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">export JAVA_HOME=/opt/jdk/jdk1.8.0_231<br>export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar<br>export PATH=$PATH:$JAVA_HOME/bin<br></code></pre></td></tr></table></figure>
 <p>即使生效</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">source ~/.bashrc<br><br>java -version	# 查看是否配置成功<br></code></pre></td></tr></table></figure>
-<h2 id="Haoop安装">Haoop安装</h2>
+<h2 id="haoop安装">Haoop安装</h2>
 <h3 id="环境配置">环境配置</h3>
 <p>下载相应的hadoop版本，解压到/opt/目录</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /opt<br>sudo tar -zxvf hadoop-2.7.7.tar.gz<br>sudo mv /opt/hadoop-2.7.7 /opt/hadoop<br></code></pre></td></tr></table></figure>
 <p>添加环境变量（在~/.bashrc中，如上）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">export HADOOP_HOME=/opt/hadoop<br>export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin<br></code></pre></td></tr></table></figure>
 <p>然后source ~/.bashrc 命令生效</p>
-<p>修改 <a target="_blank" rel="noopener" href="http://hadoop-env.sh">hadoop-env.sh</a> 和 yarn-env.sh文件（相关配置文件都在$HADOOP_HOME/etc/hadoop/目录下）</p>
+<p>修改 hadoop-env.sh 和
+yarn-env.sh文件（相关配置文件都在$HADOOP_HOME/etc/hadoop/目录下）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /opt/hadoop/etc/hadoop/<br>vi hadoop-env.sh<br>vi yarn-env.sh<br></code></pre></td></tr></table></figure>
 <p>添加JAVA_HOME</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">export JAVA_HOME=/opt/jdk/jdk1.8.0_221<br></code></pre></td></tr></table></figure>
 <h3 id="文件配置">文件配置</h3>
 <p>修改同在该目录下的slave文件，添加两个slave结点</p>
-<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/2.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/2.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>修改core-site.xml文件</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>fs.defaultFS<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>hdfs://Master:9000<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hadoop.tmp.dir<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/home/hadoop/tmp<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></td></tr></table></figure>
-<p>修改hdfs-site.xml 文件，因为副本数量不能超过结点数，设置副本为2，<br>
-DataNode的心跳间隔为2S，接口地址为<a target="_blank" rel="noopener" href="http://master:50070">http://master:50070</a></p>
+<p>修改hdfs-site.xml 文件，因为副本数量不能超过结点数，设置副本为2，
+DataNode的心跳间隔为2S，接口地址为http://master:50070</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.replication<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.http.address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>Master:50070<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.heartbeat.interval<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></td></tr></table></figure>
 <p>修改mapred-site.xml文件</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">cp mapred-site.xml.template mapred-site.xml<br></code></pre></td></tr></table></figure>
@@ -350,12 +353,12 @@ DataNode的心跳间隔为2S，接口地址为<a target="_blank" rel="noopener" 
 <h3 id="启动使用">启动使用</h3>
 <p>在namenode（master）上格式化文件系统</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">hdfs namenode -format<br>start-all.sh		# 若格式化正常，没有error报错，便可启动hadoop系统<br>stop-all.sh			# 关闭Hadoop<br></code></pre></td></tr></table></figure>
-<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/3.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/3.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>ps：在这一步的时候，如果要反复输入密码，则表示ssh免密登录配置有问题（包括本机的ssh免密登陆）</p>
 <p>正常启动之后，可以查看webUI</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">http://master:50070<br>http://master:8088<br></code></pre></td></tr></table></figure>
 <p>也可以通过jps命令查看各个节点的相关进程</p>
-<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/4.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/4.jpg" srcset="/img/loading.gif" lazyload></p>
 <blockquote>
 <p>NameNode：HDFS的命名空间，里面存储着整个HDFS的所有文件的元数据信息，这些信息都会加载到内存中，元数据信息分为两部分，第一部分是文件系统树及整棵树内所有的文件和目录，第二部分是每个文件的各个组成块所在的数据节点信息。</p>
 <p>DataNode：文件系统的工作节点，它会根据需要存储并检索数据块，受NameNode调度，并且定期向NameNode发送该DataNode上存储的块的列表信息。</p>
@@ -363,22 +366,26 @@ DataNode的心跳间隔为2S，接口地址为<a target="_blank" rel="noopener" 
 <p>ResourceManager：负责集群中所有资源的统一管理和分配，它接收来自各个节点（NodeManager）的资源汇报信息，并把这些信息按照一定的策略分配给各个应用程序。</p>
 <p>NodeManager：每个节点上的代理，它管理hadoop集群中单个计算节点，包括与ResourceManger保持通信，监督container的生命周期管理，监控每个Container的资源使用（内存、CPU等）情况，追踪节点健康状况，管理日志和不同应用程序用到的附属服务。</p>
 </blockquote>
-<p>如果出现start-all.sh之后，在slave上没有出现datanode的话，可能是因为多次hdfs namenode -format 对文件系统格式化，在每次格式化的时候，都会生成新的clusterID , 而datanode还是保持原来的clusterID，所以无法正常启动datanode。</p>
+<p>如果出现start-all.sh之后，在slave上没有出现datanode的话，可能是因为多次hdfs
+namenode -format
+对文件系统格式化，在每次格式化的时候，都会生成新的clusterID ,
+而datanode还是保持原来的clusterID，所以无法正常启动datanode。</p>
 <p>解决方法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">cat /home/hadoop/tmp/dfs/data/current/VERSION	# 可以看到namenode的clusterID<br></code></pre></td></tr></table></figure>
 <p>然后用这个clusterID，替换掉所有slave结点上的该clusterID，然后重新启动即可。</p>
 <p>遇到各种问题，学会多查看log日志文件，真的能学到很多~</p>
 <h3 id="java-api接口">java api接口</h3>
-<p>网上有很多api接口使用的教程，我就不再写了，这一部分我在试验过程中没有遇到太大的问题。这里稍微说一点就是使用hadoop提供的java api接口的时候，需要导入的jar包如下（即common下3个，hdfs下3个和conmmon/lib下所有）:</p>
-<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/5.jpg" srcset="/img/loading.gif" lazyload alt></p>
-<h2 id="HBase安装">HBase安装</h2>
-<h3 id="环境配置-2">环境配置</h3>
+<p>网上有很多api接口使用的教程，我就不再写了，这一部分我在试验过程中没有遇到太大的问题。这里稍微说一点就是使用hadoop提供的java
+api接口的时候，需要导入的jar包如下（即common下3个，hdfs下3个和conmmon/lib下所有）:</p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/5.jpg" srcset="/img/loading.gif" lazyload></p>
+<h2 id="hbase安装">HBase安装</h2>
+<h3 id="环境配置-1">环境配置</h3>
 <p>下载相应的hbase版本，因为仅是实验使用，所以没有在单独下载zookeeper，使用的hbase中自带的zookeeper，解压到/opt/目录</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo tar -zxvf hbase-2.0.0-alpha4-bin.tar.gz<br>sudo mv /opt/hbase-2.0.0-alpha4 /opt/hbase<br></code></pre></td></tr></table></figure>
 <p>添加环境变量（在~/.bashrc中，如上）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">export HBASE_HOME=/opt/hbase<br>export PATH=$HBASE_HOME/bin:$PATH<br></code></pre></td></tr></table></figure>
 <p>然后source ~/.bashrc 命令生效</p>
-<h3 id="文件配置-2">文件配置</h3>
+<h3 id="文件配置-1">文件配置</h3>
 <p>修改hbase-env.sh文件（仅修改下面两项即可）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi /opt/hbase/conf/hbase-env.sh<br></code></pre></td></tr></table></figure>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">export JAVA_HOME=/opt/jdk/jdk1.8.0_221	# jdk安装路径<br>export HBASE_MANAGES_ZK=true		# 使用hbase自带的zookeeper,如果是独立的zookeeper的话，这里为false<br></code></pre></td></tr></table></figure>
@@ -386,29 +393,31 @@ DataNode的心跳间隔为2S，接口地址为<a target="_blank" rel="noopener" 
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi /opt/hbase/conf/hbase-site.xml<br></code></pre></td></tr></table></figure>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.master<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>master:60000<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.rootdir<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>hdfs://master:9000/hbase<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.zookeeper.quorum<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>master,slave1,slave2<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.cluster.distributed<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.zookeeper.property.clientPort<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>hbase.zookeeper.property.dataDir<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/home/hadoop/zookeeper<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></td></tr></table></figure>
 <p>修改regionservers文件</p>
-<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/6.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/6.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>在完成上面的所有修改之后，将hbase文件传输到各个slave节点上。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">scp -r /opt/hbase root@slave1:/opt/<br>scp -r /opt/hbase root@slave2:/opt/<br></code></pre></td></tr></table></figure>
 <p>同步服务器时间</p>
 <p>在使用hbase的时候，一定要保证各台机器的时间是同步的，不然hbase会出现很多错误。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">yum -y install ntp ntpdate	# 安装ntpdate工具<br>timedatectl		# 查看系统时间<br>ntpdate cn.pool.ntp.org	# 与网络时间同步，同步后可以在查看确认一下<br></code></pre></td></tr></table></figure>
-<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/10.jpg" srcset="/img/loading.gif" lazyload alt></p>
-<h3 id="启动使用-2">启动使用</h3>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/10.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="启动使用-1">启动使用</h3>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">start-hbase.sh	# 启动habse（需要先启动hadoop）<br></code></pre></td></tr></table></figure>
-<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/7.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/7.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>正常启动之后，可以查看webUI</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">http://master:16010<br></code></pre></td></tr></table></figure>
-<p>ps：我当时做到这一步的时候，遇到了一个问题，是webUI可以正常访问，但是网页上Region Sever下面是空的，没有正常显示slave结点，日志报错部分如下：</p>
+<p>ps：我当时做到这一步的时候，遇到了一个问题，是webUI可以正常访问，但是网页上Region
+Sever下面是空的，没有正常显示slave结点，日志报错部分如下：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">Call to localhost/127.0.0.1:16000 failed on connection exception<br></code></pre></td></tr></table></figure>
 <p>我的问题是因为三台机器的主机名始终为localhost，虽然已经修改host文件，但是并没有生效，在修改完主机名之后，问题消失。</p>
 <p>也可以通过jps命令查看各个节点的相关进程</p>
-<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/8.jpg" srcset="/img/loading.gif" lazyload alt></p>
-<h3 id="java-api接口-2">java api接口</h3>
-<p>使用hadoop提供的java api接口的时候，需要导入/opt/hbase/lib路径下的所有jar包。</p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/8.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="java-api接口-1">java api接口</h3>
+<p>使用hadoop提供的java
+api接口的时候，需要导入/opt/hbase/lib路径下的所有jar包。</p>
 <h3 id="hbase使用">hbase使用</h3>
 <p>除了可以使用java api接口外，也可以使用hbase提供的shell命令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hbase shell	# 进入hbase shell<br></code></pre></td></tr></table></figure>
-<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/9.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2019/12/02/Hadoop-HBase%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/9.jpg" srcset="/img/loading.gif" lazyload></p>
 <h2 id="总结">总结</h2>
 <p>虽然在实验过程中，遇到了很多麻烦，但现在回想起来很多都是因为不理解导致的，如果能够明白每一项配置的作用和参数含义的话，其实整个实验都会顺利很多，但也正是在这个过程中不断学习进步的。</p>
 <p>继续加油啊~</p>

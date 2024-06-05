@@ -16,12 +16,12 @@
   <meta name="author" content="hyzs1220">
   <meta name="keywords" content="">
   
-    <meta name="description" content="左旺孟老师视频里面涉及的最后一篇论文 论文的阅读笔记： 《 Unpaired Learning of Deep Image Denoising 》 左旺孟，ECCV 2020">
+    <meta name="description" content="左旺孟老师视频里面涉及的最后一篇论文 论文的阅读笔记： 《 Unpaired Learning of Deep Image Denoising 》 左旺孟，ECCV 2020">
 <meta property="og:type" content="article">
 <meta property="og:title" content="论文阅读-0x11">
 <meta property="og:url" content="http://example.com/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/index.html">
 <meta property="og:site_name" content="hyzsのblog">
-<meta property="og:description" content="左旺孟老师视频里面涉及的最后一篇论文 论文的阅读笔记： 《 Unpaired Learning of Deep Image Denoising 》 左旺孟，ECCV 2020">
+<meta property="og:description" content="左旺孟老师视频里面涉及的最后一篇论文 论文的阅读笔记： 《 Unpaired Learning of Deep Image Denoising 》 左旺孟，ECCV 2020">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/1.png">
 <meta property="og:image" content="http://example.com/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/2.png">
@@ -227,7 +227,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.1k 字
+          3.2k 字
         
       </span>
     
@@ -284,138 +284,187 @@
 <p>论文的阅读笔记：</p>
 <p>《 Unpaired Learning of Deep Image Denoising 》 左旺孟，ECCV 2020</p>
 <span id="more"></span>
-<h2 id="Unpaired-Learning-of-Deep-Image-Denoising">Unpaired Learning of Deep Image Denoising</h2>
-<h3 id="Abstract">Abstract</h3>
+<h2 id="unpaired-learning-of-deep-image-denoising">Unpaired Learning of
+Deep Image Denoising</h2>
+<h3 id="abstract">Abstract</h3>
 <ul>
 <li>作者研究了从一组未配对的干净和有噪声图像中学习图像盲去噪网络的任务</li>
 <li>作者进一步假设噪声可以是依赖于信号的，但空间上是不相关的</li>
 <li>提出了一种结合自监督学习和知识精馏的两阶段学习方法
 <ul>
-<li>对于自我监督学习，使用扩张盲点网络(D-BSN)来学习真实噪声图像去噪。由于噪声的空间独立性，采用堆叠1  ×  1卷积层的网络来估计每幅图像的噪声水平图。D-BSN和图像特定噪声模型(CNNest)都可以通过最大化约束的数似然率进行联合训练。给定D-BSN的输出和估计的噪声水平图，基于贝叶斯规则可以进一步获得更好的去噪性能</li>
+<li>对于自我监督学习，使用扩张盲点网络(D-BSN)来学习真实噪声图像去噪。由于噪声的空间独立性，采用堆叠1
+×
+1卷积层的网络来估计每幅图像的噪声水平图。D-BSN和图像特定噪声模型(CNNest)都可以通过最大化约束的数似然率进行联合训练。给定D-BSN的输出和估计的噪声水平图，基于贝叶斯规则可以进一步获得更好的去噪性能</li>
 <li>至于知识蒸馏，首先将学习到的噪声模型应用于清洁图像，以合成一对训练图像，然后在第一阶段使用真实的噪声图像和相应的去噪结果来形成另一组配对。然后可以通过使用这两个配对集训练现有的去噪网络来蒸馏得到最终降噪模型</li>
-</ul>
-</li>
+</ul></li>
 <li>目前深度卷积神经网络在图像去噪领域进步很大，先是针对高斯白噪声（WGN），然后使用CNN针对真实噪声去噪，虽然已经取得了性能的提升，但现有的大多数CNN去噪器的成功很大程度上依赖于有监督学习和大量成对的噪声干净图像（获取？）
 <ul>
 <li>一方面，给定噪声模型的形式和参数，可以从无噪声的干净图像中合成出噪声图像，以构成成对的训练集。但是，实际的噪声通常很复杂，并且现实摄影中的相机内信号处理（ISP）流水线进一步增加了噪声的复杂性，所以很难用基本的参数完全表征噪声模型</li>
 <li>另一方面，可以通过设计合适的方法来构建配对集，以获取对应于给定真实噪声图像的几乎无噪声（或清晰）的图像。对于现实世界的摄影，可以通过平均多个噪声图像或校准和后处理低ISO图像来获取几乎无噪点的图像。不过这种几乎无噪声的图像可能会存在过度平滑的问题，而且获取成本昂贵。此外，这种几乎无噪声的图像采集可能不适用于其他成像机制(如显微镜或医学成像)</li>
-</ul>
-</li>
-<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/1.png" srcset="/img/loading.gif" lazyload alt></li>
-<li>Noise2Noise  (N2N)模型来从成对的噪声实例中学习映射，而不是使用成对训练集的监督学习
+</ul></li>
+<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/1.png" srcset="/img/loading.gif" lazyload></li>
+<li>Noise2Noise
+(N2N)模型来从成对的噪声实例中学习映射，而不是使用成对训练集的监督学习
 <ul>
 <li>不过它要求每对图像中底层的干净图像是完全相同的，噪声是独立地从相同的分布中提取的，这限制了它的实用性</li>
-</ul>
-</li>
-<li>Noise2Void  (N2V)模型，该模型采用<strong>盲点网络(BSN)</strong>，仅从有噪声的图像中学习CNN去噪器
+</ul></li>
+<li>Noise2Void
+(N2V)模型，该模型采用<strong>盲点网络(BSN)</strong>，仅从有噪声的图像中学习CNN去噪器
 <ul>
 <li>不过BSN在训练时的计算效率非常低，并且没有利用盲点处的像素值，导致去噪性能下降</li>
-</ul>
-</li>
+</ul></li>
 <li>提出了一个两阶段的方案，即自监督学习和知识蒸馏，从一组不成对的干净的和有噪声图像来学习图像盲去噪网络（不是基于GAN的非成对学习）
 <ul>
 <li>首先只利用噪声图像学习BSN和特定图像的噪声水平估计网络cnnest，进行图像去噪和噪声建模</li>
 <li>然后将学习到的噪声模型应用于干净图像来合成成对的训练图像集</li>
 <li>同时在第一阶段也将真实噪声图像和对应的去噪结果形成另一组成对图像</li>
 <li>至于知识蒸馏，作者仅使用上述两个配对集就可以训练出最先进的CNN去噪器，例如MWCNN</li>
-</ul>
-</li>
+</ul></li>
 <li>假设干净的图像是空间相关的，使得利用BSN体系结构仅从有噪图像学习盲去噪网络是可行的。为了提高训练效率，提出了一种利用扩张卷积和全卷积网络(FCN)的新型扩张BSN(即D-BSN)，在训练过程中通过一次前向传递来预测所有像素的去噪结果</li>
-<li>进一步假设噪声是像素无关的，但也可以是信号相关的。因此，一个像素的噪声级别可以是一个常量，也可以只取决于单个像素值。考虑到不同图像的噪声模型和参数可能有所不同， $CNN_{est}$ 通过堆叠1×1卷积层来满足上述要求。利用无组织的噪声图像集合，D-BSN和 $CNN_{est}$ 都可以通过最大化约束的对数似然进行联合训练。给定D-BSN和CNNest的输出，使用贝叶斯规则来获得第一阶段的去噪结果。对于第二阶段给定的干净图像，随机选取特定图像的 $CNN_{est}$ 合成有噪声的图像</li>
+<li>进一步假设噪声是像素无关的，但也可以是信号相关的。因此，一个像素的噪声级别可以是一个常量，也可以只取决于单个像素值。考虑到不同图像的噪声模型和参数可能有所不同，
+<span class="math inline">\(CNN_{est}\)</span>
+通过堆叠1×1卷积层来满足上述要求。利用无组织的噪声图像集合，D-BSN和 <span class="math inline">\(CNN_{est}\)</span>
+都可以通过最大化约束的对数似然进行联合训练。给定D-BSN和CNNest的输出，使用贝叶斯规则来获得第一阶段的去噪结果。对于第二阶段给定的干净图像，随机选取特定图像的
+<span class="math inline">\(CNN_{est}\)</span> 合成有噪声的图像</li>
 <li>论文贡献：
 <ul>
 <li>提出了一种结合自监督学习和知识蒸馏的两阶段学习方法，从无配对的干净和噪声图像中学习盲去噪网络。特别是采用自监督学习进行图像去噪和噪声建模，从而形成两个互补的成对集合，提取出最终的去噪网络</li>
-<li>为了提高训练效率和满足假设的噪声特性，提出了一种新的扩张型盲点网络(D-BSN)和一种基于图像的噪声水平估计网络( $CNN_{est}$ )。利用无组织的噪声图像集合，D-BSN和cnnest可以通过最大化约束的对数似然来联合训练</li>
-<li>在不同类型的合成噪声上的实验表明，该非成对学习方法优于N2V和Laine19，与完全监督学习方法不相上下。MWCNN(unpaired)也在真实照片上表现良好，在DND数据集上显著超过基于GAN的unpaired  learning (GCBD)</li>
+<li>为了提高训练效率和满足假设的噪声特性，提出了一种新的扩张型盲点网络(D-BSN)和一种基于图像的噪声水平估计网络(
+<span class="math inline">\(CNN_{est}\)</span>
+)。利用无组织的噪声图像集合，D-BSN和cnnest可以通过最大化约束的对数似然来联合训练</li>
+<li>在不同类型的合成噪声上的实验表明，该非成对学习方法优于N2V和Laine19，与完全监督学习方法不相上下。MWCNN(unpaired)也在真实照片上表现良好，在DND数据集上显著超过基于GAN的unpaired
+learning (GCBD)</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="Proposed-Method">Proposed Method</h3>
+<h3 id="proposed-method">Proposed Method</h3>
 <ul>
-<li>给定噪声图像 $\mathbf{y}$ ，干净图像 $\mathbf{x}$ ，用 $\widetilde {\mathbf{x}}$ 表示  $\mathbf{y}$ 的干净图像
+<li>给定噪声图像 <span class="math inline">\(\mathbf{y}\)</span>
+，干净图像 <span class="math inline">\(\mathbf{x}\)</span> ，用 <span class="math inline">\(\widetilde {\mathbf{x}}\)</span> 表示 <span class="math inline">\(\mathbf{y}\)</span> 的干净图像
 <ul>
-<li>$\mathbf{y} = \widetilde {\mathbf{x}} + \mathbf{n}$</li>
-<li>其中 $\mathbf{n}$ 表示噪声信息</li>
-<li>假设图像 $\mathbf{x}$ 是空间相关的，噪声 $\mathbf{n}$ 是像素无关、信号依赖的高斯分布，即像素 $i$ 的噪声方差（噪声水平）仅由底层无噪声图像 $\widetilde {\mathbf{x}}$ 在像素 $i$ 处的值决定</li>
-<li>$var(n_i) = g_{\widetilde {\mathbf{x}}}( {\mathbf{\widetilde x}_i})$
+<li><span class="math inline">\(\mathbf{y} = \widetilde {\mathbf{x}} +
+\mathbf{n}\)</span></li>
+<li>其中 <span class="math inline">\(\mathbf{n}\)</span>
+表示噪声信息</li>
+<li>假设图像 <span class="math inline">\(\mathbf{x}\)</span>
+是空间相关的，噪声 <span class="math inline">\(\mathbf{n}\)</span>
+是像素无关、信号依赖的高斯分布，即像素 <span class="math inline">\(i\)</span>
+的噪声方差（噪声水平）仅由底层无噪声图像 <span class="math inline">\(\widetilde {\mathbf{x}}\)</span> 在像素 <span class="math inline">\(i\)</span> 处的值决定</li>
+<li><span class="math inline">\(var(n_i) = g_{\widetilde {\mathbf{x}}}(
+{\mathbf{\widetilde x}_i})\)</span>
 <ul>
-<li>$g_{\widetilde {\mathbf{x}}}( {\mathbf{\widetilde x}<em>i})$ 可以看作是多元异方差高斯模型中的一种噪声水平函数(noise level function,  NLF)。与线性NLF不同， $g</em>{\widetilde {\mathbf{x}}}( {\mathbf{\widetilde x}_i})$ 可以是任何非线性函数，因此在噪声建模中更具表现力</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/2.png" srcset="/img/loading.gif" lazyload alt>
+<li><span class="math inline">\(g_{\widetilde {\mathbf{x}}}(
+{\mathbf{\widetilde x}_i})\)</span>
+可以看作是多元异方差高斯模型中的一种噪声水平函数(noise level function,
+NLF)。与线性NLF不同， <span class="math inline">\(g_{\widetilde
+{\mathbf{x}}}( {\mathbf{\widetilde x}_i})\)</span>
+可以是任何非线性函数，因此在噪声建模中更具表现力</li>
+</ul></li>
+</ul></li>
+<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/2.png" srcset="/img/loading.gif" lazyload>
 <ul>
 <li>在第一阶段，构建了一个新的盲点网络D-BSN，以及一个图像特定的噪声模型CNNest
 <ul>
-<li>引入自监督损耗，通过最大化约束的对数似然，在 $\mathbf{y}$ 的基础上联合训练D-BSN和 $CNN_{est}$</li>
-<li>对于给定的真实噪声图像 $\mathbf{y}$ ,  D-BSN和 $CNN_{est}$ 协作得到第一级去噪结果 $\mathbf{\hat x_{\mathbf{y}}}$ 和估计的NLF $g_{\mathbf{y}}(\mathbf{y})$</li>
-</ul>
-</li>
-<li>在第二阶段，采用知识蒸馏（Knowledge Distillation）策略，利用 $\mathcal{X}, \mathcal{Y}, \hat{\mathcal{X}}^{(1)}=\left{\hat{\mathbf{x}}<em>{\mathbf{y}} \mid \mathbf{y} \in \mathcal{Y}\right}$ （噪声图像 $\mathbf{y}$ ，干净图像 $\mathbf{x}$ 和第一级去噪结果 $\mathbf{\hat x</em>{\mathbf{y}}}$ ）和一组特定图像的 $NLFs{ g_{\mathbf{y}}(\mathbf{y})\mid \mathbf{y} \in \mathcal{Y} }$ （噪声估计），以完监督的方式提取最先进的深度去噪网络
+<li>引入自监督损耗，通过最大化约束的对数似然，在 <span class="math inline">\(\mathbf{y}\)</span> 的基础上联合训练D-BSN和 <span class="math inline">\(CNN_{est}\)</span></li>
+<li>对于给定的真实噪声图像 <span class="math inline">\(\mathbf{y}\)</span> , D-BSN和 <span class="math inline">\(CNN_{est}\)</span> 协作得到第一级去噪结果 <span class="math inline">\(\mathbf{\hat x_{\mathbf{y}}}\)</span> 和估计的NLF
+<span class="math inline">\(g_{\mathbf{y}}(\mathbf{y})\)</span></li>
+</ul></li>
+<li>在第二阶段，采用知识蒸馏（Knowledge Distillation）策略，利用 <span class="math inline">\(\mathcal{X}, \mathcal{Y},
+\hat{\mathcal{X}}^{(1)}=\left\{\hat{\mathbf{x}}_{\mathbf{y}} \mid
+\mathbf{y} \in \mathcal{Y}\right\}\)</span> （噪声图像 <span class="math inline">\(\mathbf{y}\)</span> ，干净图像 <span class="math inline">\(\mathbf{x}\)</span> 和第一级去噪结果 <span class="math inline">\(\mathbf{\hat x_{\mathbf{y}}}\)</span>
+）和一组特定图像的 <span class="math inline">\(NLFs\{
+g_{\mathbf{y}}(\mathbf{y})\mid \mathbf{y} \in \mathcal{Y} \}\)</span>
+（噪声估计），以完监督的方式提取最先进的深度去噪网络
 <ul>
-<li>对于给定的干净图像 $\mathbf{x}$ ，随机选择图像特定的NLF $g_{\mathbf{y}}(\mathbf{y})$ ，利用 $g_{\mathbf{y}}(\mathbf{y})$ 生成 $\mathbf{x}$ 的NLF。用 $\mathbf{n}_{0} \sim \mathcal{N}(0,1)$ 表示均值为零、方差为一的随机高斯噪声</li>
-<li>因此可以得到对应的合成噪声图像（其实就是干净图像 $\mathbf{x}$ 加上噪声信息，不过这里的噪声信息通过一个 $g_{\mathbf{y}}(\mathbf{y})$ 生成的NLF噪声估计水平进行了处理）</li>
-<li>$\tilde{\mathbf{y}}=\mathbf{x}+g_{\mathbf{y}}(\mathbf{x}) \cdot \mathbf{n}_{0}$</li>
-<li>同时利用噪声图像 $\mathbf{y}$ ，和他在第一阶段得到的去噪结果 $\mathbf{\hat x_{\mathbf{y}}}$ 就构成了第二对noisy-clean图像对</li>
-</ul>
-</li>
+<li>对于给定的干净图像 <span class="math inline">\(\mathbf{x}\)</span>
+，随机选择图像特定的NLF <span class="math inline">\(g_{\mathbf{y}}(\mathbf{y})\)</span> ，利用 <span class="math inline">\(g_{\mathbf{y}}(\mathbf{y})\)</span> 生成 <span class="math inline">\(\mathbf{x}\)</span> 的NLF。用 <span class="math inline">\(\mathbf{n}_{0} \sim \mathcal{N}(0,1)\)</span>
+表示均值为零、方差为一的随机高斯噪声</li>
+<li>因此可以得到对应的合成噪声图像（其实就是干净图像 <span class="math inline">\(\mathbf{x}\)</span>
+加上噪声信息，不过这里的噪声信息通过一个 <span class="math inline">\(g_{\mathbf{y}}(\mathbf{y})\)</span>
+生成的NLF噪声估计水平进行了处理）</li>
+<li><span class="math inline">\(\tilde{\mathbf{y}}=\mathbf{x}+g_{\mathbf{y}}(\mathbf{x})
+\cdot \mathbf{n}_{0}\)</span></li>
+<li>同时利用噪声图像 <span class="math inline">\(\mathbf{y}\)</span>
+，和他在第一阶段得到的去噪结果 <span class="math inline">\(\mathbf{\hat
+x_{\mathbf{y}}}\)</span> 就构成了第二对noisy-clean图像对</li>
+</ul></li>
 <li>然后就是用上面两组noisy-clean图像对来进行训练学习，损失为
 <ul>
-<li>$\mathcal{L}<em>{\text {distill }}=\sum</em>{\mathbf{x} \in \mathcal{X}}|\operatorname{CDN}(\tilde{\mathbf{y}})-\mathbf{x}|^{2}+\lambda \sum_{\mathbf{y} \in \mathcal{Y}}\left|\mathrm{CDN}(\mathbf{y})-\hat{\mathbf{x}}_{\mathbf{y}}\right|^{2}$</li>
+<li><span class="math inline">\(\mathcal{L}_{\text {distill
+}}=\sum_{\mathbf{x} \in
+\mathcal{X}}\|\operatorname{CDN}(\tilde{\mathbf{y}})-\mathbf{x}\|^{2}+\lambda
+\sum_{\mathbf{y} \in
+\mathcal{Y}}\left\|\mathrm{CDN}(\mathbf{y})-\hat{\mathbf{x}}_{\mathbf{y}}\right\|^{2}\)</span></li>
 <li>也很好理解这个东西</li>
-</ul>
-</li>
+</ul></li>
 <li>上面第二阶段的卷积去噪网络CDN可以是任何现有的CNN去噪器，作者在实现中以MWCNN为例</li>
-</ul>
-</li>
+</ul></li>
 <li>D-BSN
 <ul>
-<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/3.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/3.png" srcset="/img/loading.gif" lazyload></li>
 <li>对于某一位置的输出，BSN的核心是排除当前位置输入值的影响(即盲点要求)</li>
-<li>对于第一层卷积，可以很容易地使用掩蔽卷积来做到，对于噪声图像 $\mathbf{y}$ ，$\mathbf{w}_k$ 表示第k层的3x3卷积，对应mask $\mathbf{m}$ ，将其中心位置赋0，其他位置为1</li>
-<li>$\mathbf{f}^{(1)}_k = \mathbf{y} * (\mathbf{w}_k \circ \mathbf{m})$
+<li>对于第一层卷积，可以很容易地使用掩蔽卷积来做到，对于噪声图像 <span class="math inline">\(\mathbf{y}\)</span> ，<span class="math inline">\(\mathbf{w}_k\)</span> 表示第k层的3x3卷积，对应mask
+<span class="math inline">\(\mathbf{m}\)</span>
+，将其中心位置赋0，其他位置为1</li>
+<li><span class="math inline">\(\mathbf{f}^{(1)}_k = \mathbf{y} *
+(\mathbf{w}_k \circ \mathbf{m})\)</span>
 <ul>
-<li>其中 $*,\circ$ 表示卷积核元素相乘</li>
+<li>其中 <span class="math inline">\(*,\circ\)</span>
+表示卷积核元素相乘</li>
 <li>不过随着卷积层的堆叠，最后还是会用到这个位置的信息</li>
-</ul>
-</li>
-<li>所以作者在第一层之后就使用空洞卷积（dilated convolution），在3x3卷积上使用膨胀因子为2（在5x5卷积上，膨胀因子为3），这样的话，就不会用到当前位置的信息
+</ul></li>
+<li>所以作者在第一层之后就使用空洞卷积（dilated
+convolution），在3x3卷积上使用膨胀因子为2（在5x5卷积上，膨胀因子为3），这样的话，就不会用到当前位置的信息
 <ul>
 <li>第一层仍然是普通的mask卷积</li>
 <li>后面作者有解释，其实就是卷积之后正好跳过了当前点的信息</li>
-</ul>
-</li>
+</ul></li>
 <li>同时如果使用1x1卷积和跳跃连接，也不会破坏这个盲点要求，因此可以使用这几个方法来构建FCN，即D-BSN</li>
-<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/4.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/4.png" srcset="/img/loading.gif" lazyload></li>
 <li>网络的具体结构如上</li>
-<li>multiple dilated convolution (MDC)多尺度空洞卷积，使用到了残差连接，两个网络分支的结果最终直接连接起来，经过四个1x1卷积来得到最终的特征表达</li>
-</ul>
-</li>
-<li>$CNN_{est}$</li>
-<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/5.png" srcset="/img/loading.gif" lazyload alt></li>
-<li>给定真实噪声图像 $\mathbf{y}$ 底层的干净图像 $\widetilde {\mathbf{x}}$ ，假定噪声在条件上独立于像素</li>
-<li>假设噪声是信号依赖的多元高斯信号，并进一步要求NLF $g_{\mathbf{\widetilde x}}(\mathbf{\widetilde x})$ 是图像特有的，以提高模型的灵活性</li>
+<li>multiple dilated convolution
+(MDC)多尺度空洞卷积，使用到了残差连接，两个网络分支的结果最终直接连接起来，经过四个1x1卷积来得到最终的特征表达</li>
+</ul></li>
+<li><span class="math inline">\(CNN_{est}\)</span></li>
+<li><img src="/2021/01/28/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x11/5.png" srcset="/img/loading.gif" lazyload></li>
+<li>给定真实噪声图像 <span class="math inline">\(\mathbf{y}\)</span>
+底层的干净图像 <span class="math inline">\(\widetilde
+{\mathbf{x}}\)</span> ，假定噪声在条件上独立于像素</li>
+<li>假设噪声是信号依赖的多元高斯信号，并进一步要求NLF <span class="math inline">\(g_{\mathbf{\widetilde x}}(\mathbf{\widetilde
+x})\)</span> 是图像特有的，以提高模型的灵活性</li>
 <li>然后作者这里使用了1x1卷积的FCN框架来学习噪声模型，这样的话也可以保证某一位置的噪声水平只依赖于同一位置的输入值</li>
-<li>不过对于 $g_{\mathbf{\widetilde x}}(\mathbf{\widetilde x})$ ，它的输入要求是干净图像，所以 $CNN_{est}$ 以噪声图像作为输入，学习 $g_{\mathbf{y}}(\mathbf{y})$ ，来进行近似</li>
-<li>这里作者提出每个图象在 $CNN_{est}$ 中都有自己的网络参数来学习特定图像的NLF</li>
+<li>不过对于 <span class="math inline">\(g_{\mathbf{\widetilde
+x}}(\mathbf{\widetilde x})\)</span> ，它的输入要求是干净图像，所以 <span class="math inline">\(CNN_{est}\)</span> 以噪声图像作为输入，学习 <span class="math inline">\(g_{\mathbf{y}}(\mathbf{y})\)</span>
+，来进行近似</li>
+<li>这里作者提出每个图象在 <span class="math inline">\(CNN_{est}\)</span>
+中都有自己的网络参数来学习特定图像的NLF</li>
 <li>Self-Supervised Loss and Bayes Denoising
 <ul>
-<li>因为真实噪声图像 $\mathbf{y}$ 底层的干净图像 $\widetilde {\mathbf{x}}$ 和真实噪声图像 $\mathbf{y}$ 的真实NLF不可用，所以选择自监督学习</li>
-<li>对于给定位置 $i$ ，有 $y_i = \widetilde x_i + n_i$ ，其中 $n_{i} \sim \mathcal{N}\left(\mathbf{0}, \mathbf{\Sigma}_{i}^{\mathbf{n}}\right)$
+<li>因为真实噪声图像 <span class="math inline">\(\mathbf{y}\)</span>
+底层的干净图像 <span class="math inline">\(\widetilde
+{\mathbf{x}}\)</span> 和真实噪声图像 <span class="math inline">\(\mathbf{y}\)</span>
+的真实NLF不可用，所以选择自监督学习</li>
+<li>对于给定位置 <span class="math inline">\(i\)</span> ，有 <span class="math inline">\(y_i = \widetilde x_i + n_i\)</span> ，其中 <span class="math inline">\(n_{i} \sim \mathcal{N}\left(\mathbf{0},
+\mathbf{\Sigma}_{i}^{\mathbf{n}}\right)\)</span>
 <ul>
-<li>其中 $y_i,\widetilde x_i,n_i,\mathbf{0}$ 都是C x 1向量</li>
-</ul>
-</li>
-<li>$\boldsymbol{\mu}$ 是D-BSN直接预测得到的干净图像，假设 $\boldsymbol{\mu} = \widetilde {\mathbf{x}} + \mathbf{n^{\boldsymbol \mu}}$ ，其中 $n_{i}^{\boldsymbol \mu} \sim \mathcal{N}\left(\mathbf{0}, \mathbf{\Sigma}_{i}^{\boldsymbol{\mu}}\right)$</li>
-<li>进一步假设 $n_i$ 和 $\mu_{i}$ 是独立的，可以看到 $\boldsymbol{\mu}$ 要比真实噪声图像 $\mathbf{y}$ 更接近 $\widetilde {\mathbf{x}}$ ，$\left|\boldsymbol{\Sigma}<em>{i}^{\mathbf{n}}\right| \gg\left|\boldsymbol{\Sigma}</em>{i}^{\boldsymbol{\mu}}\right| \approx 0$</li>
-<li>不过 $\widetilde {\mathbf{x}}<em>i$ 不可用，所以引入 $\epsilon</em>{i}=y_{i}-\mu_{i}$ ，其中 $\epsilon_{i} \sim \mathcal{N}\left(\mathbf{0}, \mathbf{\Sigma}<em>{i}^{\mathbf{n}}+\mathbf{\Sigma}</em>{i}^{\boldsymbol{\mu}}\right)$</li>
+<li>其中 <span class="math inline">\(y_i,\widetilde
+x_i,n_i,\mathbf{0}\)</span> 都是C x 1向量</li>
+</ul></li>
+<li><span class="math inline">\(\boldsymbol{\mu}\)</span>
+是D-BSN直接预测得到的干净图像，假设 <span class="math inline">\(\boldsymbol{\mu} = \widetilde {\mathbf{x}} +
+\mathbf{n^{\boldsymbol \mu}}\)</span> ，其中 <span class="math inline">\(n_{i}^{\boldsymbol \mu} \sim
+\mathcal{N}\left(\mathbf{0},
+\mathbf{\Sigma}_{i}^{\boldsymbol{\mu}}\right)\)</span></li>
+<li>进一步假设 <span class="math inline">\(n_i\)</span> 和 <span class="math inline">\(\mu_{i}\)</span> 是独立的，可以看到 <span class="math inline">\(\boldsymbol{\mu}\)</span> 要比真实噪声图像 <span class="math inline">\(\mathbf{y}\)</span> 更接近 <span class="math inline">\(\widetilde {\mathbf{x}}\)</span> ，<span class="math inline">\(\left|\boldsymbol{\Sigma}_{i}^{\mathbf{n}}\right|
+\gg\left|\boldsymbol{\Sigma}_{i}^{\boldsymbol{\mu}}\right| \approx
+0\)</span></li>
+<li>不过 <span class="math inline">\(\widetilde {\mathbf{x}}_i\)</span>
+不可用，所以引入 <span class="math inline">\(\epsilon_{i}=y_{i}-\mu_{i}\)</span> ，其中 <span class="math inline">\(\epsilon_{i} \sim \mathcal{N}\left(\mathbf{0},
+\mathbf{\Sigma}_{i}^{\mathbf{n}}+\mathbf{\Sigma}_{i}^{\boldsymbol{\mu}}\right)\)</span></li>
 <li>emmm后面就看不懂了，就是推导出了在贝叶斯框架下的loss</li>
-</ul>
-</li>
+</ul></li>
 <li>不过将其应用于真实噪声时，由于真实照片中的噪声是空间相关的，违反了像素独立的噪声假设，从而限制了该方法的直接应用。不过作者认为这种假设在分离信号(空间相关)和噪声(像素无关)时是十分重要的</li>
 </ul>
-<h3 id="😝😜😋">😝😜😋</h3>
+<h3 id="section">😝😜😋</h3>
 
                 
               </div>

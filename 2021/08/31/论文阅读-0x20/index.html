@@ -16,12 +16,12 @@
   <meta name="author" content="hyzs1220">
   <meta name="keywords" content="">
   
-    <meta name="description" content="论文的阅读笔记： 《 Contextual Transformer Networks for Visual Recognition 》,   [code],  CVPR 2021 《 Restormer: Efficient Transformer for High-Resolution Image Restoration 》， [code] ,">
+    <meta name="description" content="论文的阅读笔记： 《 Contextual Transformer Networks for Visual Recognition 》, [code], CVPR 2021 《 Restormer: Efficient Transformer for High-Resolution Image Restoration 》， [code] ,">
 <meta property="og:type" content="article">
 <meta property="og:title" content="论文阅读-0x20">
 <meta property="og:url" content="http://example.com/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/index.html">
 <meta property="og:site_name" content="hyzsのblog">
-<meta property="og:description" content="论文的阅读笔记： 《 Contextual Transformer Networks for Visual Recognition 》,   [code],  CVPR 2021 《 Restormer: Efficient Transformer for High-Resolution Image Restoration 》， [code] ,">
+<meta property="og:description" content="论文的阅读笔记： 《 Contextual Transformer Networks for Visual Recognition 》, [code], CVPR 2021 《 Restormer: Efficient Transformer for High-Resolution Image Restoration 》， [code] ,">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1.png">
 <meta property="og:image" content="http://example.com/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/2.png">
@@ -303,426 +303,522 @@
               <div class="markdown-body">
                 
                 <p>论文的阅读笔记：</p>
-<p>《 Contextual Transformer Networks for Visual Recognition 》,   <a target="_blank" rel="noopener" href="https://github.com/JDAI-CV/CoTNet">[code]</a>,  CVPR 2021</p>
-<p>《 Restormer: Efficient Transformer for High-Resolution Image Restoration 》， <a target="_blank" rel="noopener" href="https://github.com/swz30/Restormer">[code]</a> ,</p>
+<p>《 Contextual Transformer Networks for Visual Recognition 》, <a target="_blank" rel="noopener" href="https://github.com/JDAI-CV/CoTNet">[code]</a>, CVPR 2021</p>
+<p>《 Restormer: Efficient Transformer for High-Resolution Image
+Restoration 》， <a target="_blank" rel="noopener" href="https://github.com/swz30/Restormer">[code]</a>
+,</p>
 <span id="more"></span>
-<h2 id="Contextual-Transformer-Networks-for-Visual-Recognition">Contextual Transformer Networks for Visual Recognition</h2>
-<h3 id="Abstract">Abstract</h3>
+<h2 id="contextual-transformer-networks-for-visual-recognition">Contextual
+Transformer Networks for Visual Recognition</h2>
+<h3 id="abstract">Abstract</h3>
 <ul>
-<li>具有 self-attention 的 Transformer 在 NLP 领域带来了技术性革命，并在最近激发了 Transformer 风格的架构设计的出现，在众多计算机视觉任务中取得了有竞争力的结果</li>
-<li>然而，大多数现有设计直接利用二维 feature map 上的 self-attention 来获得基于每个空间位置处的成对孤立的 queries 和 keys 的注意力矩阵，但是<strong>没有充分利用相邻 keys 之间的丰富上下文信息</strong></li>
-<li>在本文中，作者设计了一个全新的 Transformer-style 模块——Contextual Transformer (CoT) block
+<li>具有 self-attention 的 Transformer 在 NLP
+领域带来了技术性革命，并在最近激发了 Transformer
+风格的架构设计的出现，在众多计算机视觉任务中取得了有竞争力的结果</li>
+<li>然而，大多数现有设计直接利用二维 feature map 上的 self-attention
+来获得基于每个空间位置处的成对孤立的 queries 和 keys
+的注意力矩阵，但是<strong>没有充分利用相邻 keys
+之间的丰富上下文信息</strong></li>
+<li>在本文中，作者设计了一个全新的 Transformer-style 模块——Contextual
+Transformer (CoT) block
 <ul>
 <li>充分利用输入的上下文信息来指导动态注意力矩阵的学习，从而增强了视觉表征能力</li>
-<li>CoT 首先通过3×3卷积对输入 keys 进行上下文编码，从而得到输入的<strong>静态上下文表示</strong></li>
-<li>进一步通过两个连续的1×1卷积将编码的 keys 与输入 queries 连接起来，以学习<strong>动态多头注意力矩阵</strong></li>
-<li>将学习的注意力矩阵乘以输入 values，以实现输入的<strong>动态上下文表示</strong></li>
+<li>CoT 首先通过3×3卷积对输入 keys
+进行上下文编码，从而得到输入的<strong>静态上下文表示</strong></li>
+<li>进一步通过两个连续的1×1卷积将编码的 keys 与输入 queries
+连接起来，以学习<strong>动态多头注意力矩阵</strong></li>
+<li>将学习的注意力矩阵乘以输入
+values，以实现输入的<strong>动态上下文表示</strong></li>
 <li>该模块将静态和动态上下文表示的融合结果最终作为输出</li>
-</ul>
-</li>
-<li>CoT 可以很容易地替换ResNet架构中的每个3 × 3卷积，从而得到一个Transformer-style backbone——CoTNet</li>
+</ul></li>
+<li>CoT 可以很容易地替换ResNet架构中的每个3 ×
+3卷积，从而得到一个Transformer-style backbone——CoTNet</li>
 <li>CNN
 <ul>
 <li>CNN架构设计是基于离散卷积算子（3×3或5×5卷积），有效地施加空间局部性和平移等变性</li>
 <li>有限的卷积感受野对全局/长程依赖性的建模产生了不利影响</li>
-</ul>
-</li>
-<li>自然语言处理（NLP）领域见证了 Transformer 在强大的语言建模架构中的崛起
+</ul></li>
+<li>自然语言处理（NLP）领域见证了 Transformer
+在强大的语言建模架构中的崛起
 <ul>
 <li>自注意机制是为了在序列建模中捕捉长期依赖性而设计的</li>
 <li>以可伸缩的方式触发远程交互</li>
 <li>自注意机制从NLP到CV的简单迁移是在图像中不同空间位置的特征向量上直接执行自注意</li>
-</ul>
-</li>
+</ul></li>
 <li><strong>与其在整个特征图上使用全局自注意，还不如在局部块中使用自注意（3×3网格）</strong>
 <ul>
 <li>这种局部自注意力的设计有效地限制了网络消耗的参数和计算，因此可以<strong>完全取代整个深层架构中的卷积</strong></li>
-</ul>
-</li>
-<li>通过将基于CNN的架构与 Transformer 模块相结合，来更好地完成 CV 任务</li>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1.png" srcset="/img/loading.gif" lazyload alt>
+</ul></li>
+<li>通过将基于CNN的架构与 Transformer 模块相结合，来更好地完成 CV
+任务</li>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1.png" srcset="/img/loading.gif" lazyload>
 <ul>
-<li>传统的自注意力<strong>仅利用孤立的 query-key 对来度量注意力矩阵，但未充分利用 key 之间的丰富上下文</strong></li>
-</ul>
-</li>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/2.png" srcset="/img/loading.gif" lazyload alt>
+<li>传统的自注意力<strong>仅利用孤立的 query-key
+对来度量注意力矩阵，但未充分利用 key 之间的丰富上下文</strong></li>
+</ul></li>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/2.png" srcset="/img/loading.gif" lazyload>
 <ul>
-<li>作者将 keys 之间的上下文挖掘和二维特征图上的自注意学习统一在一个体系结构中，从而避免了为上下文挖掘引入额外的分支</li>
+<li>作者将 keys
+之间的上下文挖掘和二维特征图上的自注意学习统一在一个体系结构中，从而避免了为上下文挖掘引入额外的分支</li>
 <li>首先通过对3×3网格内的所有相邻 keys 执行3×3卷积，将 keys 表示上下文化
 <ul>
-<li>这样得到的 keys 特征视为输入的静态表示，<strong>反映了局部相邻位置的静态上下文信息</strong></li>
-</ul>
-</li>
-<li>然后将 keys 和输入 query <strong>串联输入到两个连续的1×1卷积中，得到注意力矩阵</strong></li>
-<li>进一步利用学习到的注意力矩阵聚合 values，从而<strong>实现输入的动态上下文表示</strong></li>
+<li>这样得到的 keys
+特征视为输入的静态表示，<strong>反映了局部相邻位置的静态上下文信息</strong></li>
+</ul></li>
+<li>然后将 keys 和输入 query
+<strong>串联输入到两个连续的1×1卷积中，得到注意力矩阵</strong></li>
+<li>进一步利用学习到的注意力矩阵聚合
+values，从而<strong>实现输入的动态上下文表示</strong></li>
 <li>最后将静态和动态上下文表示相结合作为CoT块的最终输出
 <ul>
-<li>作者的出发点是在输入 key 之间同时捕获上述两种空间上下文：通过 3×3 卷积的静态上下文和基于上下文自注意力的动态上下文，以促进视觉表示学习</li>
+<li>作者的出发点是在输入 key 之间同时捕获上述两种空间上下文：通过 3×3
+卷积的静态上下文和基于上下文自注意力的动态上下文，以促进视觉表示学习</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="CoT">CoT</h3>
-<h4 id="Multi-head-Self-attention-in-Vision-Backbones">Multi-head Self-attention in Vision Backbones</h4>
+<h3 id="cot">CoT</h3>
+<h4 id="multi-head-self-attention-in-vision-backbones">Multi-head
+Self-attention in Vision Backbones</h4>
 <ul>
-<li>
-<p>Local Relation Networks for Image Recognition CVPR 2019</p>
+<li>Local Relation Networks for Image Recognition CVPR 2019
 <ul>
-<li>用局部关系层建立的网络——局部关系网络 the Local Relation Network (LR-NET)</li>
-<li><img src="https://img-blog.csdnimg.cn/2021040716064736.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNjg0MjQ5,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="img"></li>
-<li>输入Input Feature，分别通过一个1×1大小的卷积核，得到Key Map和Query Map，通道数为C/m</li>
-<li>对于Query Map中一个像素，在Key Map中提取出一个邻域k×k大小的区域，然后对应像素点相乘，得到Appearance Composability</li>
-<li>文中并没有给出如何构造2×k×k的Position。这里可以认为其中一层表示x坐标，另一层表示y坐标。然后将这个2×k×k的Position经过两个1×1大小的卷积层，得到Geometry Prior，其大小为C/m×k×k。中间使用ReLU激活函数</li>
-<li>将Geometry Prior和Appearance Composability相加，然后经过Softmax，得到该层的参数Aggregation Weights，其大小为C/m×k×k。</li>
-<li>对Input Feature提取出对应的一个k×k的区域，然后与Aggregation Weights进行参数聚合，即每一个k×k大小进行加权平均操作，最终得到该点的结果，大小为C×k×k。</li>
+<li>用局部关系层建立的网络——局部关系网络 the Local Relation Network
+(LR-NET)</li>
+<li><figure>
+<img src="https://img-blog.csdnimg.cn/2021040716064736.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNjg0MjQ5,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="img">
+<figcaption aria-hidden="true">img</figcaption>
+</figure></li>
+<li>输入Input Feature，分别通过一个1×1大小的卷积核，得到Key Map和Query
+Map，通道数为C/m</li>
+<li>对于Query Map中一个像素，在Key
+Map中提取出一个邻域k×k大小的区域，然后对应像素点相乘，得到Appearance
+Composability</li>
+<li>文中并没有给出如何构造2×k×k的Position。这里可以认为其中一层表示x坐标，另一层表示y坐标。然后将这个2×k×k的Position经过两个1×1大小的卷积层，得到Geometry
+Prior，其大小为C/m×k×k。中间使用ReLU激活函数</li>
+<li>将Geometry Prior和Appearance
+Composability相加，然后经过Softmax，得到该层的参数Aggregation
+Weights，其大小为C/m×k×k。</li>
+<li>对Input Feature提取出对应的一个k×k的区域，然后与Aggregation
+Weights进行参数聚合，即每一个k×k大小进行加权平均操作，最终得到该点的结果，大小为C×k×k。</li>
 <li>通过上述求参方法，得到输出Aggregation Feature，其大小为C×W×H。</li>
-<li>最后将其经过一个1×1的卷积层，得到Output Feature，其大小为C×W×H。</li>
-</ul>
-</li>
-<li>
-<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/3.png" srcset="/img/loading.gif" lazyload alt></p>
+<li>最后将其经过一个1×1的卷积层，得到Output
+Feature，其大小为C×W×H。</li>
+</ul></li>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/3.png" srcset="/img/loading.gif" lazyload>
 <ul>
-<li>给定一个二维输入 $H \times W \times C$ ，将 $X$ 转换为 queries $Q=XW_q$ , keys $K=XW_k$ , values $V=XW_v$
+<li>给定一个二维输入 <span class="math inline">\(H \times W \times
+C\)</span> ，将 <span class="math inline">\(X\)</span> 转换为 queries
+<span class="math inline">\(Q=XW_q\)</span> , keys <span class="math inline">\(K=XW_k\)</span> , values <span class="math inline">\(V=XW_v\)</span>
 <ul>
-<li>其中 $W_q, W_k, W_v$ 是三个 1×1 的嵌入卷积</li>
-</ul>
-</li>
-<li>然后可以由 keys 和 queries 得到局部关系矩阵 $R \in \mathbb{R}^{H \times W \times (k \times k \times C_h)}$
+<li>其中 <span class="math inline">\(W_q, W_k, W_v\)</span> 是三个 1×1
+的嵌入卷积</li>
+</ul></li>
+<li>然后可以由 keys 和 queries 得到局部关系矩阵 <span class="math inline">\(R \in \mathbb{R}^{H \times W \times (k \times k
+\times C_h)}\)</span>
 <ul>
-<li>$R = K \circledast Q$</li>
-<li>其中 $C_h$ 表示多头自注意力的头数， $\circledast$ 表示局部矩阵乘法运算，用于度量空间中局部 $k×k$ 网格中每个 query 与相应 key 之间的成对关系</li>
-</ul>
-</li>
-<li>因此，在 $R$ 的第 $i$ 个空间位置的每个特征 $R^{(i)}$ 是一个 $k \times k \times C_h$ 维向量，它由所有头部的局部 query-key 关系映射（尺寸为 $k \times k$ ）组成</li>
-<li>局部关系矩阵 $R$ 进一步丰富了每个 $k \times k$ 网格的位置信息：
+<li><span class="math inline">\(R = K \circledast Q\)</span></li>
+<li>其中 <span class="math inline">\(C_h\)</span>
+表示多头自注意力的头数， <span class="math inline">\(\circledast\)</span>
+表示局部矩阵乘法运算，用于度量空间中局部 <span class="math inline">\(k×k\)</span> 网格中每个 query 与相应 key
+之间的成对关系</li>
+</ul></li>
+<li>因此，在 <span class="math inline">\(R\)</span> 的第 <span class="math inline">\(i\)</span> 个空间位置的每个特征 <span class="math inline">\(R^{(i)}\)</span> 是一个 <span class="math inline">\(k \times k \times C_h\)</span>
+维向量，它由所有头部的局部 query-key 关系映射（尺寸为 <span class="math inline">\(k \times k\)</span> ）组成</li>
+<li>局部关系矩阵 <span class="math inline">\(R\)</span> 进一步丰富了每个
+<span class="math inline">\(k \times k\)</span> 网格的位置信息：
 <ul>
-<li>$\hat R = R + P \circledast Q$</li>
-<li><strong>其中 $P \in \mathbb{R}^{k \times k \times C_k}$ 表示每个 $k \times k$ 网格内的二维位置信息，并在所有 $C_h$ 头上共享</strong></li>
-</ul>
-</li>
-<li>接下来，通过沿每个头部的通道维度对增强的空间感知局部关系矩阵 $\hat R$ 进行 Softmax 操作来归一化，从而获得注意力矩阵 $A = Softmax(\hat R)$</li>
-<li>将 $A$ 的每个空间位置处的特征向量重塑为局部注意力矩阵（尺寸为 $k \times k$ ）后，<strong>最终输出的特征图计算为每个 $k \times k$ 网格内 values 与局部注意矩阵的聚合</strong>：
+<li><span class="math inline">\(\hat R = R + P \circledast
+Q\)</span></li>
+<li><strong>其中 <span class="math inline">\(P \in \mathbb{R}^{k \times
+k \times C_k}\)</span> 表示每个 <span class="math inline">\(k \times
+k\)</span> 网格内的二维位置信息，并在所有 <span class="math inline">\(C_h\)</span> 头上共享</strong></li>
+</ul></li>
+<li>接下来，通过沿每个头部的通道维度对增强的空间感知局部关系矩阵 <span class="math inline">\(\hat R\)</span> 进行 Softmax
+操作来归一化，从而获得注意力矩阵 <span class="math inline">\(A =
+Softmax(\hat R)\)</span></li>
+<li>将 <span class="math inline">\(A\)</span>
+的每个空间位置处的特征向量重塑为局部注意力矩阵（尺寸为 <span class="math inline">\(k \times k\)</span>
+）后，<strong>最终输出的特征图计算为每个 <span class="math inline">\(k
+\times k\)</span> 网格内 values 与局部注意矩阵的聚合</strong>：
 <ul>
-<li>$Y = V \circledast A$</li>
-<li>每个头部的局部注意矩阵仅用于沿通道维度聚合 $V$ 的均匀分割特征映射，最终输出 $Y$ 是所有头部聚合特征映射的串联</li>
+<li><span class="math inline">\(Y = V \circledast A\)</span></li>
+<li>每个头部的局部注意矩阵仅用于沿通道维度聚合 <span class="math inline">\(V\)</span> 的均匀分割特征映射，最终输出 <span class="math inline">\(Y\)</span> 是所有头部聚合特征映射的串联</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<h4 id="Contextual-Transformer-Block">Contextual Transformer Block</h4>
+<h4 id="contextual-transformer-block">Contextual Transformer Block</h4>
 <ul>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/4.png" srcset="/img/loading.gif" lazyload alt></li>
-<li>假设我们有相同的输入2D特征映射 $X \in \mathbb{R}^{H \times W \times C}$ ，对应的 key，query， value 为 $K = X, Q = K, V = XW_v$</li>
-<li>对于 key ，没有采用传统的  1×1 卷积，而是首先在空间上对 $k \times k$ 网格内的所有相邻 key 采用 $k \times k$ 组卷积，以上下文化每个 key 表示</li>
-<li>所得到的上下文 key $K^1 \in \mathbb{R}^{H \times W \times C}$ 自然地<strong>反映了局部相邻位置的静态上下文信息</strong>，并将 $K^1$ 作为输入 $X$ 的静态上下文表示</li>
-<li>然后在 key  $K^1$ 和 query $Q$ 串联的条件下，通过两个连续的1×1卷积（带ReLU激活函数的 $W_\theta$ 和不带激活函数的 $W_\delta$ ）获得注意力矩阵
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/4.png" srcset="/img/loading.gif" lazyload></li>
+<li>假设我们有相同的输入2D特征映射 <span class="math inline">\(X \in
+\mathbb{R}^{H \times W \times C}\)</span> ，对应的 key，query， value 为
+<span class="math inline">\(K = X, Q = K, V = XW_v\)</span></li>
+<li>对于 key ，没有采用传统的 1×1 卷积，而是首先在空间上对 <span class="math inline">\(k \times k\)</span> 网格内的所有相邻 key 采用
+<span class="math inline">\(k \times k\)</span> 组卷积，以上下文化每个
+key 表示</li>
+<li>所得到的上下文 key <span class="math inline">\(K^1 \in \mathbb{R}^{H
+\times W \times C}\)</span>
+自然地<strong>反映了局部相邻位置的静态上下文信息</strong>，并将 <span class="math inline">\(K^1\)</span> 作为输入 <span class="math inline">\(X\)</span> 的静态上下文表示</li>
+<li>然后在 key <span class="math inline">\(K^1\)</span> 和 query <span class="math inline">\(Q\)</span>
+串联的条件下，通过两个连续的1×1卷积（带ReLU激活函数的 <span class="math inline">\(W_\theta\)</span> 和不带激活函数的 <span class="math inline">\(W_\delta\)</span> ）获得注意力矩阵
 <ul>
-<li>$A=\left[K^{1}, Q\right] W_{\theta} W_{\delta}$</li>
-</ul>
-</li>
-<li>因此对于每个头部，$A$ <strong>的每个空间位置的局部注意力矩阵是基于 query 特征和上下文的 key 特征</strong>，而不是孤立的 query-key 对来学习的
+<li><span class="math inline">\(A=\left[K^{1}, Q\right] W_{\theta}
+W_{\delta}\)</span></li>
+</ul></li>
+<li>因此对于每个头部，<span class="math inline">\(A\)</span>
+<strong>的每个空间位置的局部注意力矩阵是基于 query 特征和上下文的 key
+特征</strong>，而不是孤立的 query-key 对来学习的
 <ul>
-<li>这种方式通过静态上下文 $K^1$ 的额外指导增强了自注意力学习</li>
-</ul>
-</li>
-<li>此外根据上下文注意力矩阵 A，通过聚合 V 来计算特征图 $K^2$
+<li>这种方式通过静态上下文 <span class="math inline">\(K^1\)</span>
+的额外指导增强了自注意力学习</li>
+</ul></li>
+<li>此外根据上下文注意力矩阵 A，通过聚合 V 来计算特征图 <span class="math inline">\(K^2\)</span>
 <ul>
-<li>$K^2 = V \circledast A$</li>
-<li>鉴于特征映射 $K^2$ <strong>捕捉了输入之间的动态特征交互</strong>，因此将 $K^2$ 命名为输入的动态上下文表示</li>
+<li><span class="math inline">\(K^2 = V \circledast A\)</span></li>
+<li>鉴于特征映射 <span class="math inline">\(K^2\)</span>
+<strong>捕捉了输入之间的动态特征交互</strong>，因此将 <span class="math inline">\(K^2\)</span> 命名为输入的动态上下文表示</li>
+</ul></li>
+<li>最终CoT块（Y）的输出通过注意机制被计算为为静态上下文 <span class="math inline">\(K^ 1\)</span> 和动态上下文 <span class="math inline">\(K^2\)</span> 的融合</li>
 </ul>
-</li>
-<li>最终CoT块（Y）的输出通过注意机制被计算为为静态上下文 $K^ 1$ 和动态上下文 $K^2$ 的融合</li>
-</ul>
-<h4 id="Contextual-Transformer-Networks">Contextual Transformer Networks</h4>
+<h4 id="contextual-transformer-networks">Contextual Transformer
+Networks</h4>
 <ul>
-<li>作者的CoT设计是一个统一的 self-attention 块，它可以替代ConvNet中的标准卷积（直接用CoT块替换所有3×3卷积）</li>
+<li>作者的CoT设计是一个统一的 self-attention
+块，它可以替代ConvNet中的标准卷积（直接用CoT块替换所有3×3卷积）</li>
 <li>在本文中，作者将CoT块集成到现有最先进的ResNet体系结构中，例如ResNet和ResNeXt，且不会显著增加参数预算</li>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/5.png" srcset="/img/loading.gif" lazyload alt>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/5.png" srcset="/img/loading.gif" lazyload>
 <ul>
-<li>对于ResNet-50和CoTNet50：CoTNet50的参数量和FLOPs（ 每秒浮点运算次数 ）都略少于ResNet-50</li>
+<li>对于ResNet-50和CoTNet50：CoTNet50的参数量和FLOPs（ 每秒浮点运算次数
+）都略少于ResNet-50</li>
 <li>而与ResNeXt-50相比，CoTNeXt-50的参数量稍多，但FLOPs类似</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h4 id="Connections-with-Previous-Vision-Backbones">Connections with Previous Vision Backbones</h4>
+<h4 id="connections-with-previous-vision-backbones">Connections with
+Previous Vision Backbones</h4>
 <ul>
 <li>“蓝图”卷积
 <ul>
-<li>Rethinking Depthwise Separable Convolutions: How Intra-Kernel Correlations Lead to Improved MobileNets——CVPR 2020</li>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/6.png" srcset="/img/loading.gif" lazyload alt></li>
-<li>使用1×1 pointwise 卷积加上k×k depthwise 卷积来近似传统卷积，旨在减少沿通道深度方向上的冗余</li>
+<li>Rethinking Depthwise Separable Convolutions: How Intra-Kernel
+Correlations Lead to Improved MobileNets——CVPR 2020</li>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/6.png" srcset="/img/loading.gif" lazyload></li>
+<li>使用1×1 pointwise 卷积加上k×k depthwise
+卷积来近似传统卷积，旨在减少沿通道深度方向上的冗余</li>
 <li>这种设计与transformer样式块（例如典型的self-attention和CoT块）有一些共同点
 <ul>
-<li>这是因为 Transformer-style 块也利用 1×1  pointwise 卷积将输入转换为值，并且以类似的depthwise 卷积方式执行具有 k×k 局部注意力矩阵的后续聚合计算</li>
-</ul>
-</li>
-<li>此外，对于每个头，transformer-style block 中的聚合计算采用通道共享策略以高效实现，而不会出现任何显着的精度下降。 这里使用的通道共享策略也可以解释为tied block convolution ，它在相等的通道块上共享相同的过滤器</li>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/7.png" srcset="/img/loading.gif" lazyload alt></li>
-</ul>
-</li>
+<li>这是因为 Transformer-style 块也利用 1×1 pointwise
+卷积将输入转换为值，并且以类似的depthwise 卷积方式执行具有 k×k
+局部注意力矩阵的后续聚合计算</li>
+</ul></li>
+<li>此外，对于每个头，transformer-style block
+中的聚合计算采用通道共享策略以高效实现，而不会出现任何显着的精度下降。
+这里使用的通道共享策略也可以解释为tied block convolution
+，它在相等的通道块上共享相同的过滤器</li>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/7.png" srcset="/img/loading.gif" lazyload></li>
+</ul></li>
 <li>Dynamic Region-Aware Convolution
 <ul>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/8.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/8.png" srcset="/img/loading.gif" lazyload></li>
 <li>引入了一个滤波器生成器（由两个连续的1×1组成），用于学习不同空间位置区域特征的专用滤波器</li>
 <li>因此，它与CoT块中的注意力矩阵生成器具有相似的思想，该生成器为每个空间位置实现动态局部注意力矩阵</li>
-<li>然而该滤波器生成器模块是根据主输入特征图生成专用滤波器。相比之下，CoT注意力矩阵生成器充分利用了上下文 key 和 query 之间复杂的特征交互来进行自注意力学习</li>
-</ul>
-</li>
+<li>然而该滤波器生成器模块是根据主输入特征图生成专用滤波器。相比之下，CoT注意力矩阵生成器充分利用了上下文
+key 和 query 之间复杂的特征交互来进行自注意力学习</li>
+</ul></li>
 <li>Bottleneck Transformer
 <ul>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/9.png" srcset="/img/loading.gif" lazyload alt></li>
-<li>旨在通过用 transformer 模块取代3×3卷积，用自我注意机制来增强ConvNet</li>
-<li>采用了全局多头自注意力层 multi-head self-attention，这在计算上比CoT块中的局部自注意力更昂贵</li>
-<li>因此，对于同一个ResNet主干网，BoT50仅用 transformer 模块替换了最后三个3×3卷积，而本文的CoT块可以完全替换整个深层架构中的3×3卷积，从而利用输入之间丰富的上下文来加强自注意力学习</li>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/9.png" srcset="/img/loading.gif" lazyload></li>
+<li>旨在通过用 transformer
+模块取代3×3卷积，用自我注意机制来增强ConvNet</li>
+<li>采用了全局多头自注意力层 multi-head
+self-attention，这在计算上比CoT块中的局部自注意力更昂贵</li>
+<li>因此，对于同一个ResNet主干网，BoT50仅用 transformer
+模块替换了最后三个3×3卷积，而本文的CoT块可以完全替换整个深层架构中的3×3卷积，从而利用输入之间丰富的上下文来加强自注意力学习</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="Code">Code</h3>
-<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/4.png" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="code">Code</h3>
+<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/4.png" srcset="/img/loading.gif" lazyload></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">CotLayer</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, dim, kernel_size</span>):<br>        <span class="hljs-comment"># 调用 CotLayer(width, kernel_size=3)</span><br>        <span class="hljs-built_in">super</span>(CotLayer, self).__init__()<br><br>        self.dim = dim<br>        self.kernel_size = kernel_size<br><br>        self.key_embed = nn.Sequential(<br>            <span class="hljs-comment"># 分组卷积</span><br>            <span class="hljs-comment"># Torch.nn.Conv2d(in_channels,out_channels,kernel_size,</span><br>            <span class="hljs-comment"># 	stride,padding,dilation,groups,bias)</span><br>            nn.Conv2d(dim, dim, self.kernel_size, stride=<span class="hljs-number">1</span>, padding=self.kernel_size//<span class="hljs-number">2</span>, groups=<span class="hljs-number">4</span>, bias=<span class="hljs-literal">False</span>),<br>            nn.BatchNorm2d(dim),<br>            nn.ReLU(inplace=<span class="hljs-literal">True</span>)<br>        )<br><br>        <span class="hljs-comment"># 共享通道，感觉和缩放一样，，</span><br>        share_planes = <span class="hljs-number">8</span><br>        <span class="hljs-comment"># 缩放因子</span><br>        factor = <span class="hljs-number">2</span><br>        self.embed = nn.Sequential(<br>            <span class="hljs-comment"># w_\theta, 存在concat操作</span><br>            nn.Conv2d(<span class="hljs-number">2</span>*dim, dim//factor, <span class="hljs-number">1</span>, bias=<span class="hljs-literal">False</span>), <br>            nn.BatchNorm2d(dim//factor),<br>            nn.ReLU(inplace=<span class="hljs-literal">True</span>),<br>            <span class="hljs-comment"># w_\delta, 没有激活函数</span><br>            nn.Conv2d(dim//factor, <span class="hljs-built_in">pow</span>(kernel_size, <span class="hljs-number">2</span>) * dim // share_planes, kernel_size=<span class="hljs-number">1</span>),<br>            <span class="hljs-comment"># 将channel方向分group，然后每个group内做归一化</span><br>            nn.GroupNorm(num_groups=dim // share_planes, num_channels=<span class="hljs-built_in">pow</span>(kernel_size, <span class="hljs-number">2</span>) * dim // share_planes)<br>        )<br><br>        self.conv1x1 = nn.Sequential(<br>            nn.Conv2d(dim, dim, kernel_size=<span class="hljs-number">1</span>, stride=<span class="hljs-number">1</span>, padding=<span class="hljs-number">0</span>, dilation=<span class="hljs-number">1</span>, bias=<span class="hljs-literal">False</span>),<br>            nn.BatchNorm2d(dim)<br>        )<br><br>        self.local_conv = LocalConvolution(dim, dim, kernel_size=self.kernel_size, stride=<span class="hljs-number">1</span>, padding=(self.kernel_size - <span class="hljs-number">1</span>) // <span class="hljs-number">2</span>, dilation=<span class="hljs-number">1</span>)<br>        self.bn = nn.BatchNorm2d(dim)<br>        act = get_act_layer(<span class="hljs-string">&#x27;swish&#x27;</span>)<br>        self.act = act(inplace=<span class="hljs-literal">True</span>)<br><br>        reduction_factor = <span class="hljs-number">4</span><br>        self.radix = <span class="hljs-number">2</span><br>        <br>        attn_chs = <span class="hljs-built_in">max</span>(dim * self.radix // reduction_factor, <span class="hljs-number">32</span>)<br>        self.se = nn.Sequential(<br>            nn.Conv2d(dim, attn_chs, <span class="hljs-number">1</span>),<br>            nn.BatchNorm2d(attn_chs),<br>            nn.ReLU(inplace=<span class="hljs-literal">True</span>),<br>            nn.Conv2d(attn_chs, self.radix*dim, <span class="hljs-number">1</span>)<br>        )<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-comment"># 用一个3x3卷积得到 key, 静态上下文信息 K^1</span><br>        k = self.key_embed(x)<br>        <span class="hljs-comment"># concat =&gt; 2C x H x W</span><br>        qk = torch.cat([x, k], dim=<span class="hljs-number">1</span>)<br>        b, c, qk_hh, qk_ww = qk.size()<br>        <br>		<span class="hljs-comment"># 两个1x1卷积操作，得到注意力图</span><br>        w = self.embed(qk)<br>        <span class="hljs-comment"># 转换成一维向量，自动补齐，k x k，H，W</span><br>        w = w.view(b, <span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, self.kernel_size*self.kernel_size, qk_hh, qk_ww)<br>        <br>        <span class="hljs-comment"># 计算 value</span><br>        x = self.conv1x1(x)<br>        <br>        <span class="hljs-comment"># 使用注意力图（每个key对应一个k x k注意力矩阵）计算 value，得到动态上下文信息 K^2</span><br>        x = self.local_conv(x, w)<br>        x = self.bn(x)<br>        x = self.act(x)<br><br>        <span class="hljs-comment"># 拼接上面得到的静态和动态上下文信息</span><br>        B, C, H, W = x.shape<br>        x = x.view(B, C, <span class="hljs-number">1</span>, H, W)<br>        k = k.view(B, C, <span class="hljs-number">1</span>, H, W)<br>        x = torch.cat([x, k], dim=<span class="hljs-number">2</span>)<br>        <br>		<span class="hljs-comment"># 使用一个SE注意模块进行融合</span><br>        x_gap = x.<span class="hljs-built_in">sum</span>(dim=<span class="hljs-number">2</span>) <span class="hljs-comment"># 求和合并(B, C, H, W)</span><br>        x_gap = x_gap.mean((<span class="hljs-number">2</span>, <span class="hljs-number">3</span>), keepdim=<span class="hljs-literal">True</span>) <span class="hljs-comment"># (B, C, 1, 1)</span><br>        x_attn = self.se(x_gap) <span class="hljs-comment"># (B, 2C, 1, 1)</span><br>        x_attn = x_attn.view(B, C, self.radix) <span class="hljs-comment"># (B, C, 2)</span><br>        x_attn = F.softmax(x_attn, dim=<span class="hljs-number">2</span>)<br>        <span class="hljs-comment"># (B, C, 2, H, W) * (B, C, 2, 1, 1) , (B, C, H, W)</span><br>        out = (x * x_attn.reshape((B, C, self.radix, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>))).<span class="hljs-built_in">sum</span>(dim=<span class="hljs-number">2</span>)<br>        <br>        <span class="hljs-keyword">return</span> out.contiguous()<br></code></pre></td></tr></table></figure>
-<h3 id="Experiments">Experiments</h3>
+<h3 id="experiments">Experiments</h3>
 <ul>
-<li>
-<p>ImageNet Classification</p>
+<li>ImageNet Classification
 <ul>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/10.png" srcset="/img/loading.gif" lazyload alt></li>
-</ul>
-</li>
-<li>
-<p>Object Detection</p>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/10.png" srcset="/img/loading.gif" lazyload></li>
+</ul></li>
+<li>Object Detection
 <ul>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/11.png" srcset="/img/loading.gif" lazyload alt></li>
-</ul>
-</li>
-<li>
-<p>Instance Segmentation</p>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/11.png" srcset="/img/loading.gif" lazyload></li>
+</ul></li>
+<li>Instance Segmentation
 <ul>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/12.png" srcset="/img/loading.gif" lazyload alt></li>
-</ul>
-</li>
-<li>
-<p>Ablation Study</p>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/12.png" srcset="/img/loading.gif" lazyload></li>
+</ul></li>
+<li>Ablation Study
 <ul>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/13.png" srcset="/img/loading.gif" lazyload alt></li>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/14.png" srcset="/img/loading.gif" lazyload alt>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/13.png" srcset="/img/loading.gif" lazyload></li>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/14.png" srcset="/img/loading.gif" lazyload>
 <ul>
 <li>上表对比了不同阶段替换CoT（√）以及SE注意力（⭐）等改进的性能影响</li>
 <li>提升替换CoT模块的数量可以有效提升模型的性能，而参数量与FLOPs不会显著变化</li>
 <li>相比SE-ResNetD-50，所提SE-CoTNetD-50取得了更佳的性能</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="Restormer-Efficient-Transformer-for-High-Resolution-Image-Restoration">Restormer: Efficient Transformer for High-Resolution Image Restoration</h2>
-<h3 id="Abstract-2">Abstract</h3>
+<h2 id="restormer-efficient-transformer-for-high-resolution-image-restoration">Restormer:
+Efficient Transformer for High-Resolution Image Restoration</h2>
+<h3 id="abstract-1">Abstract</h3>
 <ul>
-<li>
-<p>在这项工作中，作者提出了一个高效的转换器模型——Restoration  Transformer（Restormer），通过在构建模块（multi-head attention and feed-forward network）中进行几个关键设计，使其能够捕获长距离像素交互的同时，仍然适用于大型图像</p>
-</li>
-<li>
-<p>CNN</p>
+<li><p>在这项工作中，作者提出了一个高效的转换器模型——Restoration
+Transformer（Restormer），通过在构建模块（multi-head attention and
+feed-forward
+network）中进行几个关键设计，使其能够捕获长距离像素交互的同时，仍然适用于大型图像</p></li>
+<li><p>CNN</p>
 <ul>
 <li>卷积神经网络（CNN）在从大规模数据中学习广义图像先验知识方面表现良好，这些模型已被广泛应用于图像恢复和相关任务</li>
-<li>CNN中的基本操作是“卷积”，它提供了 local connectivity 局部连通性和 translation equivariance 翻译等价性，这些特性为CNN带来了效率和通用性</li>
+<li>CNN中的基本操作是“卷积”，它提供了 local connectivity 局部连通性和
+translation equivariance
+翻译等价性，这些特性为CNN带来了效率和通用性</li>
 <li>两个主要问题
 <ul>
 <li><strong>感受野有限</strong>，因此无法对长距离像素相关性进行建模</li>
 <li>卷积滤波器<strong>在推理时具有静态权重</strong>，因此不能灵活地适应输入内容</li>
-</ul>
-</li>
+</ul></li>
 <li>为了解决上述缺点，一种更强大、更动态的替代方法是<strong>自注意（SA）机制</strong>，该机制通过所有其他位置的加权和计算给定像素处的响应</li>
-</ul>
-</li>
-<li>
-<p>Transformers：Self-attention</p>
+</ul></li>
+<li><p>Transformers：Self-attention</p>
 <ul>
 <li>Transformer模型缓解了CNN的缺点（即，有限的感受野和对输入内容的不适应性）</li>
 <li>SA在捕捉远距离像素交互方面非常有效，但其<strong>计算复杂度</strong>随着空间分辨率的增加而呈二次方增长，因此无法应用于高分辨率图像
 <ul>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/15.jpg" srcset="/img/loading.gif" lazyload alt></li>
-</ul>
-</li>
-<li>将图像分解为一系列 patch（局部窗口），并了解它们之间的相互关系。这些模型的显著特点是具有强大的能力，能够学习到图像 patch 之间的长距离依赖关系以及对给定输入内容的适应性<br>
-+</li>
+<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/15.jpg" srcset="/img/loading.gif" lazyload></li>
+</ul></li>
+<li>将图像分解为一系列
+patch（局部窗口），并了解它们之间的相互关系。这些模型的显著特点是具有强大的能力，能够学习到图像
+patch 之间的长距离依赖关系以及对给定输入内容的适应性
+<ul>
+<li></li>
+</ul></li>
 <li>减少计算量：
 <ul>
 <li>在每个像素周围大小为8×8的<strong>小空间窗口上应用SA</strong></li>
 <li>将输入图像分割为大小为48×48的非重叠patch，并<strong>独立计算每个patch上的SA</strong></li>
-</ul>
-</li>
-<li>但这种限制 SA 的空间范围与捕获真正的远程空间像素关系的目标自相矛盾，尤其是在高分辨率图像上</li>
-</ul>
-</li>
-<li>
-<p>本文作者提出了一种高效的图像恢复 transformer ，它能够建模全局连通性，并且仍然适用于高分图像</p>
+</ul></li>
+<li>但这种限制 SA
+的空间范围与捕获真正的远程空间像素关系的目标自相矛盾，尤其是在高分辨率图像上</li>
+</ul></li>
+<li><p>本文作者提出了一种高效的图像恢复 transformer
+，它能够建模全局连通性，并且仍然适用于高分图像</p>
 <ul>
-<li>引入了一个 multi-Dconv head ‘transposed’ attention (MDTA) block  来代替具有线性复杂性的普通多头SA
+<li>引入了一个 multi-Dconv head ‘transposed’ attention (MDTA) block
+来代替具有线性复杂性的普通多头SA
 <ul>
 <li>将SA应用于特征维度而不是空间维度</li>
-<li>MDTA不是显式地对成对像素交互进行建模，而是计算特征通道之间的交叉协方差 ，以从（关键点和查询投影）输入特征中获得注意图，以从（key and query projected）输入特征获得注意力图</li>
+<li>MDTA不是显式地对成对像素交互进行建模，而是计算特征通道之间的交叉协方差
+，以从（关键点和查询投影）输入特征中获得注意图，以从（key and query
+projected）输入特征获得注意力图</li>
 <li>MDTA块的一个重要特征是在特征协方差计算之前进行局部上下文混合。这是通过使用1×1卷积的跨通道上下文的像素级聚合和使用有效的深度级卷积的本地上下文的通道级聚合来实现的
 <ul>
 <li>强调空间局部上下文，并在通道中引入卷积运算的互补优势</li>
 <li>其次，它确保在计算基于协方差的注意图时隐式地建模像素之间的上下文化全局关系</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li>feed-forward network (FN)
 <ul>
 <li>由两个全连接层组成，层间具有非线性</li>
-<li>本文作者使用门控机制重新制定常规 FN的第一个线性变换层，以改善通过网络的信息流</li>
-<li>该门控层被设计为两个线性投影层的元素乘积，其中之一被 GELU 非线性激活</li>
-<li>gated-Dconv FN (GDFN) 也基于本地内容混合，类似于MDTA模块，以同样强调空间上下文</li>
+<li>本文作者使用门控机制重新制定常规
+FN的第一个线性变换层，以改善通过网络的信息流</li>
+<li>该门控层被设计为两个线性投影层的元素乘积，其中之一被 GELU
+非线性激活</li>
+<li>gated-Dconv FN (GDFN)
+也基于本地内容混合，类似于MDTA模块，以同样强调空间上下文</li>
 <li>GDFN中的门控机制控制哪些互补特征应该向前流动，并允许网络层次结构中的后续层专门关注更精细的图像属性，从而获得高质量的输出</li>
-</ul>
-</li>
+</ul></li>
 <li>除了上述体系结构的新颖之处外，作者还展示了Restormer渐进式学习策略的有效性
 <ul>
 <li>在这个过程中，网络在早期的小patch和大batch上进行训练，在后期逐渐在大patch和小batch上进行训练</li>
 <li>这种训练策略有助于Restormer从大型图像中学习上下文，并在测试时提供质量性能改进</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>三个主要贡献：</p>
+</ul></li>
+</ul></li>
+<li><p>三个主要贡献：</p>
 <ul>
 <li>提出Restormer，一种编码器-解码器转换器，用于高分辨率图像的多尺度局部-全局表示学习，而无需将其分解为局部窗口，从而利用远距离图像上下文</li>
-<li>提出了一种 multi-Dconv head transposed attention (MDTA) module ，该模块能够聚合局部和非局部像素交互，并且足够有效地处理高分辨率图像</li>
-<li>一种新的 gated-Dconv feed-forward network (GDFN)，用于执行受控特征转换，抑制信息量较小的特征，只允许有用的信息进一步通过网络层次结构</li>
+<li>提出了一种 multi-Dconv head transposed attention (MDTA) module
+，该模块能够聚合局部和非局部像素交互，并且足够有效地处理高分辨率图像</li>
+<li>一种新的 gated-Dconv feed-forward network
+(GDFN)，用于执行受控特征转换，抑制信息量较小的特征，只允许有用的信息进一步通过网络层次结构</li>
+</ul></li>
+<li><p>模型在多个图像恢复任务上实现了最优结果，包括图像去噪、单图像运动去模糊、散焦去模糊（单图像和双像素数据）和图像去噪（高斯灰度/颜色去噪和真实图像去噪）</p></li>
 </ul>
-</li>
-<li>
-<p>模型在多个图像恢复任务上实现了最优结果，包括图像去噪、单图像运动去模糊、散焦去模糊（单图像和双像素数据）和图像去噪（高斯灰度/颜色去噪和真实图像去噪）</p>
-</li>
-</ul>
-<h3 id="Method">Method</h3>
-<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638960902013.png" srcset="/img/loading.gif" lazyload alt="1638960902013"></p>
+<h3 id="method">Method</h3>
+<figure>
+<img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638960902013.png" srcset="/img/loading.gif" lazyload alt="1638960902013">
+<figcaption aria-hidden="true">1638960902013</figcaption>
+</figure>
 <ul>
-<li>主要目标是开发一个高效的 transformer 模型，该模型可以处理用于恢复任务的高分辨率图像
+<li>主要目标是开发一个高效的 transformer
+模型，该模型可以处理用于恢复任务的高分辨率图像
 <ul>
-<li>为了缓解计算瓶颈，引入了multi-head SA layer and a multi-scale hierarchical module 的关键设计
+<li>为了缓解计算瓶颈，引入了multi-head SA layer and a multi-scale
+hierarchical module 的关键设计
 <ul>
 <li>与单尺度网络相比，多尺度分层模块的计算需求更少</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>输入退化图像 $\mathbf{I} \in \mathbb{R}^{H \times W \times 3}$ ，Restormer 首先卷积得到低级特征嵌入  $\mathbf{F_0} \in \mathbb{R}^{H \times W \times C}$</li>
-<li>之后这些浅层特征，通过4个层对称的 encoder-decoder 来转化为深层特征   $\mathbf{F_d} \in \mathbb{R}^{H \times W \times 2C}$
+</ul></li>
+</ul></li>
+<li>输入退化图像 <span class="math inline">\(\mathbf{I} \in
+\mathbb{R}^{H \times W \times 3}\)</span> ，Restormer
+首先卷积得到低级特征嵌入 <span class="math inline">\(\mathbf{F_0} \in
+\mathbb{R}^{H \times W \times C}\)</span></li>
+<li>之后这些浅层特征，通过4个层对称的 encoder-decoder 来转化为深层特征
+<span class="math inline">\(\mathbf{F_d} \in \mathbb{R}^{H \times W
+\times 2C}\)</span>
 <ul>
 <li>从高分辨率输入开始，编码器分层减少空间大小，同时扩展通道数</li>
-<li>解码器采用低分辨率潜在特征  $\mathbf{F}_l \in \mathbb{R}^{H \times W \times 2C}$ 作为输入，并逐层恢复高分辨率表示</li>
-<li>对于特征上下采样，作者分别应用了 pixel-unshuffle and pixel-shuffle 操作
+<li>解码器采用低分辨率潜在特征 <span class="math inline">\(\mathbf{F}_l
+\in \mathbb{R}^{H \times W \times 2C}\)</span>
+作为输入，并逐层恢复高分辨率表示</li>
+<li>对于特征上下采样，作者分别应用了 pixel-unshuffle and pixel-shuffle
+操作
 <ul>
-<li><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.PixelShuffle.html#torch.nn.PixelShuffle"><code>PixelShuffle</code></a> : Rearranges elements in a tensor of shape $(<em>, C \times r^2, H, W)$ to a tensor of shape $(</em>, C, H \times r, W \times r)$ , where r is an upscale factor.</li>
-<li><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.PixelUnshuffle.html"><code>PixelUnshuffle</code></a> :  Reverses the <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.PixelShuffle.html#torch.nn.PixelShuffle"><code>PixelShuffle</code></a> operation by rearranging elements in a tensor of shape $(<em>, C, H \times r, W \times r)$ to a tensor of shape $(</em>, C \times r^2, H, W)$ , where r is a downscale factor.</li>
-</ul>
-</li>
-<li>通过跳跃连接来拼接编码器和解码器输出，拼接后使用 1x1 卷积来减少通道数（减半）</li>
+<li><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.PixelShuffle.html#torch.nn.PixelShuffle"><code>PixelShuffle</code></a>
+: Rearranges elements in a tensor of shape <span class="math inline">\((*, C \times r^2, H, W)\)</span> to a tensor of
+shape <span class="math inline">\((*, C, H \times r, W \times
+r)\)</span> , where r is an upscale factor.</li>
+<li><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.PixelUnshuffle.html"><code>PixelUnshuffle</code></a>
+: Reverses the <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.PixelShuffle.html#torch.nn.PixelShuffle"><code>PixelShuffle</code></a>
+operation by rearranging elements in a tensor of shape <span class="math inline">\((*, C, H \times r, W \times r)\)</span> to a
+tensor of shape <span class="math inline">\((*, C \times r^2, H,
+W)\)</span> , where r is a downscale factor.</li>
+</ul></li>
+<li>通过跳跃连接来拼接编码器和解码器输出，拼接后使用 1x1
+卷积来减少通道数（减半）</li>
 <li>其实感觉就是个U-Net结构</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h4 id="Multi-Dconv-Head-Transposed-Attention-MDTA">Multi-Dconv Head Transposed Attention(MDTA)</h4>
+<h4 id="multi-dconv-head-transposed-attentionmdta">Multi-Dconv Head
+Transposed Attention(MDTA)</h4>
 <ul>
-<li>
-<p>Transformers 中的主要计算开销来自 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/365386753"><code>SA</code></a></p>
+<li><p>Transformers 中的主要计算开销来自 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/365386753"><code>SA</code></a></p>
 <ul>
-<li>SA中的时间和内存复杂度主要是 key-query 对的计算会随着空间分辨率增长呈二次方增长，即对于 W×H 像素的图像，复杂度为 $O(W^2H^2)$</li>
+<li>SA中的时间和内存复杂度主要是 key-query
+对的计算会随着空间分辨率增长呈二次方增长，即对于 W×H
+像素的图像，复杂度为 <span class="math inline">\(O(W^2H^2)\)</span></li>
 <li>因此，在高分辨率图像上使用SA是不可行的</li>
 </ul>
-<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638963023390.png" srcset="/img/loading.gif" lazyload alt="1638963023390"></p>
-</li>
-<li>
-<p>为此，作者提出了MDTA，其跨通道应用SA，而不是空间维度</p>
+<figure>
+<img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638963023390.png" srcset="/img/loading.gif" lazyload alt="1638963023390">
+<figcaption aria-hidden="true">1638963023390</figcaption>
+</figure></li>
+<li><p>为此，作者提出了MDTA，其跨通道应用SA，而不是空间维度</p>
 <ul>
-<li><strong>计算通道间的交叉协方差</strong>，从而生成隐式编码全局上下文的 attention map</li>
-<li>作为MDTA的另一个重要组成部分，在计算特征协方差生成全局 attention map 之前，引入 depth-wise 卷积来强调上下文信息</li>
-</ul>
-</li>
-<li>
-<p>对于输入 $\mathbf{X} \in \mathbb{R}^{\hat H \times \hat W \times \hat C}$ ，归一化得到 $\mathbf{Y} \in \mathbb{R}^{\hat H \times \hat W \times \hat C}$ ，然后生成  $query (Q), key (K), value (V) $</p>
+<li><strong>计算通道间的交叉协方差</strong>，从而生成隐式编码全局上下文的
+attention map</li>
+<li>作为MDTA的另一个重要组成部分，在计算特征协方差生成全局 attention map
+之前，引入 depth-wise 卷积来强调上下文信息</li>
+</ul></li>
+<li><p>对于输入 <span class="math inline">\(\mathbf{X} \in
+\mathbb{R}^{\hat H \times \hat W \times \hat C}\)</span> ，归一化得到
+<span class="math inline">\(\mathbf{Y} \in \mathbb{R}^{\hat H \times
+\hat W \times \hat C}\)</span> ，然后生成 $query (Q), key (K), value (V)
+$</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/80041030">应用1×1 point-wise 卷积来聚合像素级跨通道上下文，然后应用 3×3 depth-wise 卷积来编码通道级空间上下文</a>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/80041030">应用1×1 point-wise
+卷积来聚合像素级跨通道上下文，然后应用 3×3 depth-wise
+卷积来编码通道级空间上下文</a>
 <ul>
-<li>$\mathbf{Q}=W_p^Q W_d^Q \mathbf{Y}, \mathbf{K}=W_p^K W_d^K \mathbf{Y}, \mathbf{V}=W_p^V W_d^V \mathbf{Y}$</li>
-<li>其中 $W_p^{(\sdot)}$ 是 1x1 point-wise 卷积， $W_d^{(\sdot)}$ 是 3x3 depth-wise 卷积</li>
-</ul>
-</li>
-<li>之后对 query 和 key 做一下reshape操作，来 dot-product 计算生成  transposed-attention map $\mathbf{A} \in \mathbb{R}^{\hat C \times \hat C}$
+<li><span class="math inline">\(\mathbf{Q}=W_p^Q W_d^Q \mathbf{Y},
+\mathbf{K}=W_p^K W_d^K \mathbf{Y}, \mathbf{V}=W_p^V W_d^V
+\mathbf{Y}\)</span></li>
+<li>其中 <span class="math inline">\(W_p^{(\sdot)}\)</span> 是 1x1
+point-wise 卷积， <span class="math inline">\(W_d^{(\sdot)}\)</span> 是
+3x3 depth-wise 卷积</li>
+</ul></li>
+<li>之后对 query 和 key 做一下reshape操作，来 dot-product 计算生成
+transposed-attention map <span class="math inline">\(\mathbf{A} \in
+\mathbb{R}^{\hat C \times \hat C}\)</span>
 <ul>
-<li>而不是传统方法生成的注意力图 $\mathbb{R}^{\hat H \hat W \times \hat H \hat W}$</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>$\hat{\mathbf{X}}=W_{p}$ Attention $(\hat{\mathbf{Q}}, \hat{\mathbf{K}}, \hat{\mathbf{V}})+\mathbf{X}$<br>
-Attention $(\hat{\mathbf{Q}}, \hat{\mathbf{K}}, \hat{\mathbf{V}})=\hat{\mathbf{V}} \cdot \operatorname{Softmax}(\hat{\mathbf{K}} \cdot \hat{\mathbf{Q}} / \alpha)$</p>
+<li>而不是传统方法生成的注意力图 <span class="math inline">\(\mathbb{R}^{\hat H \hat W \times \hat H \hat
+W}\)</span></li>
+</ul></li>
+</ul></li>
+<li><p><span class="math inline">\(\hat{\mathbf{X}}=W_{p}\)</span>
+Attention <span class="math inline">\((\hat{\mathbf{Q}},
+\hat{\mathbf{K}}, \hat{\mathbf{V}})+\mathbf{X}\)</span> Attention <span class="math inline">\((\hat{\mathbf{Q}}, \hat{\mathbf{K}},
+\hat{\mathbf{V}})=\hat{\mathbf{V}} \cdot
+\operatorname{Softmax}(\hat{\mathbf{K}} \cdot \hat{\mathbf{Q}} /
+\alpha)\)</span></p>
 <ul>
-<li>其中， $\hat{\mathbf{Q}} \in \mathbb{R}^{\hat H \hat W \times \hat C}, \hat{\mathbf{K}} \in \mathbb{R}^{\hat C \times \hat H \hat W}, \hat{\mathbf{V} \in \mathbb{R}^{\hat H \hat W \times \hat C}}$ 由原始尺度  $\mathbb{R}^{\hat H \times \hat W \times \hat C}$  reshape得到</li>
-<li>$\alpha$ 是一个可学习的缩放参数，用来控制 $\hat{\mathbf{Q}}, \hat{\mathbf{K}}$ 的点积大小</li>
+<li>其中， <span class="math inline">\(\hat{\mathbf{Q}} \in
+\mathbb{R}^{\hat H \hat W \times \hat C}, \hat{\mathbf{K}} \in
+\mathbb{R}^{\hat C \times \hat H \hat W}, \hat{\mathbf{V} \in
+\mathbb{R}^{\hat H \hat W \times \hat C}}\)</span> 由原始尺度 <span class="math inline">\(\mathbb{R}^{\hat H \times \hat W \times \hat
+C}\)</span> reshape得到</li>
+<li><span class="math inline">\(\alpha\)</span>
+是一个可学习的缩放参数，用来控制 <span class="math inline">\(\hat{\mathbf{Q}}, \hat{\mathbf{K}}\)</span>
+的点积大小</li>
+</ul></li>
+<li><p>与传统的SA一样，也使用了多头方法，分组并行就行进行学习</p></li>
 </ul>
-</li>
-<li>
-<p>与传统的SA一样，也使用了多头方法，分组并行就行进行学习</p>
-</li>
-</ul>
-<h4 id="Gated-Dconv-Feed-Forward-Network-GDFN">Gated-Dconv Feed-Forward Network(GDFN)</h4>
-<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638966876739.png" srcset="/img/loading.gif" lazyload alt="1638966876739"></p>
+<h4 id="gated-dconv-feed-forward-networkgdfn">Gated-Dconv Feed-Forward
+Network(GDFN)</h4>
+<figure>
+<img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638966876739.png" srcset="/img/loading.gif" lazyload alt="1638966876739">
+<figcaption aria-hidden="true">1638966876739</figcaption>
+</figure>
 <ul>
-<li>对于 transformer 特征，feed-forward network (FN) 分别对每个像素位置进行相同的操作
+<li>对于 transformer 特征，feed-forward network (FN)
+分别对每个像素位置进行相同的操作
 <ul>
-<li>它使用两个1×1卷积，一个用于扩展特征通道（膨胀比 $\gamma$ ），另一个用于将通道缩减回原始输入维度</li>
-</ul>
-</li>
+<li>它使用两个1×1卷积，一个用于扩展特征通道（膨胀比 <span class="math inline">\(\gamma\)</span>
+），另一个用于将通道缩减回原始输入维度</li>
+</ul></li>
 <li>在本文中，作者进行了两个改进：
 <ul>
 <li>gating mechanism——门控机制
 <ul>
 <li>被表示为线性变换层的两条平行路径的元素级乘积，其中一条通过 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/349492378">GELU非线性激活</a></li>
-<li><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/16.jpg" srcset="/img/loading.gif" lazyload alt="1638966876739"></li>
-</ul>
-</li>
+<li><figure>
+<img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/16.jpg" srcset="/img/loading.gif" lazyload alt="1638966876739">
+<figcaption aria-hidden="true">1638966876739</figcaption>
+</figure></li>
+</ul></li>
 <li>depth-wise convolutions
 <ul>
-<li>在这里依然使用了 depth-wise convolution，以对空间相邻像素位置的信息进行编码，这有助于学习局部图像结构以进行有效恢复</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>对于输入  $\mathbf{X} \in \mathbb{R}^{\hat H \times \hat W \times \hat C}$ ，GDFN公式化：
+<li>在这里依然使用了 depth-wise
+convolution，以对空间相邻像素位置的信息进行编码，这有助于学习局部图像结构以进行有效恢复</li>
+</ul></li>
+</ul></li>
+<li>对于输入 <span class="math inline">\(\mathbf{X} \in \mathbb{R}^{\hat
+H \times \hat W \times \hat C}\)</span> ，GDFN公式化：
 <ul>
-<li>$\begin{aligned} \hat{\mathbf{X}} &amp;=W_{p}^{0} \text { Gating }(\mathbf{X})+\mathbf{X} \ \text { Gating }(\mathbf{X}) &amp;=\phi\left(W_{d}^{1} W_{p}^{1}(\mathrm{LN}(\mathbf{X}))\right) \odot W_{d}^{2} W_{p}^{2}(\mathrm{LN}(\mathbf{X})) \end{aligned}$
+<li><span class="math inline">\(\begin{aligned} \hat{\mathbf{X}}
+&amp;=W_{p}^{0} \text { Gating }(\mathbf{X})+\mathbf{X} \\ \text {
+Gating }(\mathbf{X}) &amp;=\phi\left(W_{d}^{1}
+W_{p}^{1}(\mathrm{LN}(\mathbf{X}))\right) \odot W_{d}^{2}
+W_{p}^{2}(\mathrm{LN}(\mathbf{X})) \end{aligned}\)</span>
 <ul>
-<li>其中 $\odot$ 表示元素相乘，$\phi$ 表示 GELU 非线性激活， LN 是归一化层</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>GDFN 控制各层中的通道中的信息流，从而使得每层都专注于与其他层之间互补的精细细节。既与MDTA相比，GDFN 更专注于使用上下文信息丰富特性
+<li>其中 <span class="math inline">\(\odot\)</span> 表示元素相乘，<span class="math inline">\(\phi\)</span> 表示 GELU 非线性激活， LN
+是归一化层</li>
+</ul></li>
+</ul></li>
+<li>GDFN
+控制各层中的通道中的信息流，从而使得每层都专注于与其他层之间互补的精细细节。既与MDTA相比，GDFN
+更专注于使用上下文信息丰富特性
 <ul>
-<li>由于GDFN比常规的FN执行更多操作，所以减低的膨胀比 $\gamma$ ，以便具有相似的参数和计算量</li>
+<li>由于GDFN比常规的FN执行更多操作，所以减低的膨胀比 <span class="math inline">\(\gamma\)</span> ，以便具有相似的参数和计算量</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h4 id="Progressive-Learning">Progressive Learning</h4>
+<h4 id="progressive-learning">Progressive Learning</h4>
 <ul>
 <li>基于CNN的恢复模型通常在固定大小的图像 patch 上进行训练
 <ul>
-<li>然而，在裁剪的小 patch 上训练 transformer 可能不会对全局图像统计进行编码，从而在测试时在全分辨率图像上得到次优性能</li>
+<li>然而，在裁剪的小 patch 上训练 transformer
+可能不会对全局图像统计进行编码，从而在测试时在全分辨率图像上得到次优性能</li>
+</ul></li>
+<li>为此，作者执行渐进式学习，其中网络在早期阶段在较小的图像 patch
+上进行训练，在后期训练阶段在逐渐增大的图像 patch 上进行训练</li>
+<li>通过渐进学习在混合大小的 patch
+上训练的模型在测试时显示出更好的性能，其中图像可以具有不同的分辨率，这也是图像恢复中的常见情况</li>
+<li>随着 patch 大小的增加，也随之减少了 batch 大小，以保持与固定 patch
+训练相同的每个优化步骤的时间</li>
 </ul>
-</li>
-<li>为此，作者执行渐进式学习，其中网络在早期阶段在较小的图像 patch 上进行训练，在后期训练阶段在逐渐增大的图像 patch 上进行训练</li>
-<li>通过渐进学习在混合大小的 patch 上训练的模型在测试时显示出更好的性能，其中图像可以具有不同的分辨率，这也是图像恢复中的常见情况</li>
-<li>随着 patch 大小的增加，也随之减少了 batch 大小，以保持与固定 patch 训练相同的每个优化步骤的时间</li>
-</ul>
-<h3 id="Experiments-and-Analysis">Experiments and Analysis</h3>
+<h3 id="experiments-and-analysis">Experiments and Analysis</h3>
 <ul>
 <li>作者在四个图像处理任务的基准数据集和实验设置上进行了实验评估
 <ul>
@@ -730,30 +826,49 @@ Attention $(\hat{\mathbf{Q}}, \hat{\mathbf{K}}, \hat{\mathbf{V}})=\hat{\mathbf{V
 <li>单图像运动去模糊</li>
 <li>散焦去模糊（在单图像和双像素数据上）</li>
 <li>图像去噪（在合成和真实数据上）</li>
+</ul></li>
+<li>从第一层到第四层，Transformer blocks
+数量设置为[4，6，6，8]，MDTA中的注意头为[1，2，4，8]，通道的数量为[48，96，192，384]</li>
+<li>patch size 和 batch size <span class="math inline">\([(128^2,64),
+(160^2,40), (192^2,32), (256^2,16), (320^2,8), (384^2,8)]\)</span></li>
 </ul>
-</li>
-<li>从第一层到第四层，Transformer blocks 数量设置为[4，6，6，8]，MDTA中的注意头为[1，2，4，8]，通道的数量为[48，96，192，384]</li>
-<li>patch size 和 batch size $[(128^2,64), (160^2,40), (192^2,32), (256^2,16), (320^2,8), (384^2,8)]$</li>
-</ul>
-<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638972160218.png" srcset="/img/loading.gif" lazyload alt="1638972160218"></p>
-<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638972235377.png" srcset="/img/loading.gif" lazyload alt="1638972235377"></p>
-<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638972255581.png" srcset="/img/loading.gif" lazyload alt="1638972255581"></p>
-<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1639037957648.png" srcset="/img/loading.gif" lazyload alt="1639037957648"></p>
-<h4 id="Ablation-Studies">Ablation Studies</h4>
-<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638972409807.png" srcset="/img/loading.gif" lazyload alt="1638972409807"></p>
-<p><img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638972547853.png" srcset="/img/loading.gif" lazyload alt="1638972547853"></p>
+<figure>
+<img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638972160218.png" srcset="/img/loading.gif" lazyload alt="1638972160218">
+<figcaption aria-hidden="true">1638972160218</figcaption>
+</figure>
+<figure>
+<img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638972235377.png" srcset="/img/loading.gif" lazyload alt="1638972235377">
+<figcaption aria-hidden="true">1638972235377</figcaption>
+</figure>
+<figure>
+<img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638972255581.png" srcset="/img/loading.gif" lazyload alt="1638972255581">
+<figcaption aria-hidden="true">1638972255581</figcaption>
+</figure>
+<figure>
+<img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1639037957648.png" srcset="/img/loading.gif" lazyload alt="1639037957648">
+<figcaption aria-hidden="true">1639037957648</figcaption>
+</figure>
+<h4 id="ablation-studies">Ablation Studies</h4>
+<figure>
+<img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638972409807.png" srcset="/img/loading.gif" lazyload alt="1638972409807">
+<figcaption aria-hidden="true">1638972409807</figcaption>
+</figure>
+<figure>
+<img src="/2021/08/31/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x20/1638972547853.png" srcset="/img/loading.gif" lazyload alt="1638972547853">
+<figcaption aria-hidden="true">1638972547853</figcaption>
+</figure>
 <ul>
-<li>表8中，展示了第一层的设计选择：在 concat 操作之后，是否使用 1x1 卷积（将通道数减半）
+<li>表8中，展示了第一层的设计选择：在 concat 操作之后，是否使用 1x1
+卷积（将通道数减半）
 <ul>
-<li>有 1x1 卷积；无 1x1 卷积，直接concat；在 cancat 之后加一个 transformer block</li>
-</ul>
-</li>
+<li>有 1x1 卷积；无 1x1 卷积，直接concat；在 cancat 之后加一个
+transformer block</li>
+</ul></li>
 <li>表10中，展示了选择更深还是更浅的网络的选择
 <ul>
 <li>通过调整 transformer block 来保持包含的计算量和参数量</li>
 <li>深窄模型比宽浅模型执行得更准确；然而，由于并行化，更广泛的模型运行得更快。在本文中使用了深窄恢复器</li>
-</ul>
-</li>
+</ul></li>
 </ul>
 
                 

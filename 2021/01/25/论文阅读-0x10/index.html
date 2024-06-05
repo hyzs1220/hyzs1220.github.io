@@ -16,12 +16,12 @@
   <meta name="author" content="hyzs1220">
   <meta name="keywords" content="">
   
-    <meta name="description" content="这两篇是左旺孟老师视频里面关于图像压缩的部分，当时看的时候，也是被搞得云里雾里的，后来看了好多网上的笔记博客才慢慢搞懂，也是打算好好看，学习一下。上一篇里面的论文都是16年左右的，后面几篇就到18年或20年最新的了，感觉很多工作都是对之前工作的发展改进。 论文的阅读笔记： 《 Learning Convolutional Networks for Content-weighted Image Co">
+    <meta name="description" content="这两篇是左旺孟老师视频里面关于图像压缩的部分，当时看的时候，也是被搞得云里雾里的，后来看了好多网上的笔记博客才慢慢搞懂，也是打算好好看，学习一下。上一篇里面的论文都是16年左右的，后面几篇就到18年或20年最新的了，感觉很多工作都是对之前工作的发展改进。 论文的阅读笔记： 《 Learning Convolutional Networks for Content-weighted Image">
 <meta property="og:type" content="article">
 <meta property="og:title" content="论文阅读-0x10">
 <meta property="og:url" content="http://example.com/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/index.html">
 <meta property="og:site_name" content="hyzsのblog">
-<meta property="og:description" content="这两篇是左旺孟老师视频里面关于图像压缩的部分，当时看的时候，也是被搞得云里雾里的，后来看了好多网上的笔记博客才慢慢搞懂，也是打算好好看，学习一下。上一篇里面的论文都是16年左右的，后面几篇就到18年或20年最新的了，感觉很多工作都是对之前工作的发展改进。 论文的阅读笔记： 《 Learning Convolutional Networks for Content-weighted Image Co">
+<meta property="og:description" content="这两篇是左旺孟老师视频里面关于图像压缩的部分，当时看的时候，也是被搞得云里雾里的，后来看了好多网上的笔记博客才慢慢搞懂，也是打算好好看，学习一下。上一篇里面的论文都是16年左右的，后面几篇就到18年或20年最新的了，感觉很多工作都是对之前工作的发展改进。 论文的阅读笔记： 《 Learning Convolutional Networks for Content-weighted Image">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/1.png">
 <meta property="og:image" content="http://example.com/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/2.png">
@@ -289,170 +289,227 @@
                 
                 <p>这两篇是左旺孟老师视频里面关于图像压缩的部分，当时看的时候，也是被搞得云里雾里的，后来看了好多网上的笔记博客才慢慢搞懂，也是打算好好看，学习一下。上一篇里面的论文都是16年左右的，后面几篇就到18年或20年最新的了，感觉很多工作都是对之前工作的发展改进。</p>
 <p>论文的阅读笔记：</p>
-<p>《 Learning Convolutional Networks for Content-weighted Image Compression 》 左旺孟，CVPR 2018</p>
-<p>《 Efficient and Effective Context-Based ConvolutionalEntropy Modeling for Image Compression 》 左旺孟，TPAMI 2020</p>
+<p>《 Learning Convolutional Networks for Content-weighted Image
+Compression 》 左旺孟，CVPR 2018</p>
+<p>《 Efficient and Effective Context-Based ConvolutionalEntropy
+Modeling for Image Compression 》 左旺孟，TPAMI 2020</p>
 <span id="more"></span>
-<h2 id="Learning-Convolutional-Networks-for-Content-weighted-Image-Compression">Learning Convolutional Networks for Content-weighted Image Compression</h2>
-<h3 id="Abstract">Abstract</h3>
+<h2 id="learning-convolutional-networks-for-content-weighted-image-compression">Learning
+Convolutional Networks for Content-weighted Image Compression</h2>
+<h3 id="abstract">Abstract</h3>
 <ul>
-<li>有损图像压缩是一个优化问题，其优化目标是失真率，优化对象是编码器、 化器和解码器</li>
-<li>作者认为图像的局部信息内容是变化的，因此<strong>根据图像的不同区域来自适应地选择bit rate（码率，K/N），在内容加权importance map的指导下分配码率</strong>，所以importance map的总和可以作为离散熵估计的连续选择来控制压缩率</li>
-<li>作者还采用了一个<strong>二元机（binarizer）来实现量化功能</strong>。为了让二元机在BP过程中可微，作者引入了一个代理函数（proxy function），在BP中代替二元操作。</li>
-<li>一个图像压缩系统通常由 编码器（encoder），量化器（quantizer）和解码器（decoder） 三个部分组成编解码器</li>
+<li>有损图像压缩是一个优化问题，其优化目标是失真率，优化对象是编码器、
+化器和解码器</li>
+<li>作者认为图像的局部信息内容是变化的，因此<strong>根据图像的不同区域来自适应地选择bit
+rate（码率，K/N），在内容加权importance
+map的指导下分配码率</strong>，所以importance
+map的总和可以作为离散熵估计的连续选择来控制压缩率</li>
+<li>作者还采用了一个<strong>二元机（binarizer）来实现量化功能</strong>。为了让二元机在BP过程中可微，作者引入了一个代理函数（proxy
+function），在BP中代替二元操作。</li>
+<li>一个图像压缩系统通常由
+编码器（encoder），量化器（quantizer）和解码器（decoder）
+三个部分组成编解码器</li>
 <li>作者压缩框架由四个主要组件组成:卷积编码器、重要性映射网络、二进制化器（二元机）和卷积解码器。通过引入连续重要性图和代理功能，所有组件都可以<strong>以端到端的方式进行联合优化</strong></li>
 <li>使用CNN来进行图像压缩
 <ul>
 <li>对于图像编码和解码，灵活的非线性分析和生成转换可以通过叠加多个卷积层实现</li>
 <li>其次，它允许以端到端的方式联合优化非线性编码器和解码器</li>
-</ul>
-</li>
+</ul></li>
 <li>仍需解决的问题
 <ul>
 <li>有损图像压缩可以被表述为一个联合失真率优化来学习编码器、量化器和解码器。编码器和解码器可以表示为cnn并通过反向传播进行优化，但<strong>量化器的学习不可微</strong>仍然是一个具有挑战性的问题</li>
-<li>该系统的目标是<strong>将压缩率和失真率共同降低</strong>，在学习过程中还需要估计熵率并使其最小化。由于量化的结果，定义在离散码上的<strong>熵率</strong>（ 一个长度为n的随机变量序列，该序列的熵随n增长的增长率 ）也是一个离散函数，并且需要一个连续的近似</li>
+<li>该系统的目标是<strong>将压缩率和失真率共同降低</strong>，在学习过程中还需要估计熵率并使其最小化。由于量化的结果，定义在离散码上的<strong>熵率</strong>（
+一个长度为n的随机变量序列，该序列的熵随n增长的增长率
+）也是一个离散函数，并且需要一个连续的近似</li>
 <li>因此这篇文章主要就是为了解决量化和熵率预测问题</li>
-</ul>
-</li>
-<li>现有的深度学习方法，为每一个位置都分配相同长度的码元。显然，局部信息量（local informative content）是空间位置相关的，因此比特率也应该是空间位置相关的。因此<strong>作者提出了一个基于内容权重的重要性图（content-weighted importance map）。其输出一个与输入同尺寸的图。每一个点的值是一个非负数值，指示编码长度</strong>。此时，重要性图各点求和，就可以作为压缩率的连续预测，进而作为压缩率控制器。此时就不再需要预测熵率了</li>
-<li>对于一张给定的图片，编码器输出为E(x)，然后二值化器（二元机）$B(E(x))$将便把其输出中大于0.5的置为1，小于0.5的置为0。 在反向传播时，该二元机被一个代理函数近似，使其可训练</li>
+</ul></li>
+<li>现有的深度学习方法，为每一个位置都分配相同长度的码元。显然，局部信息量（local
+informative
+content）是空间位置相关的，因此比特率也应该是空间位置相关的。因此<strong>作者提出了一个基于内容权重的重要性图（content-weighted
+importance
+map）。其输出一个与输入同尺寸的图。每一个点的值是一个非负数值，指示编码长度</strong>。此时，重要性图各点求和，就可以作为压缩率的连续预测，进而作为压缩率控制器。此时就不再需要预测熵率了</li>
+<li>对于一张给定的图片，编码器输出为E(x)，然后二值化器（二元机）<span class="math inline">\(B(E(x))\)</span>将便把其输出中大于0.5的置为1，小于0.5的置为0。
+在反向传播时，该二元机被一个代理函数近似，使其可训练</li>
 <li>作者还设计了一个卷积熵编码器，通过上下文预测当前位置编码，并将其应用到上下文自适应二进制算术编码(CABAC)框架中，进一步压缩二进制码元和重要性图</li>
-<li>对于现有的图像标准，例如JPEG和JPEG  2000，编解码器实际上是单独优化的
+<li>对于现有的图像标准，例如JPEG和JPEG 2000，编解码器实际上是单独优化的
 <ul>
 <li>在编码阶段，首先对图像进行线性变换。然后利用量化和无损熵编码来最小化压缩率</li>
 <li>在解码阶段，设计了解码算法和反变换来减小失真。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="Content-weighted-Image-Compression">Content-weighted Image Compression</h3>
+<h3 id="content-weighted-image-compression">Content-weighted Image
+Compression</h3>
 <ul>
-<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/1.png" srcset="/img/loading.gif" lazyload alt>
+<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/1.png" srcset="/img/loading.gif" lazyload>
 <ul>
 <li>对于一张给定的图片x，卷积编码器输出为E(x)</li>
-<li>二值化器$B(E(x))$将便把其输出中大于0.5的置为1，小于0.5的置为0</li>
-<li>importance map网络将中间层feature map作为输入，产生内容加权的importance map P(x)，然后将P(x)量化为mask $M(P(x))$，它与$B(E(x))$尺寸相同</li>
-<li>然后根据$M(P(x))$修剪二进制码元，通过卷积解码器输出重建图片</li>
+<li>二值化器<span class="math inline">\(B(E(x))\)</span>将便把其输出中大于0.5的置为1，小于0.5的置为0</li>
+<li>importance map网络将中间层feature
+map作为输入，产生内容加权的importance map P(x)，然后将P(x)量化为mask
+<span class="math inline">\(M(P(x))\)</span>，它与<span class="math inline">\(B(E(x))\)</span>尺寸相同</li>
+<li>然后根据<span class="math inline">\(M(P(x))\)</span>修剪二进制码元，通过卷积解码器输出重建图片</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h4 id="Convolutional-encoder-and-decoder">Convolutional encoder and decoder</h4>
+<h4 id="convolutional-encoder-and-decoder">Convolutional encoder and
+decoder</h4>
 <ul>
 <li>框架中的编码器和解码器都是完全卷积的网络，可以通过反向传播进行训练</li>
-<li>解码器D©的网络结构与编码器的网络结构是对称的
+<li>解码器D(c)的网络结构与编码器的网络结构是对称的
 <ul>
 <li>c是图像x的码元</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h4 id="Binarizer（二元机）">Binarizer（二元机）</h4>
+<h4 id="binarizer二元机">Binarizer（二元机）</h4>
 <ul>
-<li>由于最后一个卷积层采用sigmoid非线性，编码器输出e = E (x)应在[0,1]范围内。用$e_{ijk}$表示e中的一个元素。二进制化定义为
+<li>由于最后一个卷积层采用sigmoid非线性，编码器输出e = E
+(x)应在[0,1]范围内。用<span class="math inline">\(e_{ijk}\)</span>表示e中的一个元素。二进制化定义为
 <ul>
-<li>$B\left(e_{i j k}\right)=\left{\begin{array}{ll}1, &amp; \text { if } e_{ijk} &gt; 0.5 \ 0, &amp; \text { if } e_{i j k} &lt;= 0.5\end{array}\right.$</li>
-</ul>
-</li>
+<li><span class="math inline">\(B\left(e_{i j
+k}\right)=\left\{\begin{array}{ll}1, &amp; \text { if } e_{ijk} &gt; 0.5
+\\ 0, &amp; \text { if } e_{i j k} &lt;=
+0.5\end{array}\right.\)</span></li>
+</ul></li>
 <li>不过可以看出来这种二值化函数，在神经网络的反向传播中是无法进行参数更新的，梯度处处为零</li>
-<li>为此，作者引入了一个代理函数 $\widetilde B\left(e_{i j k}\right)$ 来近似 $B\left(e_{i j k}\right)$
+<li>为此，作者引入了一个代理函数 <span class="math inline">\(\widetilde
+B\left(e_{i j k}\right)\)</span> 来近似 <span class="math inline">\(B\left(e_{i j k}\right)\)</span>
 <ul>
-<li>不过在在正向传播中仍然还是用 $B\left(e_{i j k}\right)$ ，在反向传播中使用 $\widetilde B\left(e_{i j k}\right)$</li>
-<li>$\widetilde B\left(e_{i j k}\right)=\left{\begin{array}{ll}1, &amp; \text { if } e_{ijk} &gt; 1 \ e_{i j k}, &amp; \text { if } 1 &lt;= e_{i j k} &lt;= 0 \ 0, &amp; \text { if } e_{i j k} &lt; 0 \end{array} \right.$</li>
+<li>不过在在正向传播中仍然还是用 <span class="math inline">\(B\left(e_{i
+j k}\right)\)</span> ，在反向传播中使用 <span class="math inline">\(\widetilde B\left(e_{i j k}\right)\)</span></li>
+<li><span class="math inline">\(\widetilde B\left(e_{i j
+k}\right)=\left\{\begin{array}{ll}1, &amp; \text { if } e_{ijk} &gt; 1
+\\ e_{i j k}, &amp; \text { if } 1 &lt;= e_{i j k} &lt;= 0 \\ 0, &amp;
+\text { if } e_{i j k} &lt; 0 \end{array} \right.\)</span></li>
 <li>这样的话他的梯度是很好算的</li>
-<li>$\widetilde B’\left(e_{i j k}\right)=\left{\begin{array}{ll}1, &amp; \text { if } 1 &lt;= e_{ijk} &lt;= 0 \ 0, &amp; \text { otherwise } \end{array}\right.$</li>
+<li><span class="math inline">\(\widetilde B&#39;\left(e_{i j
+k}\right)=\left\{\begin{array}{ll}1, &amp; \text { if } 1 &lt;= e_{ijk}
+&lt;= 0 \\ 0, &amp; \text { otherwise } \end{array}\right.\)</span></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h4 id="Importance-map">Importance map</h4>
+<h4 id="importance-map">Importance map</h4>
 <ul>
 <li>在之前的一些方法中，量化后的码元长度是空间不变的，然后使用熵编码进一步压缩编码</li>
 <li>作者认为图像中的平滑区域应该比具有显著对象或丰富纹理的区域更容易被压缩。因此，分配给平滑区域的比特应该少一些，而分配给信息内容较多的区域的比特应该多一些
 <ul>
 <li>为此作者提出了importance map用于比特分配以及压缩率控制</li>
-<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/2.png" srcset="/img/loading.gif" lazyload alt></li>
-</ul>
-</li>
+<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/2.png" srcset="/img/loading.gif" lazyload></li>
+</ul></li>
 <li>作者使用内容加权的重要图来进行比特分配和压缩率控制
 <ul>
 <li>只有一个通道的feature map</li>
 <li>大小应该与编码器输出的大小相同</li>
 <li>其值的范围在（0，1）之间</li>
-</ul>
-</li>
+</ul></li>
 <li>用h×w表示重要性图p的大小，n表示编码器输出的特征图的数量。为了指导比特分配，首先要<strong>将p中的每个元素量化为一个不大于n的整数，然后生成一个大小为n×h×w的重要掩码m</strong></li>
 <li>对于得到的单通道importance map P(x)，首先把它量化为整数（量化器）：
 <ul>
-<li>$Q\left(p_{i j}\right)=\left{\begin{array}{ll}l-1, &amp; \text { if } \frac{l-1}{L} \leq p_{i j}&lt;\frac{l}{L}, l=1, \ldots, L \ L, &amp; \text { if } p_{i j}=1\end{array}\right.$
+<li><span class="math inline">\(Q\left(p_{i
+j}\right)=\left\{\begin{array}{ll}l-1, &amp; \text { if } \frac{l-1}{L}
+\leq p_{i j}&lt;\frac{l}{L}, l=1, \ldots, L \\ L, &amp; \text { if }
+p_{i j}=1\end{array}\right.\)</span>
 <ul>
-<li>$Q\left(p_{i j}\right)$一共有L个量化等级，从0到L-1，并且 (n mod L) = 0</li>
-<li>每一个量化级别对应 n/L 比特，$p_{ij} \in (0,1)$</li>
-</ul>
-</li>
-<li>对于$Q\left(p_{i j}\right)$=0的点，不用分配比特权重，在解码阶段它可以通过上下文重建</li>
-</ul>
-</li>
-<li>通过$Q\left(p_{i j}\right)$，我们可以得到importance mask :
+<li><span class="math inline">\(Q\left(p_{i
+j}\right)\)</span>一共有L个量化等级，从0到L-1，并且 (n mod L) = 0</li>
+<li>每一个量化级别对应 n/L 比特，<span class="math inline">\(p_{ij} \in
+(0,1)\)</span></li>
+</ul></li>
+<li>对于<span class="math inline">\(Q\left(p_{i
+j}\right)\)</span>=0的点，不用分配比特权重，在解码阶段它可以通过上下文重建</li>
+</ul></li>
+<li>通过<span class="math inline">\(Q\left(p_{i
+j}\right)\)</span>，我们可以得到importance mask :
 <ul>
-<li>$\mathbf{m}<em>{k i j}=\left{\begin{array}{ll}1, &amp; \text { if } k \leq \frac{n}{L} Q\left(p</em>{i j}\right) \ 0, &amp; \text { else }\end{array}\right.$</li>
+<li><span class="math inline">\(\mathbf{m}_{k i
+j}=\left\{\begin{array}{ll}1, &amp; \text { if } k \leq \frac{n}{L}
+Q\left(p_{i j}\right) \\ 0, &amp; \text { else
+}\end{array}\right.\)</span></li>
 <li>kij分别对应nhw</li>
-</ul>
-</li>
-<li>最后需要编码的码元为$c=M(p) \circ B(e)$，其中$\circ$ 表示元素乘法
+</ul></li>
+<li>最后需要编码的码元为<span class="math inline">\(c=M(p) \circ
+B(e)\)</span>，其中<span class="math inline">\(\circ\)</span>
+表示元素乘法
 <ul>
-<li>假设每一个feature map的每一个(k,i,j)位置分配1bit，那么原本共需要$n \times h \times w$ bit，现在只需要 $\sum \frac n L Q_{p_{i,j}}$ bit</li>
-</ul>
-</li>
+<li>假设每一个feature
+map的每一个(k,i,j)位置分配1bit，那么原本共需要<span class="math inline">\(n \times h \times w\)</span> bit，现在只需要 <span class="math inline">\(\sum \frac n L Q_{p_{i,j}}\)</span> bit</li>
+</ul></li>
 <li>不过上面的量化和mask操作也是不可微的，无法进行反向传播，所以用以下函数进行等价
 <ul>
-<li>$\mathbf{m}<em>{k i j}=\left{\begin{array}{ll}1, &amp; \text { if }\left\lceil\frac{k L}{n}\right\rceil&lt;L p</em>{i j}+1 \ 0, &amp; \text { else }\end{array}\right.$</li>
-<li>其中$\left\lceil\frac{k L}{n}\right\rceil$ 是上限函数，与二元机类似，也使用梯度直接估计</li>
-<li>$\frac{\partial \mathbf{m}<em>{k i j}}{\partial p</em>{i j}}=\left{\begin{array}{l}L, \text { if } L p_{i j}-1 \leq\left\lceil\frac{k L}{n}\right\rceil&lt;L p_{i j}+2 \ 0, \text { else }\end{array}\right.$</li>
-</ul>
-</li>
+<li><span class="math inline">\(\mathbf{m}_{k i
+j}=\left\{\begin{array}{ll}1, &amp; \text { if }\left\lceil\frac{k
+L}{n}\right\rceil&lt;L p_{i j}+1 \\ 0, &amp; \text { else
+}\end{array}\right.\)</span></li>
+<li>其中<span class="math inline">\(\left\lceil\frac{k
+L}{n}\right\rceil\)</span>
+是上限函数，与二元机类似，也使用梯度直接估计</li>
+<li><span class="math inline">\(\frac{\partial \mathbf{m}_{k i
+j}}{\partial p_{i j}}=\left\{\begin{array}{l}L, \text { if } L p_{i j}-1
+\leq\left\lceil\frac{k L}{n}\right\rceil&lt;L p_{i j}+2 \\ 0, \text {
+else }\end{array}\right.\)</span></li>
+</ul></li>
 </ul>
 <h4 id="损失函数">损失函数</h4>
 <ul>
 <li>所提出的内容加权图像压缩系统可以表述为一个失真率优化问题。目标是尽量减少失真损失和码率损失</li>
-<li>引入了一个折中参数$\gamma$来平衡压缩率和失真</li>
-<li>$\mathcal{L}=\sum_{\mathbf{x} \in \mathcal{X}}\left{\mathcal{L}<em>{D}(\mathbf{c}, \mathbf{x})+\gamma \mathcal{L}</em>{R}(\mathbf{x})\right}$
+<li>引入了一个折中参数<span class="math inline">\(\gamma\)</span>来平衡压缩率和失真</li>
+<li><span class="math inline">\(\mathcal{L}=\sum_{\mathbf{x} \in
+\mathcal{X}}\left\{\mathcal{L}_{D}(\mathbf{c}, \mathbf{x})+\gamma
+\mathcal{L}_{R}(\mathbf{x})\right\}\)</span>
 <ul>
-<li>其中c为x的编码，${L}<em>{D}(\mathbf{c}, \mathbf{x})$ 为失真损失（MSE损失），${L}</em>{R}(\mathbf{x})$ 为码率损失</li>
-</ul>
-</li>
+<li>其中c为x的编码，<span class="math inline">\({L}_{D}(\mathbf{c},
+\mathbf{x})\)</span> 为失真损失（MSE损失），<span class="math inline">\({L}_{R}(\mathbf{x})\)</span> 为码率损失</li>
+</ul></li>
 <li>作者在码率损失中引入了一个阈值r，来惩罚高于r的编码长度，使学习到的压缩系统达到与给定的压缩率相当的压缩率
 <ul>
-<li>$\mathcal{L}<em>{R}(\mathbf{x})=\left{\begin{array}{ll}\sum</em>{i, j}(P(\mathbf{x}))<em>{i j}-r, &amp; \text { if } \sum</em>{i, j}(P(\mathbf{x}))_{i j}&gt;r \ 0, &amp; \text { otherwise }\end{array}\right.$</li>
+<li><span class="math inline">\(\mathcal{L}_{R}(\mathbf{x})=\left\{\begin{array}{ll}\sum_{i,
+j}(P(\mathbf{x}))_{i j}-r, &amp; \text { if } \sum_{i,
+j}(P(\mathbf{x}))_{i j}&gt;r \\ 0, &amp; \text { otherwise
+}\end{array}\right.\)</span></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="Convolutional-entropy-encoder">Convolutional entropy encoder</h3>
+<h3 id="convolutional-entropy-encoder">Convolutional entropy
+encoder</h3>
 <ul>
 <li>由于没有熵约束，上面提到的压缩系统生成的编码在熵率方面不是最优的</li>
-<li>一般有两种熵压缩方法，即Huffman  tree和算术编码。其中算术编码在定义良好的<strong>上下文环境</strong>下表现出较好的压缩率，作者采用了算术编码</li>
-<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/3.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>一般有两种熵压缩方法，即Huffman
+tree和算术编码。其中算术编码在定义良好的<strong>上下文环境</strong>下表现出较好的压缩率，作者采用了算术编码</li>
+<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/3.png" srcset="/img/loading.gif" lazyload></li>
 <li>采用了基于CABAC框架的二进制算术编码
 <ul>
 <li>设c为n个二进制位图的编码，m为相应的重要掩码</li>
 <li>在对c进行编码时，通过修改编码表，重新定义上下文，并使用CNN进行概率预测</li>
 <li>在编码进度上，简单地将每个二进制位图从左到右逐行编码，并跳过相应重要掩码值为0的位</li>
-</ul>
-</li>
-<li>将 $c_{kij}$ 的上下文定义为 $CNTX(c_{kij})$ ，同时考虑来自它的邻域和邻域映射的信息
+</ul></li>
+<li>将 <span class="math inline">\(c_{kij}\)</span> 的上下文定义为 <span class="math inline">\(CNTX(c_{kij})\)</span>
+，同时考虑来自它的邻域和邻域映射的信息
 <ul>
-<li>这里作者是将 $CNTX(c_{kij})$ 定义为一个5×5×4的长方体，然后划分可用位（蓝色）和不可用位置（灰色）</li>
-</ul>
-</li>
-<li>一种常用的概率预测方法是建立并维护一个频率表。不过由于 $CNTX(c_{kij})$ 长方体的尺寸太大，无法建立频率表。所以作者引入了一个CNN模型来进行概率预测。如上图所示，卷积熵编码器 $En(CNTX(c_{kij}))$ 以长方体为输入，输出 $c_{kij}$ 为1的概率。因此，学习熵编码器的损失可以写成:
+<li>这里作者是将 <span class="math inline">\(CNTX(c_{kij})\)</span>
+定义为一个5×5×4的长方体，然后划分可用位（蓝色）和不可用位置（灰色）</li>
+</ul></li>
+<li>一种常用的概率预测方法是建立并维护一个频率表。不过由于 <span class="math inline">\(CNTX(c_{kij})\)</span>
+长方体的尺寸太大，无法建立频率表。所以作者引入了一个CNN模型来进行概率预测。如上图所示，卷积熵编码器
+<span class="math inline">\(En(CNTX(c_{kij}))\)</span>
+以长方体为输入，输出 <span class="math inline">\(c_{kij}\)</span>
+为1的概率。因此，学习熵编码器的损失可以写成:
 <ul>
-<li>$\mathcal{L}<em>{E}=\sum</em>{i, j, k} m_{k i j}\left{c_{k i j} \log <em>{2}\left(\operatorname{En}\left(\operatorname{CNTX}\left(c</em>{k i j}\right)\right)\right)\right.$<br>
-$\left.+\left(1-c_{k i j}\right) \log <em>{2}\left(1-\operatorname{En}\left(C N T X\left(c</em>{k i j}\right)\right)\right)\right}$</li>
-</ul>
-</li>
+<li><span class="math inline">\(\mathcal{L}_{E}=\sum_{i, j, k} m_{k i
+j}\left\{c_{k i j} \log
+_{2}\left(\operatorname{En}\left(\operatorname{CNTX}\left(c_{k i
+j}\right)\right)\right)\right.\)</span> <span class="math inline">\(\left.+\left(1-c_{k i j}\right) \log
+_{2}\left(1-\operatorname{En}\left(C N T X\left(c_{k i
+j}\right)\right)\right)\right\}\)</span></li>
+</ul></li>
 <li>作者还将卷积熵编码器扩展到量化的重要性图。为了利用二进制算术编码，采用多个二进制码映射来表示量化的重要性映射。然后训练卷积熵编码器来压缩二进制编码映射</li>
 </ul>
-<h3 id="😝😜😋">😝😜😋</h3>
+<h3 id="section">😝😜😋</h3>
 <p>其实这篇论文涉及到的图像压缩，也是自己第一次接触，里面很多知识点也是慢慢学习，然后也大概都明白了，包括他的网络结构和提到的CABAC算法，不过还是让我比较疑惑的一点就是他提出的卷积熵编码是怎么在网络中使用的，，，不够清楚他在那一部分使用了，感觉放到哪个部分都会怪怪的</p>
-<p>主要就是提出了一个内容相关的权重图——importance map来对图像内容进行加权，从而控制不同区域的码率分配，从而能够更好地进行压缩，然后就是对网络中各种量化器的可微操作，保证网络能够直接端到端训练学习。然后就是对CABAC的改进，使用了一个卷积网络来进行概率预测，使用到了更多的上下文信息。</p>
-<h2 id="Efficient-and-Effective-Context-Based-ConvolutionalEntropy-Modeling-for-Image-Compression">Efficient and Effective Context-Based ConvolutionalEntropy Modeling for Image Compression</h2>
-<p>基于上下文的卷积熵模型用于图像压缩，虽然还没看，但是看了看左旺孟老师的视频，感觉还是对之前工作的一种改进，在上面工作的基础（对当前点的预测使用一个 $CNTX(c_{kij})$ 长方体的上下文信息）上，参考PixelRNN的思想，来更好地并行化操作，并且能够包含足够多的上下文信息。</p>
-<h3 id="Abstract-2">Abstract</h3>
+<p>主要就是提出了一个内容相关的权重图——importance
+map来对图像内容进行加权，从而控制不同区域的码率分配，从而能够更好地进行压缩，然后就是对网络中各种量化器的可微操作，保证网络能够直接端到端训练学习。然后就是对CABAC的改进，使用了一个卷积网络来进行概率预测，使用到了更多的上下文信息。</p>
+<h2 id="efficient-and-effective-context-based-convolutionalentropy-modeling-for-image-compression">Efficient
+and Effective Context-Based ConvolutionalEntropy Modeling for Image
+Compression</h2>
+<p>基于上下文的卷积熵模型用于图像压缩，虽然还没看，但是看了看左旺孟老师的视频，感觉还是对之前工作的一种改进，在上面工作的基础（对当前点的预测使用一个
+<span class="math inline">\(CNTX(c_{kij})\)</span>
+长方体的上下文信息）上，参考PixelRNN的思想，来更好地并行化操作，并且能够包含足够多的上下文信息。</p>
+<h3 id="abstract-1">Abstract</h3>
 <ul>
 <li>准确估计自然图像的概率结构是图像压缩的关键</li>
 <li>尽管最近端到端优化图像压缩取得了显著的成功，但为了简化熵建模，潜码通常被假定为完全统计分解</li>
@@ -461,239 +518,305 @@ $\left.+\left(1-c_{k i j}\right) \log <em>{2}\left(1-\operatorname{En}\left(C N 
 <li>引入了三维之字形扫描顺序和三维分码技术来定义并行熵解码的编码上下文</li>
 <li>这两种方法都可以归结为在CCNs的卷积滤波器上放置平移不变二进制掩码</li>
 <li>ps：基本都是PixelRNN的思想和一些改进</li>
-</ul>
-</li>
+</ul></li>
 <li>无损压缩允许从压缩的位流进行完美的数据重构，目标是将更短的码字分配给更多的“可能的”代码
 <ul>
 <li>典型的例子包括Huffman编码、算术编码和范围编码</li>
-</ul>
-</li>
+</ul></li>
 <li>有损压缩丢弃输入数据的“不重要”信息，重要性的定义取决于应用程序</li>
-<li>在有损压缩中，需要在**率失真（ Rate–distortion optimization ， 对视频/图像的有损（画面品质）与比特率（编码所需的数据量）同时进行最优化 ）**之间进行权衡，其中码率由离散码的熵计算，失真由信号保真度度量</li>
+<li>在有损压缩中，需要在<strong>率失真（ Rate–distortion optimization ，
+对视频/图像的有损（画面品质）与比特率（编码所需的数据量）同时进行最优化
+）</strong>之间进行权衡，其中码率由离散码的熵计算，失真由信号保真度度量</li>
 <li>有损图像压缩的一种流行的方案是变换编码，它由三个操作组成:变换、量化和熵编码
 <ul>
 <li>转换将图像映射到一个潜在的码元表示，它更适合于开发人类感知方面。早期的变换对所有比特率都是线性的、可逆的和固定的，最近的变换采用了深度神经网络(DNNs)的形式，旨在实现非线性和更可压缩的表示。基于dnn的变换大多是不可逆的，不过其促使在变换过程中丢弃感知上不重要的图像特征。从而有机会学习不同比特率下的不同变换，以获得最佳的率失真性能</li>
 <li>误差只产生于量化过程</li>
 <li>熵编码负责无损地将量化码压缩到位流中进行存储和传输</li>
-</ul>
-</li>
+</ul></li>
 <li>在无损或有损图像压缩中，由编码器和解码器共享的潜在码的离散概率分布(即熵模型)是决定压缩性能的关键
 <ul>
-<li>根据香农信源编码定理，给定一个需要编码的向量$\mathbf y = {y_{0}, \ldots, y_{M}}$，y的最佳编码长度为 $\left\lceil-log_n P(\mathbf y)\right\rceil$
+<li>根据香农信源编码定理，给定一个需要编码的向量<span class="math inline">\(\mathbf y = \{y_{0}, \ldots,
+y_{M}\}\)</span>，y的最佳编码长度为 <span class="math inline">\(\left\lceil-log_n P(\mathbf
+y)\right\rceil\)</span>
 <ul>
 <li>这里使用二进制编码所以n=2</li>
-</ul>
-</li>
-<li>然后作者说在没有进一步约束的情况下，很难估计高维空间中的P(y)，由于这个原因，大多数熵编码方案假设y在统计上被完全分解为相同的边际分布，导致编码长度为 $\left\lceil- \sum_{i=0}^M log_2 P(y_i)\right\rceil$</li>
+</ul></li>
+<li>然后作者说在没有进一步约束的情况下，很难估计高维空间中的P(y)，由于这个原因，大多数熵编码方案假设y在统计上被完全分解为相同的边际分布，导致编码长度为
+<span class="math inline">\(\left\lceil- \sum_{i=0}^M log_2
+P(y_i)\right\rceil\)</span></li>
 <li>不过概率论中的链式法则提供了一个更准确的近似
 <ul>
-<li>$P(\boldsymbol{y}) \approx \prod_{i=0}^{M} P\left(y_{i} \mid \operatorname{PTX}\left(y_{i}, \boldsymbol{y}\right)\right)$</li>
-<li>这里的PTX就代表了当前位置 $y_i$ 之前的所有上下文信息</li>
-</ul>
-</li>
-<li>不过随着$PTX(y_i,\mathbf y)$ 范围的变大，很难通过构造直方图来估计该条件概率，所以作者参考PixelRNN来构建长距离建模，增加上下文信息</li>
-</ul>
-</li>
+<li><span class="math inline">\(P(\boldsymbol{y}) \approx
+\prod_{i=0}^{M} P\left(y_{i} \mid \operatorname{PTX}\left(y_{i},
+\boldsymbol{y}\right)\right)\)</span></li>
+<li>这里的PTX就代表了当前位置 <span class="math inline">\(y_i\)</span>
+之前的所有上下文信息</li>
+</ul></li>
+<li>不过随着<span class="math inline">\(PTX(y_i,\mathbf y)\)</span>
+范围的变大，很难通过构造直方图来估计该条件概率，所以作者参考PixelRNN来构建长距离建模，增加上下文信息</li>
+</ul></li>
 <li>作者提出了基于上下文的卷积网络(CCNs)来进行有效和高效的熵建模
 <ul>
-<li>给定y，作者指定了一个三维之字形编码顺序，从而在对$y_i$进行编码的时候它的上下文信息</li>
+<li>给定y，作者指定了一个三维之字形编码顺序，从而在对<span class="math inline">\(y_i\)</span>进行编码的时候它的上下文信息</li>
 <li>熵编码期间的并行计算很简单，因为每个代码的上下文都是已知的，并且很容易获得</li>
-<li>然而，在熵解码过程中并不总是如此。首先对 $y_i$ 的部分上下文进行顺序解码，从而对 $P(y_{i} \mid \operatorname{PTX}\left(y_{i}, \boldsymbol{y}\right)$ 进行估计，这是非常缓慢的</li>
+<li>然而，在熵解码过程中并不总是如此。首先对 <span class="math inline">\(y_i\)</span> 的部分上下文进行顺序解码，从而对
+<span class="math inline">\(P(y_{i} \mid \operatorname{PTX}\left(y_{i},
+\boldsymbol{y}\right)\)</span> 进行估计，这是非常缓慢的</li>
 <li>为了解决这个问题，作者引入了一种3D编码划分技术，它将y按照所提出的编码顺序分成多个组。根据各自的上下文，每个组内的编码都假定是条件独立的，因此可以并行解码</li>
-</ul>
-</li>
+</ul></li>
 <li>为了验证所提出的CCNs，作者将其与算术编码结合进行熵建模
 <ul>
-<li>为了实现图像的无损压缩，将输入的灰度图像转换为8个二进制平面，通过优化信息论中的熵损失，训练一个CCN来预测 $y_i$ 的伯努利分布</li>
-<li>对于有损图像压缩，我们将 $y_i$ 的分类分布参数化为离散混合高斯分布(MoG)，其参数(即混合权值、均值和方差)由三个CCN估计</li>
+<li>为了实现图像的无损压缩，将输入的灰度图像转换为8个二进制平面，通过优化信息论中的熵损失，训练一个CCN来预测
+<span class="math inline">\(y_i\)</span> 的伯努利分布</li>
+<li>对于有损图像压缩，我们将 <span class="math inline">\(y_i\)</span>
+的分类分布参数化为离散混合高斯分布(MoG)，其参数(即混合权值、均值和方差)由三个CCN估计</li>
 <li>基于CCN的熵模型通过对训练图像数据库的分析和合成变换(即原始像素空间和潜码空间的映射)进行联合优化，权衡了码率和失真</li>
 <li>这一小部分是完全没理解，，</li>
-</ul>
-</li>
+</ul></li>
 <li>DNN-Based Entropy Modeling
 <ul>
 <li>熵建模的第一步也是最重要的一步是估计概率P(y)，对于大多数图像压缩技术，y被认为是统计上独立的，其熵可以通过边缘分布计算得到，因此经过高度非线性分析变换的自然图像仍然具有很强的统计冗余</li>
 <li>在自然语言处理（NLP）中，循环神经网络(RNN)和长短期记忆(LSTM)是两种常用的建模长期依赖性的工具。在图像处理方面，PixelRNN最早尝试利用远程像素依赖性来生成图像
 <ul>
 <li>不过上述方法在计算上效率低下，需要一次前向传播来生成(或估计)单个像素的概率</li>
-</ul>
-</li>
-<li>为了加速PixelCNN,  提出了多尺度PixelCNN，它能够在初始图像上采样两倍大的中间图像条件。 可以重复此过程以生成最终的高分辨率结果。 当将多尺度PixelCNN视为熵模型时，我们必须无损地压缩初始图像并将其作为边界信息发送给解码器进行熵解码
+</ul></li>
+<li>为了加速PixelCNN,
+提出了多尺度PixelCNN，它能够在初始图像上采样两倍大的中间图像条件。
+可以重复此过程以生成最终的高分辨率结果。
+当将多尺度PixelCNN视为熵模型时，我们必须无损地压缩初始图像并将其作为边界信息发送给解码器进行熵解码
 <ul>
 <li>和之前看的这部分内容感觉不太一样，，</li>
-</ul>
-</li>
-<li>基于上下文的熵建模的DNNs引入了一个尺度先验，它存储每个 $y_i$ 的方差参数作为边界信息。更丰富的边信息通常导致更准确的熵建模</li>
-<li>Li等人提取每个 $y_i$ 的小代码块作为上下文，采用简单的DNN进行熵建模（就是上一篇论文）。该方法计算复杂度与PixelRNN相似</li>
+</ul></li>
+<li>基于上下文的熵建模的DNNs引入了一个尺度先验，它存储每个 <span class="math inline">\(y_i\)</span>
+的方差参数作为边界信息。更丰富的边信息通常导致更准确的熵建模</li>
+<li>Li等人提取每个 <span class="math inline">\(y_i\)</span>
+的小代码块作为上下文，采用简单的DNN进行熵建模（就是上一篇论文）。该方法计算复杂度与PixelRNN相似</li>
 <li>Li等人和Mentzer等人用掩码DNNs实现了并行熵编码。然而，由于上下文的依赖性，熵解码必须顺序执行，这仍然非常缓慢</li>
-</ul>
-</li>
+</ul></li>
 <li>DNN-Based Lossy Image Compression
 <ul>
 <li>端到端有损图像压缩的一个主要问题是量化函数的梯度几乎处处为零，使得基于梯度下降的优化无效</li>
 <li>针对量化产生的零梯度问题，提出了不同的解决策略
 <ul>
-<li>从信号处理的角度来看，量化器可以用与量化箱（quantization bin）相同宽度的加性i.i.d.均匀噪声来近似。这个近似的一个理想性质是，得到的密度是y的概率质量函数的连续松弛</li>
+<li>从信号处理的角度来看，量化器可以用与量化箱（quantization
+bin）相同宽度的加性i.i.d.均匀噪声来近似。这个近似的一个理想性质是，得到的密度是y的概率质量函数的连续松弛</li>
 <li>引入了连续函数(没有零梯度问题)来近似量化函数。原始量化器用于前向传递，而其连续代理用于反向传递</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="CCNS-FOR-ENTROPY-MODELING">CCNS FOR ENTROPY MODELING</h3>
+<h3 id="ccns-for-entropy-modeling">CCNS FOR ENTROPY MODELING</h3>
 <ul>
 <li>作者为了进行高效的基于上下文的熵编码，对网络结构做了两个假设:
 <ul>
-<li>对于编码块 $\boldsymbol{y} \in \mathbb{Q}^{M \times H \times W}$ （MHW为通道、高、宽），其中第t层卷积层的输出为 $\boldsymbol{v}^{(t)} \in M \times H \times W \times N_t$ ，其中 $N_t$ 代表用来表示 $\boldsymbol{y}$ 的特征块的数量
+<li>对于编码块 <span class="math inline">\(\boldsymbol{y} \in
+\mathbb{Q}^{M \times H \times W}\)</span>
+（MHW为通道、高、宽），其中第t层卷积层的输出为 <span class="math inline">\(\boldsymbol{v}^{(t)} \in M \times H \times W
+\times N_t\)</span> ，其中 <span class="math inline">\(N_t\)</span>
+代表用来表示 <span class="math inline">\(\boldsymbol{y}\)</span>
+的特征块的数量
 <ul>
-<li>假设I在输入代码块y和输出特征表示 $v^{(T)}$ 之间建立了一对多的对应关系。 换句话说，第i个通道和第j个特征块在空间位置（p，q）上的特征 $v_{i,j}^{(t)}(p,q)$ 与 $y_i(p,q)$ 唯一关联</li>
-</ul>
-</li>
-<li>假设 $CTX(y_i(p,q),\boldsymbol y)$ 为 $y_i(p,q)$ 的之前的码集（全部上下文信息）， $SS(v_{i,j}^{(t)}(p,q))$ 为 $v_{i,j}^{(t)}(p,q)$ 接收域码集，用来支持其计算（支持集），那么有 $SS(v_{i,j}^{(t)}(p,q)) \in CTX(y_i,(p,q),\boldsymbol y)$
+<li>假设I在输入代码块y和输出特征表示 <span class="math inline">\(v^{(T)}\)</span> 之间建立了一对多的对应关系。
+换句话说，第i个通道和第j个特征块在空间位置（p，q）上的特征 <span class="math inline">\(v_{i,j}^{(t)}(p,q)\)</span> 与 <span class="math inline">\(y_i(p,q)\)</span> 唯一关联</li>
+</ul></li>
+<li>假设 <span class="math inline">\(CTX(y_i(p,q),\boldsymbol
+y)\)</span> 为 <span class="math inline">\(y_i(p,q)\)</span>
+的之前的码集（全部上下文信息）， <span class="math inline">\(SS(v_{i,j}^{(t)}(p,q))\)</span> 为 <span class="math inline">\(v_{i,j}^{(t)}(p,q)\)</span>
+接收域码集，用来支持其计算（支持集），那么有 <span class="math inline">\(SS(v_{i,j}^{(t)}(p,q)) \in
+CTX(y_i,(p,q),\boldsymbol y)\)</span>
 <ul>
-<li>假设II<strong>确保 $v_{i,j}^{(t)}(p,q)$ 的计算仅取决于 $CTX(y_i(p,q),\boldsymbol y)$ 的子集</strong></li>
-</ul>
-</li>
+<li>假设II<strong>确保 <span class="math inline">\(v_{i,j}^{(t)}(p,q)\)</span> 的计算仅取决于 <span class="math inline">\(CTX(y_i(p,q),\boldsymbol y)\)</span>
+的子集</strong></li>
+</ul></li>
 <li>这两个假设共同保证了在完全卷积网络中基于上下文的熵建模的合法性，这可以通过将平移不变的二进制掩码放置到卷积滤波器来实现</li>
-</ul>
-</li>
-<li>可以假设在一个二维码块中， $\boldsymbol{y} \in \mathbb{Q}^{H \times W}$ ，第t层的mask卷积为：
+</ul></li>
+<li>可以假设在一个二维码块中， <span class="math inline">\(\boldsymbol{y} \in \mathbb{Q}^{H \times
+W}\)</span> ，第t层的mask卷积为：
 <ul>
-<li>$v_{i}^{(t)}(p, q)=\sum_{j=1}^{N_{t}}\left(u_{j}^{(t)} *\left(m^{(t)} \odot w_{i, j}^{(t)}\right)\right)(p, q)+b_{i}^{(t)}$
+<li><span class="math inline">\(v_{i}^{(t)}(p,
+q)=\sum_{j=1}^{N_{t}}\left(u_{j}^{(t)} *\left(m^{(t)} \odot w_{i,
+j}^{(t)}\right)\right)(p, q)+b_{i}^{(t)}\)</span>
 <ul>
-<li>其中*表示二维卷积，$\odot$ 表示哈达玛积 ，$w_{i,j}^{(t)}$ 是一个二维卷积核，$m^{(t)}$ 表示对应的mask，$b_{i}^{(t)}$ 为偏差</li>
-<li>根据假设1，输入 $u_i^{(t)}$ 和输出 $v_i^{(t)}$ 和 $\boldsymbol{y}$ 大小一致，输入码块 $\boldsymbol{y}$ 对应于 $u_0^{(0)}$</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>对于全卷积网络的输入层，产生 $v_i^{(0)}(p,q)$ 的编码 $\Omega_{p, q} = { y(p+ \mu,q+ \nu) }$ ，其中 $(\mu,\nu) \in \Psi$ 是以(0,0)为中心的局部指标集，那么对应可以得到码集
+<li>其中*表示二维卷积，<span class="math inline">\(\odot\)</span>
+表示哈达玛积 ，<span class="math inline">\(w_{i,j}^{(t)}\)</span>
+是一个二维卷积核，<span class="math inline">\(m^{(t)}\)</span>
+表示对应的mask，<span class="math inline">\(b_{i}^{(t)}\)</span>
+为偏差</li>
+<li>根据假设1，输入 <span class="math inline">\(u_i^{(t)}\)</span>
+和输出 <span class="math inline">\(v_i^{(t)}\)</span> 和 <span class="math inline">\(\boldsymbol{y}\)</span> 大小一致，输入码块 <span class="math inline">\(\boldsymbol{y}\)</span> 对应于 <span class="math inline">\(u_0^{(0)}\)</span></li>
+</ul></li>
+</ul></li>
+<li>对于全卷积网络的输入层，产生 <span class="math inline">\(v_i^{(0)}(p,q)\)</span> 的编码 <span class="math inline">\(\Omega_{p, q} = \{ y(p+ \mu,q+ \nu) \}\)</span>
+，其中 <span class="math inline">\((\mu,\nu) \in \Psi\)</span>
+是以(0,0)为中心的局部指标集，那么对应可以得到码集
 <ul>
-<li>$\operatorname{SS}\left(v_{i}^{(0)}(p, q)\right)=\operatorname{CTX}\left(y(p, q), \Omega_{p, q}\right) \subset \operatorname{CTX}(y(p, q), \boldsymbol{y})$</li>
+<li><span class="math inline">\(\operatorname{SS}\left(v_{i}^{(0)}(p,
+q)\right)=\operatorname{CTX}\left(y(p, q), \Omega_{p, q}\right) \subset
+\operatorname{CTX}(y(p, q), \boldsymbol{y})\)</span></li>
 <li>其中设置mask</li>
-<li>$\mathbf{m}^{(0)}(\mu,\nu)=\left{\begin{array}{ll}1, &amp; \text { if }\Omega_{p, q}(\mu,\nu) \in \operatorname{CTX}(y(p, q), \boldsymbol{y}) \ 0, &amp; \text { otherwise }\end{array}\right.$</li>
-</ul>
-</li>
+<li><span class="math inline">\(\mathbf{m}^{(0)}(\mu,\nu)=\left\{\begin{array}{ll}1,
+&amp; \text { if }\Omega_{p, q}(\mu,\nu) \in \operatorname{CTX}(y(p, q),
+\boldsymbol{y}) \\ 0, &amp; \text { otherwise
+}\end{array}\right.\)</span></li>
+</ul></li>
 <li>虽然写的公式看着很麻烦，但实际上就是用了一个mask卷积，证明了它的平移不变性</li>
-<li><img src="/C:/Users/pan/Desktop/1.22%E7%BB%84%E4%BC%9A%E5%88%86%E4%BA%AB/%E8%87%AA%E7%9B%91%E7%9D%A3%E4%B8%8A%E4%B8%8B%E6%96%87%E5%BB%BA%E6%A8%A1%E5%8F%8A%E5%BA%95%E5%B1%82%E8%A7%86%E8%A7%89%E5%BA%94%E7%94%A8/24.png" srcset="/img/loading.gif" lazyload alt>
+<li><img src="/C:/Users/pan/Desktop/1.22组会分享/自监督上下文建模及底层视觉应用/24.png" srcset="/img/loading.gif" lazyload>
 <ul>
-<li>上图中， $CTX(y_i(p,q),\boldsymbol y)$ 就是当前点之前的所有上下文信息， $SS(v_{i,j}^{(t)}(p,q))$ 是当前接受域中的上下文信息， $m^{(0)}$ 表示标色部分的mask卷积</li>
-</ul>
-</li>
-<li>在第t层，假设 $m^{(t)} = m^{(0)}$ ，对于编码 $y(p+\mu,q+\nu) \in CTX(y_i(p,q),\boldsymbol y)$ ，有
+<li>上图中， <span class="math inline">\(CTX(y_i(p,q),\boldsymbol
+y)\)</span> 就是当前点之前的所有上下文信息， <span class="math inline">\(SS(v_{i,j}^{(t)}(p,q))\)</span>
+是当前接受域中的上下文信息， <span class="math inline">\(m^{(0)}\)</span> 表示标色部分的mask卷积</li>
+</ul></li>
+<li>在第t层，假设 <span class="math inline">\(m^{(t)} = m^{(0)}\)</span>
+，对于编码 <span class="math inline">\(y(p+\mu,q+\nu) \in
+CTX(y_i(p,q),\boldsymbol y)\)</span> ，有
 <ul>
-<li>$\begin{aligned} \operatorname{SS}\left(u_{j}^{(t)}(p+\mu, q+\nu)\right) &amp; \subset \operatorname{CTX}(y(p+\mu, q+\nu), \boldsymbol{y}) \ &amp; \subset \operatorname{CTX}(y(p, q), \boldsymbol{y}), \end{aligned}$</li>
-<li>意思就是只要 $y(p+\mu,q+\nu)$ 在 $y(p,q)$ 的上下文中，那么就可以从 $u_i^{(t)}(p+\mu,q+\nu)$ 中计算 $v^{(t)}(p,q)$</li>
-<li>另外t&gt;0的 $u_j^{(t)}(p,q)$ 由 $CTX(y_i(p,q),\boldsymbol y)$ 生成，进而计算得到 $v_i^{(t)}(p,q)$ ，所以第t层的mask可以写为</li>
-<li>$\mathbf{m}^{(t)}(\mu,\nu)=\left{\begin{array}{ll}m^{(0)}, &amp; \text { if }(\mu,\nu) \neq (0,0) \ 1, &amp; \text { otherwise }\end{array}\right.$</li>
-</ul>
-</li>
+<li><span class="math inline">\(\begin{aligned}
+\operatorname{SS}\left(u_{j}^{(t)}(p+\mu, q+\nu)\right) &amp; \subset
+\operatorname{CTX}(y(p+\mu, q+\nu), \boldsymbol{y}) \\ &amp; \subset
+\operatorname{CTX}(y(p, q), \boldsymbol{y}), \end{aligned}\)</span></li>
+<li>意思就是只要 <span class="math inline">\(y(p+\mu,q+\nu)\)</span> 在
+<span class="math inline">\(y(p,q)\)</span> 的上下文中，那么就可以从
+<span class="math inline">\(u_i^{(t)}(p+\mu,q+\nu)\)</span> 中计算 <span class="math inline">\(v^{(t)}(p,q)\)</span></li>
+<li>另外t&gt;0的 <span class="math inline">\(u_j^{(t)}(p,q)\)</span> 由
+<span class="math inline">\(CTX(y_i(p,q),\boldsymbol y)\)</span>
+生成，进而计算得到 <span class="math inline">\(v_i^{(t)}(p,q)\)</span>
+，所以第t层的mask可以写为</li>
+<li><span class="math inline">\(\mathbf{m}^{(t)}(\mu,\nu)=\left\{\begin{array}{ll}m^{(0)},
+&amp; \text { if }(\mu,\nu) \neq (0,0) \\ 1, &amp; \text { otherwise
+}\end{array}\right.\)</span></li>
+</ul></li>
 <li>利用上面的平移不变掩码，可以进行并行编码，但解码过程仍然需要顺序进行</li>
-<li><img src="/C:/Users/pan/Desktop/1.22%E7%BB%84%E4%BC%9A%E5%88%86%E4%BA%AB/%E8%87%AA%E7%9B%91%E7%9D%A3%E4%B8%8A%E4%B8%8B%E6%96%87%E5%BB%BA%E6%A8%A1%E5%8F%8A%E5%BA%95%E5%B1%82%E8%A7%86%E8%A7%89%E5%BA%94%E7%94%A8/25.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/C:/Users/pan/Desktop/1.22组会分享/自监督上下文建模及底层视觉应用/25.png" srcset="/img/loading.gif" lazyload></li>
 <li>为了加快熵解码的速度，作者进一步删除代码之间的依赖关系，但存在模型准确性的风险
 <ul>
-<li>具体操作就是将 $\boldsymbol{y}$ 划分成K组 ${GP_{0}(\boldsymbol{y}), \ldots, GP_{K-1}(\boldsymbol{y})}$ ，并假设各组之间在统计上是独立的</li>
-<li>导致 $y(p,q) \in GP_k(\boldsymbol{y})$ 的部分上下文 $PTX(y(p,q),\boldsymbol{y}) = {GP_{0}(\boldsymbol{y}), \ldots, GP_{K-1}(\boldsymbol{y})}$</li>
+<li>具体操作就是将 <span class="math inline">\(\boldsymbol{y}\)</span>
+划分成K组 <span class="math inline">\(\{GP_{0}(\boldsymbol{y}), \ldots,
+GP_{K-1}(\boldsymbol{y})\}\)</span>
+，并假设各组之间在统计上是独立的</li>
+<li>导致 <span class="math inline">\(y(p,q) \in
+GP_k(\boldsymbol{y})\)</span> 的部分上下文 <span class="math inline">\(PTX(y(p,q),\boldsymbol{y}) =
+\{GP_{0}(\boldsymbol{y}), \ldots,
+GP_{K-1}(\boldsymbol{y})\}\)</span></li>
 <li>这样的话，各部分的解码就可以并行进行</li>
 <li>不过具体的划分方式就会很大程度上收到编码顺序的影响
 <ul>
 <li>对于光栅编码，<strong>直接排除当前行</strong>的操作是最简单的，但对于CABAC编码而言，去掉的当前行信息是十分重要的</li>
-<li>所以作者将编码顺序切换到了zigzag方式（如上图），其中 $GP_k(\boldsymbol{y}) = { y(p,q) | p+q=k }$ , $PTX(y(p,q),\boldsymbol{y}) = { y(p’,q’) | p’+q’&lt;k }$ ，对应mask</li>
-<li>$\mathbf{m}^{(t)}(\mu,\nu)=\left{\begin{array}{ll}0, &amp; \text { if }\mu+\nu \neq 0 \ 1, &amp; \text { otherwise }\end{array}\right.$</li>
-<li>如上图(d)，这样的话，对于黄色位置，它的上下文信息都能够很好的包含进去（蓝色同理），这样的话，当前解码过程（$p+q=k$）中就可以并行进行</li>
-</ul>
-</li>
-</ul>
-</li>
+<li>所以作者将编码顺序切换到了zigzag方式（如上图），其中 <span class="math inline">\(GP_k(\boldsymbol{y}) = \{ y(p,q) | p+q=k
+\}\)</span> , <span class="math inline">\(PTX(y(p,q),\boldsymbol{y}) =
+\{ y(p&#39;,q&#39;) | p&#39;+q&#39;&lt;k \}\)</span> ，对应mask</li>
+<li><span class="math inline">\(\mathbf{m}^{(t)}(\mu,\nu)=\left\{\begin{array}{ll}0,
+&amp; \text { if }\mu+\nu \neq 0 \\ 1, &amp; \text { otherwise
+}\end{array}\right.\)</span></li>
+<li>如上图(d)，这样的话，对于黄色位置，它的上下文信息都能够很好的包含进去（蓝色同理），这样的话，当前解码过程（<span class="math inline">\(p+q=k\)</span>）中就可以并行进行</li>
+</ul></li>
+</ul></li>
 <li>进一步可以将其扩展到三维中
 <ul>
-<li><img src="/C:/Users/pan/Desktop/1.22%E7%BB%84%E4%BC%9A%E5%88%86%E4%BA%AB/%E8%87%AA%E7%9B%91%E7%9D%A3%E4%B8%8A%E4%B8%8B%E6%96%87%E5%BB%BA%E6%A8%A1%E5%8F%8A%E5%BA%95%E5%B1%82%E8%A7%86%E8%A7%89%E5%BA%94%E7%94%A8/34.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/C:/Users/pan/Desktop/1.22组会分享/自监督上下文建模及底层视觉应用/34.png" srcset="/img/loading.gif" lazyload></li>
 <li>感觉这个理解起来略抽象，不过还好，照着二维的方法进一步拓展就得到这个了</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="CCN-BASED-ENTROPY-MODELS-FOR-LOSSLESS-IMAGE-COMPRESSION">CCN-BASED ENTROPY MODELS FOR LOSSLESS IMAGE COMPRESSION</h3>
+<h3 id="ccn-based-entropy-models-for-lossless-image-compression">CCN-BASED
+ENTROPY MODELS FOR LOSSLESS IMAGE COMPRESSION</h3>
 <p>基于ccn的无损图像压缩熵模型</p>
 <ul>
-<li>首先对图像进行二值化操作得到 $x \in \mathbb{R}^{H \times W}$ ，从而得到一个3D的编码块</li>
-<li>$y_{r}(p, q)=\left\lfloor\frac{x(p, q)}{2^{7-r}}\right\rfloor \bmod 2, \quad r=0,1, \ldots, 7$</li>
-<li>其中，作者用r = 0索引最有效位平面。CCN以 $\boldsymbol{y}$ 为输入，并产生一个相同大小的特征块 $\boldsymbol{v}$ (为了便于标注，省略了上标(T))来计算伯努利分布 $P(y_r(P,  q)|SS(v_r(P, q))$ 的均值估计</li>
-<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/7.png" srcset="/img/loading.gif" lazyload alt>
+<li>首先对图像进行二值化操作得到 <span class="math inline">\(x \in
+\mathbb{R}^{H \times W}\)</span> ，从而得到一个3D的编码块</li>
+<li><span class="math inline">\(y_{r}(p, q)=\left\lfloor\frac{x(p,
+q)}{2^{7-r}}\right\rfloor \bmod 2, \quad r=0,1, \ldots, 7\)</span></li>
+<li>其中，作者用r = 0索引最有效位平面。CCN以 <span class="math inline">\(\boldsymbol{y}\)</span>
+为输入，并产生一个相同大小的特征块 <span class="math inline">\(\boldsymbol{v}\)</span>
+(为了便于标注，省略了上标(T))来计算伯努利分布 <span class="math inline">\(P(y_r(P,  q)|SS(v_r(P, q))\)</span>
+的均值估计</li>
+<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/7.png" srcset="/img/loading.gif" lazyload>
 <ul>
 <li>其中a中的MConv表示mask卷积，b和c表示学习到的CCN的算数编码和解码</li>
 <li>使用了四个残差连接来加速训练，最后一层使用了sigmoid激活，其他都是ReLU</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="CCN-BASED-ENTROPY-MODELS-FOR-LOSSY-IMAGE-COMPRESSION">CCN-BASED ENTROPY MODELS FOR LOSSY IMAGE COMPRESSION</h3>
+<h3 id="ccn-based-entropy-models-for-lossy-image-compression">CCN-BASED
+ENTROPY MODELS FOR LOSSY IMAGE COMPRESSION</h3>
 <p>基于ccn的有损图像压缩熵模型</p>
-<p><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/8.png" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/8.png" srcset="/img/loading.gif" lazyload></p>
 <ul>
-<li>在有损图像压缩中，我们的目标是最小化码率和失真的加权和 $\ell_{r}+\lambda \ell_{d}$</li>
-<li>本文提出的压缩方法由四个部分组成:分析变换 $g_a$、量化器 $g_d$、基于CCN的熵模型和合成变换 $g_s$
+<li>在有损图像压缩中，我们的目标是最小化码率和失真的加权和 <span class="math inline">\(\ell_{r}+\lambda \ell_{d}\)</span></li>
+<li>本文提出的压缩方法由四个部分组成:分析变换 <span class="math inline">\(g_a\)</span>、量化器 <span class="math inline">\(g_d\)</span>、基于CCN的熵模型和合成变换 <span class="math inline">\(g_s\)</span>
 <ul>
-<li>分析变换gata以彩色图像 $\boldsymbol{x}$ 为输入，产生潜码表示 $z$，进一步量化后产生离散码块 $\boldsymbol{y}$
+<li>分析变换gata以彩色图像 <span class="math inline">\(\boldsymbol{x}\)</span> 为输入，产生潜码表示 <span class="math inline">\(z\)</span>，进一步量化后产生离散码块 <span class="math inline">\(\boldsymbol{y}\)</span>
 <ul>
-<li>$g_a$由3层卷积组成，每个卷积之后是一个因子为2的下采样。在每次下采样后，采用由7个卷积组成的密集块（DenseBlock）</li>
+<li><span class="math inline">\(g_a\)</span>由3层卷积组成，每个卷积之后是一个因子为2的下采样。在每次下采样后，采用由7个卷积组成的密集块（DenseBlock）</li>
 <li>在最后一个密集块之后，添加了另一个带有M个滤波器的卷积层来产生z</li>
-</ul>
-</li>
-<li>合成变换 $g_s$ 具有分析变换的镜像结构。其中，采用深度-空间整形对特征图进行上采样。最后一个卷积层与三个滤波器负责在RGB空间产生压缩图像</li>
-<li>对于量化器 $g_d$ ，将其第 $r$ 个通道的量化中心用 $\left{\omega_{r, 0}, \ldots, \omega_{r, L-1}\right}$ 参数化，其中L是量化等级数
+</ul></li>
+<li>合成变换 <span class="math inline">\(g_s\)</span>
+具有分析变换的镜像结构。其中，采用深度-空间整形对特征图进行上采样。最后一个卷积层与三个滤波器负责在RGB空间产生压缩图像</li>
+<li>对于量化器 <span class="math inline">\(g_d\)</span> ，将其第 <span class="math inline">\(r\)</span> 个通道的量化中心用 <span class="math inline">\(\left\{\omega_{r, 0}, \ldots, \omega_{r,
+L-1}\right\}\)</span> 参数化，其中L是量化等级数
 <ul>
-<li>给定一组固定的 $\omega$ ，我们通过将 $z_r(p, q)$ 映射到它最近的中心来实现量化，从而使量化误差最小化</li>
-<li>$y_{r}(p, q)=g_{d}\left(z_{r}(p, q)\right)=\underset{\left{\omega_{r, l}\right}}{\operatorname{argmin}}\left|z_{r}(p, q)-\omega_{r, l}\right|_{2}^{2}$</li>
-<li>不过由于梯度处处为零，无法进行反向传播，所以使用一个连续代理 $\hat g_{d}$</li>
-<li>在训练中，前向传播依旧使用 $g_{d}\left(z_{r}(p, q)\right)$ ，反向传播的时候使用 $\hat g_{d}$</li>
-<li>然后使用最小化均方误差(MSE)来优化量化中心 $\omega$</li>
-<li>$\left.\ell(\boldsymbol{\omega})=\frac{1}{M H W} \sum_{r, p, q} | z_{r}(p, q)-y_{r}(p, q)\right) |_{2}^{2}$</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>在不知道量化编码 $\boldsymbol{y}$ 的分类分布的情况下，作者使用离散化的MoG分布，其参数由所提出的CCNs预测，把 $C$ 分量的可微MoG分布写成
+<li>给定一组固定的 <span class="math inline">\(\omega\)</span>
+，我们通过将 <span class="math inline">\(z_r(p, q)\)</span>
+映射到它最近的中心来实现量化，从而使量化误差最小化</li>
+<li><span class="math inline">\(y_{r}(p, q)=g_{d}\left(z_{r}(p,
+q)\right)=\underset{\left\{\omega_{r,
+l}\right\}}{\operatorname{argmin}}\left\|z_{r}(p, q)-\omega_{r,
+l}\right\|_{2}^{2}\)</span></li>
+<li>不过由于梯度处处为零，无法进行反向传播，所以使用一个连续代理 <span class="math inline">\(\hat g_{d}\)</span></li>
+<li>在训练中，前向传播依旧使用 <span class="math inline">\(g_{d}\left(z_{r}(p, q)\right)\)</span>
+，反向传播的时候使用 <span class="math inline">\(\hat
+g_{d}\)</span></li>
+<li>然后使用最小化均方误差(MSE)来优化量化中心 <span class="math inline">\(\omega\)</span></li>
+<li><span class="math inline">\(\left.\ell(\boldsymbol{\omega})=\frac{1}{M H W}
+\sum_{r, p, q} \| z_{r}(p, q)-y_{r}(p, q)\right)
+\|_{2}^{2}\)</span></li>
+</ul></li>
+</ul></li>
+<li>在不知道量化编码 <span class="math inline">\(\boldsymbol{y}\)</span>
+的分类分布的情况下，作者使用离散化的MoG分布，其参数由所提出的CCNs预测，把
+<span class="math inline">\(C\)</span> 分量的可微MoG分布写成
 <ul>
-<li>$y_{r}(p, q) \sim \sum_{i=0}^{C-1} \pi_{i} \mathcal{N}\left(y_{r}(p, q) ; \mu_{i}, \sigma_{i}^{2}\right)$</li>
-<li>其中，$\pi,\mu_{i}, \sigma_{i}^{2}$ 表示第i个分量的混合权重、平均值和方差</li>
-<li>然后，将 $y_r(p,q)$ 的概率计算为编码所在的量化区间 $\Delta$ 的积分</li>
-<li>$P\left(y_{r}(p, q)\right)=\int_{\Delta} \sum_{i=0}^{C-1} \pi_{i} \mathcal{N}\left(\xi ; \mu_{i}, \sigma_{i}^{2}\right) d \xi$</li>
-</ul>
-</li>
+<li><span class="math inline">\(y_{r}(p, q) \sim \sum_{i=0}^{C-1}
+\pi_{i} \mathcal{N}\left(y_{r}(p, q) ; \mu_{i},
+\sigma_{i}^{2}\right)\)</span></li>
+<li>其中，<span class="math inline">\(\pi,\mu_{i},
+\sigma_{i}^{2}\)</span> 表示第i个分量的混合权重、平均值和方差</li>
+<li>然后，将 <span class="math inline">\(y_r(p,q)\)</span>
+的概率计算为编码所在的量化区间 <span class="math inline">\(\Delta\)</span> 的积分</li>
+<li><span class="math inline">\(P\left(y_{r}(p, q)\right)=\int_{\Delta}
+\sum_{i=0}^{C-1} \pi_{i} \mathcal{N}\left(\xi ; \mu_{i},
+\sigma_{i}^{2}\right) d \xi\)</span></li>
+</ul></li>
 <li>提出的有损图像压缩熵模型，该模型由三个相同结构的ccn组成，如上图（右）所示
 <ul>
 <li>每个CCN由9个mask卷积组成，其中有3个剩余连接用于生成C特征块，与MoG中的组件数量相匹配</li>
 <li>分别输出混合权值、平均值和方差来建立离散化的MoG分布</li>
-</ul>
-</li>
+</ul></li>
 <li>与无损图像压缩类似，将优化后的熵模型与算术编码相结合，进行实验比较</li>
 </ul>
-<h3 id="Experiments">Experiments</h3>
+<h3 id="experiments">Experiments</h3>
 <ul>
-<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/9.png" srcset="/img/loading.gif" lazyload alt>
+<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/9.png" srcset="/img/loading.gif" lazyload>
 <ul>
 <li>所提出的CCN与性能最佳的MCN模型相匹配，这表明在所提出的zigzag编码顺序和码分技术下，CCN将最重要的代码作为当前处理的代码的部分上下文</li>
-</ul>
-</li>
-<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/12.png" srcset="/img/loading.gif" lazyload alt>
+</ul></li>
+<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/12.png" srcset="/img/loading.gif" lazyload>
 <ul>
 <li>与其他神经网络相比，在压缩比率上比较一致，但是解码速度上要快上将近100倍</li>
-</ul>
-</li>
-<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/10.png" srcset="/img/loading.gif" lazyload alt>
+</ul></li>
+<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/10.png" srcset="/img/loading.gif" lazyload>
 <ul>
-<li>CCN与其他无损图像压缩标准的比较；消融实验，CCN(N,S)表示有N个特征块，S × S滤波器大小的CCN</li>
-</ul>
-</li>
-<li>在编码方面， $CCN_{light}$ 的速度最快，其次是多尺度PixelCNN和SIN(性能最好的变量)</li>
-<li>尽管编码时间相似，但它们的解码复杂性却截然不同。多尺度PixelCNN是最快的解码器，其次是SIN。由于解码的顺序性质，MCN是最慢的。CCN在保持几乎相同的比特率的情况下，通过所提出的码分割技术实现了对MCN的显著改进。此外， $CCN_{light}$ 加速了CCN  30倍以上，在模型效率和模型精度之间取得了很好的平衡</li>
+<li>CCN与其他无损图像压缩标准的比较；消融实验，CCN(N,S)表示有N个特征块，S
+× S滤波器大小的CCN</li>
+</ul></li>
+<li>在编码方面， <span class="math inline">\(CCN_{light}\)</span>
+的速度最快，其次是多尺度PixelCNN和SIN(性能最好的变量)</li>
+<li>尽管编码时间相似，但它们的解码复杂性却截然不同。多尺度PixelCNN是最快的解码器，其次是SIN。由于解码的顺序性质，MCN是最慢的。CCN在保持几乎相同的比特率的情况下，通过所提出的码分割技术实现了对MCN的显著改进。此外，
+<span class="math inline">\(CCN_{light}\)</span> 加速了CCN
+30倍以上，在模型效率和模型精度之间取得了很好的平衡</li>
 <li>除CCNlight外，所有竞争模型的复杂度都相当</li>
-<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/11.png" srcset="/img/loading.gif" lazyload alt>
+<li><img src="/2021/01/25/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x10/11.png" srcset="/img/loading.gif" lazyload>
 <ul>
 <li>可以看到在更高的比特率下对图像进行编码和解码需要更多的时间。这是因为在更高的比特率下使用更大的M来保存更有知觉意义的信息，对应更多的卷积运算和更长的处理时间</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="😝😜😋-2">😝😜😋</h3>
+<h3 id="section-1">😝😜😋</h3>
 <p>天哪，我终于看完了，太不容易了，看的我头疼，这篇论文莫名地感觉技术含量贼高，，，可能也是因为是最新发表的论文所以里面涉及的一些内容都是蛮难的</p>
 <p>感觉作者也是从数学角度上对图像压缩做了一次分析，然后用了好多公式做了个推理，虽然感觉就是说明了mask卷积的用法，但公式部分的推导过程和理解还是蛮费脑子的。在说明完这一部分之后，作者对之前的mask卷积进行了改进，在解码过程中忽略掉当前行的信息，从而实现并行操作，不过会丢失掉很重要的信息，所以作者更改了编码顺序，从而保证信息的传递</p>
 <p>再后面，就是作者提出了对于无损/有损压缩的网络结构，其实都还是蛮常规的网络结构，没有太多花里胡哨的东西，然后将训练得到的CCN网络用来进行图像压缩</p>

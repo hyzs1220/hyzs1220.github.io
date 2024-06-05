@@ -280,7 +280,8 @@
 <span id="more"></span>
 <p>先列一下自己的大体思路：</p>
 <ul>
-<li>收集一定数量的素材图片，用来进行图片替换，然后确定一张被替换的图片Image。对于素材图片，首先将其进行缩放处理，例如，我们可以将其缩放成7 * 7的图像块，然后我们提取其RGB值，求得该图像块的平均值。</li>
+<li>收集一定数量的素材图片，用来进行图片替换，然后确定一张被替换的图片Image。对于素材图片，首先将其进行缩放处理，例如，我们可以将其缩放成7
+* 7的图像块，然后我们提取其RGB值，求得该图像块的平均值。</li>
 <li>然后我们对被替换的图片Image进行操作，将其进行分割操作，划分为一个个7*7的小块，然后对划分出来的每一个小区域同样进行RGB平均值的计算，然后拿来和素材像素块进行比较，找到一个误差值（在代码中我是使用的计算方差的方式）较小（颜色更为接近）的像素图像块，然后将其替换。</li>
 <li>重复上述操作，知道对整张图片操作完，然后我们将图像保存下来即可。</li>
 </ul>
@@ -293,8 +294,14 @@
 <li>还有一个主要问题就是替换素材图片的选择，在代码实现中，我是采用了RGB方差最小的方式来进行素材图片的选择了，但最初发现效果并不是很好，后来想到可以通过增加素材图片数量的方式来优化效果，下图中的效果是拥有18个素材图片的结果，感觉已经比较完善了，相信如果素材图片更多或者有更好的选择方式，那么最终展现的效果也一定会好很多。</li>
 </ul>
 <p>实现效果如下：</p>
-<p><img src="/2019/03/26/%E5%9B%BE%E7%89%87%E5%83%8F%E7%B4%A0%E5%8C%96%E5%A4%84%E7%90%86/test.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p><img src="/2019/03/26/%E5%9B%BE%E7%89%87%E5%83%8F%E7%B4%A0%E5%8C%96%E5%A4%84%E7%90%86/result.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<figure>
+<img src="/2019/03/26/%E5%9B%BE%E7%89%87%E5%83%8F%E7%B4%A0%E5%8C%96%E5%A4%84%E7%90%86/test.jpg" srcset="/img/loading.gif" lazyload alt="img">
+<figcaption aria-hidden="true">img</figcaption>
+</figure>
+<figure>
+<img src="/2019/03/26/%E5%9B%BE%E7%89%87%E5%83%8F%E7%B4%A0%E5%8C%96%E5%A4%84%E7%90%86/result.jpg" srcset="/img/loading.gif" lazyload alt="img">
+<figcaption aria-hidden="true">img</figcaption>
+</figure>
 
                 
               </div>

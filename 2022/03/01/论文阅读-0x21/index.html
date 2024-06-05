@@ -16,12 +16,12 @@
   <meta name="author" content="hyzs1220">
   <meta name="keywords" content="">
   
-    <meta name="description" content="论文阅读笔记： 《Not all patches are what you need: Expediting vision transformers via token reorganizations》，[code] ，ICLR2022 《HerosNet: Hyperspectral Explicable Reconstruction and Optimal Sampling Deep Netw">
+    <meta name="description" content="论文阅读笔记： 《Not all patches are what you need: Expediting vision transformers via token reorganizations》，[code] ，ICLR2022 《HerosNet: Hyperspectral Explicable Reconstruction and Optimal Sampling Deep">
 <meta property="og:type" content="article">
 <meta property="og:title" content="论文阅读-0x21">
 <meta property="og:url" content="http://example.com/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/index.html">
 <meta property="og:site_name" content="hyzsのblog">
-<meta property="og:description" content="论文阅读笔记： 《Not all patches are what you need: Expediting vision transformers via token reorganizations》，[code] ，ICLR2022 《HerosNet: Hyperspectral Explicable Reconstruction and Optimal Sampling Deep Netw">
+<meta property="og:description" content="论文阅读笔记： 《Not all patches are what you need: Expediting vision transformers via token reorganizations》，[code] ，ICLR2022 《HerosNet: Hyperspectral Explicable Reconstruction and Optimal Sampling Deep">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646114994442.png">
 <meta property="og:image" content="http://example.com/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646123079425.png">
@@ -254,7 +254,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.7k 字
+          6.8k 字
         
       </span>
     
@@ -308,345 +308,457 @@
               <div class="markdown-body">
                 
                 <p>论文阅读笔记：</p>
-<p>《Not all patches are what you need: Expediting vision transformers via token reorganizations》，<a target="_blank" rel="noopener" href="https://github.com/youweiliang/evit">[code]</a> ，ICLR2022</p>
-<p>《HerosNet: Hyperspectral Explicable Reconstruction and Optimal Sampling Deep Network for Snapshot Compressive Imaging》，<a target="_blank" rel="noopener" href="https://github.com/jianzhangcs/HerosNet">[code]</a> , CVPR 2022</p>
+<p>《Not all patches are what you need: Expediting vision transformers
+via token reorganizations》，<a target="_blank" rel="noopener" href="https://github.com/youweiliang/evit">[code]</a> ，ICLR2022</p>
+<p>《HerosNet: Hyperspectral Explicable Reconstruction and Optimal
+Sampling Deep Network for Snapshot Compressive Imaging》，<a target="_blank" rel="noopener" href="https://github.com/jianzhangcs/HerosNet">[code]</a> , CVPR
+2022</p>
 <span id="more"></span>
-<h2 id="Not-all-patches-are-what-you-need-Expediting-vision-transformers-via-token-reorganizations">Not all patches are what you need: Expediting vision transformers via token reorganizations</h2>
-<h3 id="Abstract">Abstract</h3>
+<h2 id="not-all-patches-are-what-you-need-expediting-vision-transformers-via-token-reorganizations">Not
+all patches are what you need: Expediting vision transformers via token
+reorganizations</h2>
+<h3 id="abstract">Abstract</h3>
 <ul>
-<li>之前的VIT（vision transfomer）将图像块作为token，来建立多头自注意力（multi-head self-attention，MHSA）
+<li>之前的VIT（vision
+transfomer）将图像块作为token，来建立多头自注意力（multi-head
+self-attention，MHSA）
 <ul>
-<li>但随着VIT的发展，其计算量也随着不断增长。与传统CNN相比，VIT的 global self-attention between image tokens and long-range dependency 使得模型收敛较慢</li>
+<li>但随着VIT的发展，其计算量也随着不断增长。与传统CNN相比，VIT的 global
+self-attention between image tokens and long-range dependency
+使得模型收敛较慢</li>
 <li>不过却很少有人关注VIT加速，因为和CNN的差异，CNN加速的一些方法（蒸馏和修建等操作）无法应用于VIT</li>
-</ul>
-</li>
+</ul></li>
 <li>但本文作者认为这种方式会包含冗余计算，因为其包含了语义上无意义或分散注意力的图像背景的token</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646114994442.png" srcset="/img/loading.gif" lazyload alt="1646114994442"></li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646114994442.png" srcset="/img/loading.gif" lazyload alt="1646114994442">
+<figcaption aria-hidden="true">1646114994442</figcaption>
+</figure></li>
 <li>因此作者希望在前反馈阶段中，重新对这些token进行组织
 <ul>
-<li>对于每个前向推理，我们在MHSA和FFD（feed-forward network）之间标记图像块，这些操作是通过相应的类标记注意力引导实现的</li>
+<li>对于每个前向推理，我们在MHSA和FFD（feed-forward
+network）之间标记图像块，这些操作是通过相应的类标记注意力引导实现的</li>
 <li>然后我们<strong>保留关注的图像tokens和融合不关注的图像tokens</strong>来重组图像tokens，以加快后续MHSA和FFN计算</li>
 <li>这样的话就允许梯度反向传播通过不关注的tokens，从而更好地识别关注tokens。通过这种方式，随着网络的深入，逐渐减少图像tokens的数量，以降低计算成本</li>
 <li>此外，在不引入额外参数的情况下，可以通过识别过程灵活控制ViT主干的容量</li>
-</ul>
-</li>
+</ul></li>
 <li>作者在本文中的两个改进角度：
 <ul>
 <li>在相同数量的输入图像token情况下，该方法减少了MHSA和FFD计算量，实现高效推理
 <ul>
 <li>ImageNet分类：在牺牲DeiT-S模型0.3%精度的基础上，将速度提高了50%</li>
-</ul>
-</li>
+</ul></li>
 <li>通过保持相同的计算成本，该方法可以容许更多的token输入，以提高识别精度，适用于高分辨率图像
 <ul>
 <li>ImageNet分类：保留和DeiT-S模型计算成本相同的基础上，提高了1%的精度</li>
-<li>此外在 multiply-accumulate computation (MAC) 指标下，计算成本降低36%的同时，DeiT-S精度从79.8% 提高到 80.7%</li>
+<li>此外在 multiply-accumulate computation (MAC)
+指标下，计算成本降低36%的同时，DeiT-S精度从79.8% 提高到 80.7%</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="Method">Method</h3>
-<h4 id="VIT">VIT</h4>
+<h3 id="method">Method</h3>
+<h4 id="vit">VIT</h4>
 <p>VIT相关的具体细节可以参考链接内容，感觉写的都很详细：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37541097/article/details/118242600">link_1</a>，<a target="_blank" rel="noopener" href="https://python.iitter.com/other/121733.html">link_2</a></p>
 <ul>
 <li>VIT通过将输入图像分割成patch并将每个patch投影到token来执行标记化</li>
-<li>此外还有一个额外的类标记 [CLS] 被添加到图像tokens集合中，并负责聚合全局图像信息和最终分类</li>
-<li>所有的tokens都通过 learnable vector (positional encoding) 进行添加，并输入到transfomer中</li>
+<li>此外还有一个额外的类标记 [CLS]
+被添加到图像tokens集合中，并负责聚合全局图像信息和最终分类</li>
+<li>所有的tokens都通过 learnable vector (positional encoding)
+进行添加，并输入到transfomer中</li>
 <li>在MHSA中，token进一步被映射成三个矩阵QKV，进行注意力操作
 <ul>
-<li>$\operatorname{Attention}(\boldsymbol{Q}, \boldsymbol{K}, \boldsymbol{V})=\operatorname{Softmax}\left(\frac{\boldsymbol{Q} \boldsymbol{K}^{\top}}{\sqrt{d}}\right) \boldsymbol{V}$
+<li><span class="math inline">\(\operatorname{Attention}(\boldsymbol{Q},
+\boldsymbol{K},
+\boldsymbol{V})=\operatorname{Softmax}\left(\frac{\boldsymbol{Q}
+\boldsymbol{K}^{\top}}{\sqrt{d}}\right) \boldsymbol{V}\)</span>
 <ul>
-<li>其中 d 是Q向量的长度， $\operatorname{Softmax}\left(\boldsymbol{Q K}^{\top} / \sqrt{d}\right)$ 是注意力矩阵</li>
-<li>注意力矩阵的第一行 [CLS] 表示对所有 tokens 的注意力，用于确定每个 token 的注意力</li>
-</ul>
-</li>
-</ul>
-</li>
+<li>其中 d 是Q向量的长度， <span class="math inline">\(\operatorname{Softmax}\left(\boldsymbol{Q
+K}^{\top} / \sqrt{d}\right)\)</span> 是注意力矩阵</li>
+<li>注意力矩阵的第一行 [CLS] 表示对所有 tokens 的注意力，用于确定每个
+token 的注意力</li>
+</ul></li>
+</ul></li>
 <li>MHSA的输出进入到FFN
 <ul>
 <li>FFN由两个全连接层组成，中间有一个GELU激活层</li>
-</ul>
-</li>
+</ul></li>
 <li>在最终的Transformer encoder，提取 [CLS] 并用于对象类别预测</li>
 </ul>
-<h4 id="Attention-token-identification">Attention token identification</h4>
+<h4 id="attention-token-identification">Attention token
+identification</h4>
 <ul>
-<li>在VIT中，最终是通过 [CLS] 来进行分类，和其他tokens的交互通过encoder的注意力机制完成
+<li>在VIT中，最终是通过 [CLS]
+来进行分类，和其他tokens的交互通过encoder的注意力机制完成
 <ul>
-<li>$\boldsymbol{x}<em>{\text {class }}=\operatorname{Softmax}\left(\frac{\boldsymbol{q}</em>{\mathrm{class}} \cdot \boldsymbol{K}^{\top}}{\sqrt{d}}\right) \boldsymbol{V}=\boldsymbol{a} \cdot \boldsymbol{V}$
+<li><span class="math inline">\(\boldsymbol{x}_{\text {class
+}}=\operatorname{Softmax}\left(\frac{\boldsymbol{q}_{\mathrm{class}}
+\cdot \boldsymbol{K}^{\top}}{\sqrt{d}}\right)
+\boldsymbol{V}=\boldsymbol{a} \cdot \boldsymbol{V}\)</span>
 <ul>
-<li>这里的 $q_{class}$ 表示 [CLS]</li>
-</ul>
-</li>
-<li>因此 [CLS] token 的输出 $\boldsymbol{x}<em>{\text {class }}$ 是 $\boldsymbol{V}=\left[\boldsymbol{v}</em>{1}, \boldsymbol{v}<em>{2}, \ldots, \boldsymbol{v}</em>{n}\right]^{\top}$  向量的线性组合</li>
-<li>组合系数 $\boldsymbol{a}$ 是 [CLS] 对所有 tokens 的注意力值</li>
-</ul>
-</li>
-<li>由于 $\boldsymbol{v}_{i}$  表示第 $i$ 个token， 因此  $\boldsymbol{a}<em>i$  决定了该 token 会有多少信息通过线性组合的方式融合到 [CLS] 的输出  $\boldsymbol{x}</em>{\text {class }}$ 中， 因此很容易注意到可以<strong>用该注意力值来表示 token 的重要性</strong></li>
-<li>此外还有相关工作表明，ViTs中的 [CLS] 更关注特定于类的标记（具有更大的 attention 值）</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646123079425.png" srcset="/img/loading.gif" lazyload alt="欧泽"></li>
-<li>因此作者使用 [CLS] 来识别 tokens 的重要程度，基于这些参数来移除注意力值最小的 token，但从上表可以看出，这会严重影响分类精度，所以作者在训练阶段加入了图像 token 重组</li>
-<li>在MHSA中，因为 multi-head 会并行计算SA，所以也就存在多个 [CLS] 注意力向量  $\boldsymbol{a}^h$
+<li>这里的 <span class="math inline">\(q_{class}\)</span> 表示
+[CLS]</li>
+</ul></li>
+<li>因此 [CLS] token 的输出 <span class="math inline">\(\boldsymbol{x}_{\text {class }}\)</span> 是 <span class="math inline">\(\boldsymbol{V}=\left[\boldsymbol{v}_{1},
+\boldsymbol{v}_{2}, \ldots, \boldsymbol{v}_{n}\right]^{\top}\)</span>
+向量的线性组合</li>
+<li>组合系数 <span class="math inline">\(\boldsymbol{a}\)</span> 是
+[CLS] 对所有 tokens 的注意力值</li>
+</ul></li>
+<li>由于 <span class="math inline">\(\boldsymbol{v}_{i}\)</span> 表示第
+<span class="math inline">\(i\)</span> 个token， 因此 <span class="math inline">\(\boldsymbol{a}_i\)</span> 决定了该 token
+会有多少信息通过线性组合的方式融合到 [CLS] 的输出 <span class="math inline">\(\boldsymbol{x}_{\text {class }}\)</span> 中，
+因此很容易注意到可以<strong>用该注意力值来表示 token
+的重要性</strong></li>
+<li>此外还有相关工作表明，ViTs中的 [CLS]
+更关注特定于类的标记（具有更大的 attention 值）</li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646123079425.png" srcset="/img/loading.gif" lazyload alt="欧泽">
+<figcaption aria-hidden="true">欧泽</figcaption>
+</figure></li>
+<li>因此作者使用 [CLS] 来识别 tokens
+的重要程度，基于这些参数来移除注意力值最小的
+token，但从上表可以看出，这会严重影响分类精度，所以作者在训练阶段加入了图像
+token 重组</li>
+<li>在MHSA中，因为 multi-head 会并行计算SA，所以也就存在多个 [CLS]
+注意力向量 <span class="math inline">\(\boldsymbol{a}^h\)</span>
 <ul>
-<li>所以在这里作者计算了所有 head 的平均注意力值 $\overline{\boldsymbol{a}}=\sum_{h=1}^{H} \boldsymbol{a}^{(h)} / H$</li>
-<li>如下图所示，作者保留了 $k$ 个注意力值 $\overline{\boldsymbol{a}} $ 最大的tokens（ $top-k$ ），将其成为注意力tokens，同时将其他tokens融合成为一个新的 token</li>
+<li>所以在这里作者计算了所有 head 的平均注意力值 <span class="math inline">\(\overline{\boldsymbol{a}}=\sum_{h=1}^{H}
+\boldsymbol{a}^{(h)} / H\)</span></li>
+<li>如下图所示，作者保留了 <span class="math inline">\(k\)</span>
+个注意力值 $ $ 最大的tokens（ <span class="math inline">\(top-k\)</span>
+），将其成为注意力tokens，同时将其他tokens融合成为一个新的 token</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646124753547.png" srcset="/img/loading.gif" lazyload alt="1646124753547"></p>
-<h4 id="Inattentive-token-fusion">Inattentive token fusion</h4>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646124753547.png" srcset="/img/loading.gif" lazyload alt="1646124753547">
+<figcaption aria-hidden="true">1646124753547</figcaption>
+</figure>
+<h4 id="inattentive-token-fusion">Inattentive token fusion</h4>
 <ul>
 <li>虽然图像背景tokens包含较少的信息，可以在不显著影响VIT性能的情况下丢弃，但作者认为它们仍然是有助于预测结果</li>
 <li>另一方面，作者是选择保留了固定数量的tokens，所以当图像中的对象较大时，移除与之相关的部分，会对性能造成负面影响</li>
-<li>综上，作者将不重要的tokens $\mathcal{N}$ 进行融合，以补充所关注的tokens</li>
+<li>综上，作者将不重要的tokens <span class="math inline">\(\mathcal{N}\)</span>
+进行融合，以补充所关注的tokens</li>
 <li>具体操作就是加权平均运算
 <ul>
-<li>$x_{\text {fused }}=\sum_{i \in \mathcal{N}} a_{i} x_{i}$</li>
+<li><span class="math inline">\(x_{\text {fused }}=\sum_{i \in
+\mathcal{N}} a_{i} x_{i}\)</span></li>
 <li>融合之后的token将继续向后传播</li>
 <li>与VIT的批量运算比，这种计算成本可以忽略不计</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="Code">Code</h3>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646208998163.png" srcset="/img/loading.gif" lazyload alt="1646208998163"></p>
-<h3 id="Analysis-Experiments">Analysis &amp; Experiments</h3>
-<h4 id="Training-with-higher-resolution-images">Training with higher resolution images</h4>
+<h3 id="code">Code</h3>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646208998163.png" srcset="/img/loading.gif" lazyload alt="1646208998163">
+<figcaption aria-hidden="true">1646208998163</figcaption>
+</figure>
+<h3 id="analysis-experiments">Analysis &amp; Experiments</h3>
+<h4 id="training-with-higher-resolution-images">Training with higher
+resolution images</h4>
 <ul>
 <li>这里因为对tokens进行了融合减少，所以在维持相同计算量的情况下，允许更多地tokens输入</li>
 <li>因此该方法可以输入更高分辨率图像</li>
-<li>而对于ImageNet，作者通过差值方法将标准输入图像 224×224 调整为 256×256</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646201662471.png" srcset="/img/loading.gif" lazyload alt="1646201662471">
+<li>而对于ImageNet，作者通过差值方法将标准输入图像 224×224 调整为
+256×256</li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646201662471.png" srcset="/img/loading.gif" lazyload alt="1646201662471">
+<figcaption aria-hidden="true">1646201662471</figcaption>
+</figure>
 <ul>
 <li>multiply-accumulate computations(MACs) —— 乘加累积操作数
 <ul>
 <li>1MACs包含一个乘法操作与一个加法操作，大约包含2FLOPs，通常MACs与FLOPs存在一个2倍的关系</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<h4 id="Visualization">Visualization</h4>
+<h4 id="visualization">Visualization</h4>
 <ul>
-<li>本文作者提出的 EViT 通过识别 attention tokens 和丢弃 inattention tokens 的冗余计算来加速VIT</li>
+<li>本文作者提出的 EViT 通过识别 attention tokens 和丢弃 inattention
+tokens 的冗余计算来加速VIT</li>
 <li>因此为了进一步研究 EViT 的可解释性，作者进行了可视化实验</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646201800669.png" srcset="/img/loading.gif" lazyload alt="1646201800669"></li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646201800669.png" srcset="/img/loading.gif" lazyload alt="1646201800669">
+<figcaption aria-hidden="true">1646201800669</figcaption>
+</figure></li>
 </ul>
-<h4 id="Implementation-details">Implementation details</h4>
+<h4 id="implementation-details">Implementation details</h4>
 <ul>
-<li>本文的 token identification module 被添加到 DeiT-S 和 DeiT-B 的第4、7、10层中，以及 LV -ViT-S 的第5、9、13层</li>
-<li>另外作者采用了 warm up 的策略来进行 tokens 的标记。让 attention tokens 的保留率由1逐渐降低到目标值</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646202716459.png" srcset="/img/loading.gif" lazyload alt="1646202716459"></li>
+<li>本文的 token identification module 被添加到 DeiT-S 和 DeiT-B
+的第4、7、10层中，以及 LV -ViT-S 的第5、9、13层</li>
+<li>另外作者采用了 warm up 的策略来进行 tokens 的标记。让 attention
+tokens 的保留率由1逐渐降低到目标值</li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646202716459.png" srcset="/img/loading.gif" lazyload alt="1646202716459">
+<figcaption aria-hidden="true">1646202716459</figcaption>
+</figure></li>
 </ul>
-<h4 id="Inattentive-token-fusion-2">Inattentive token fusion</h4>
+<h4 id="inattentive-token-fusion-1">Inattentive token fusion</h4>
 <ul>
-<li>为了缓解 tokens 移除过程中的信息丢失，作者提出了 inattention tokens 融合，根据 [CLS] 的注意力值来进行融合</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646202878260.png" srcset="/img/loading.gif" lazyload alt="1646202878260">
+<li>为了缓解 tokens 移除过程中的信息丢失，作者提出了 inattention tokens
+融合，根据 [CLS] 的注意力值来进行融合</li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646202878260.png" srcset="/img/loading.gif" lazyload alt="1646202878260">
+<figcaption aria-hidden="true">1646202878260</figcaption>
+</figure>
 <ul>
 <li>虽然性能提升上不是很大，但这种融合方法基本没有计算量</li>
-<li>此外作者认为，这也表明 attention token identification 的有效性，因为大部分关注的tokens被保留下来</li>
+<li>此外作者认为，这也表明 attention token identification
+的有效性，因为大部分关注的tokens被保留下来</li>
+</ul></li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646203107405.png" srcset="/img/loading.gif" lazyload alt="1646203107405">
+<figcaption aria-hidden="true">1646203107405</figcaption>
+</figure></li>
 </ul>
-</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646203107405.png" srcset="/img/loading.gif" lazyload alt="1646203107405"></li>
-</ul>
-<h4 id="Epochs-of-training">Epochs of training</h4>
+<h4 id="epochs-of-training">Epochs of training</h4>
 <ul>
 <li>在有效的计算机制中，训练时间越长，越有益于VIT，如上面表四</li>
 </ul>
-<h4 id="Training-Finetuning-on-higher-resolution-images">Training/Finetuning on higher resolution images</h4>
+<h4 id="trainingfinetuning-on-higher-resolution-images">Training/Finetuning
+on higher resolution images</h4>
 <ul>
-<li>通过融合 inattention tokens，可以在相同计算成本下输入更多tokens，如上面表五</li>
+<li>通过融合 inattention
+tokens，可以在相同计算成本下输入更多tokens，如上面表五</li>
 </ul>
-<h4 id="Training-with-an-oracle-ViT">Training with an oracle ViT</h4>
+<h4 id="training-with-an-oracle-vit">Training with an oracle ViT</h4>
 <ul>
-<li>本文中，token 选择的标准是 [CLS] 的注意力值，因此提前学习到每个 tokens 对预测任务的重要性会十分有帮助</li>
+<li>本文中，token 选择的标准是 [CLS] 的注意力值，因此提前学习到每个
+tokens 对预测任务的重要性会十分有帮助</li>
 <li>作者引入了 oracle VIT 来指导 [CLS] 完成tokens的选择</li>
-<li>使用经过充分训练的 DeiT-S/B 作为 oracle ，并使用 oracle ViT 的参数初始化 EViT-DeiT-S/B</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646205627366.png" srcset="/img/loading.gif" lazyload alt="1646205627366"></li>
+<li>使用经过充分训练的 DeiT-S/B 作为 oracle ，并使用 oracle ViT
+的参数初始化 EViT-DeiT-S/B</li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646205627366.png" srcset="/img/loading.gif" lazyload alt="1646205627366">
+<figcaption aria-hidden="true">1646205627366</figcaption>
+</figure></li>
 </ul>
-<h4 id="Comparison-with-DynamicViT">Comparison with DynamicViT</h4>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646205832834.png" srcset="/img/loading.gif" lazyload alt="1646205832834"></p>
-<h4 id="Comparison-with-other-Vision-Transformers">Comparison with other Vision Transformers</h4>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646208727006.png" srcset="/img/loading.gif" lazyload alt="1646208727006"></p>
-<h4 id="Using-tokens-to-tokens-attentive-scores-for-inattentive-tokens-identification">Using tokens-to-tokens attentive scores for inattentive tokens identification</h4>
+<h4 id="comparison-with-dynamicvit">Comparison with DynamicViT</h4>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646205832834.png" srcset="/img/loading.gif" lazyload alt="1646205832834">
+<figcaption aria-hidden="true">1646205832834</figcaption>
+</figure>
+<h4 id="comparison-with-other-vision-transformers">Comparison with other
+Vision Transformers</h4>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646208727006.png" srcset="/img/loading.gif" lazyload alt="1646208727006">
+<figcaption aria-hidden="true">1646208727006</figcaption>
+</figure>
+<h4 id="using-tokens-to-tokens-attentive-scores-for-inattentive-tokens-identification">Using
+tokens-to-tokens attentive scores for inattentive tokens
+identification</h4>
 <ul>
-<li>作者使用 [CLS] 作为注意力来区别 tokens 的动机是 因为VIT的最终预测就是通过 [CLS] 来决定的</li>
-<li>但同时作者也发现可以用 tokens-to-tokens 注意力来区别 tokens （也就是每个 tokens 之间的关联程度QK），其注意力计算为所有 tokens 和 tokens 之间的注意力均值
+<li>作者使用 [CLS] 作为注意力来区别 tokens 的动机是
+因为VIT的最终预测就是通过 [CLS] 来决定的</li>
+<li>但同时作者也发现可以用 tokens-to-tokens 注意力来区别 tokens
+（也就是每个 tokens 之间的关联程度QK），其注意力计算为所有 tokens 和
+tokens 之间的注意力均值
 <ul>
-<li>$\boldsymbol{A}=\operatorname{Softmax}\left(\frac{\boldsymbol{Q} \boldsymbol{K}^{\top}}{\sqrt{d}}\right)$</li>
-<li>注意力分数计算为 $\boldsymbol{a}=\frac{1}{n} \sum_{i=1}^{n} \boldsymbol{A}_{i,:}$
+<li><span class="math inline">\(\boldsymbol{A}=\operatorname{Softmax}\left(\frac{\boldsymbol{Q}
+\boldsymbol{K}^{\top}}{\sqrt{d}}\right)\)</span></li>
+<li>注意力分数计算为 <span class="math inline">\(\boldsymbol{a}=\frac{1}{n} \sum_{i=1}^{n}
+\boldsymbol{A}_{i,:}\)</span>
 <ul>
-<li>其中 n 表示 token 数目，$\boldsymbol{A}_{i}$ 是 attention map 的第 $i$ 行</li>
-<li>对于多头注意力 $\overline{\boldsymbol{a}}=\sum_{h=1}^{H} \boldsymbol{a}^{(h)} / H$</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>因此可以看出来，在  tokens-to-tokens 策略中，每个 token 块都参与到了投票中；而在 [CLS] 中，只有 [CLS] token 参与到了投票中</li>
+<li>其中 n 表示 token 数目，<span class="math inline">\(\boldsymbol{A}_{i}\)</span> 是 attention map 的第
+<span class="math inline">\(i\)</span> 行</li>
+<li>对于多头注意力 <span class="math inline">\(\overline{\boldsymbol{a}}=\sum_{h=1}^{H}
+\boldsymbol{a}^{(h)} / H\)</span></li>
+</ul></li>
+</ul></li>
+<li>因此可以看出来，在 tokens-to-tokens 策略中，每个 token
+块都参与到了投票中；而在 [CLS] 中，只有 [CLS] token 参与到了投票中</li>
 <li>实验结果标明，两者性能差不多，但 tokens-to-tokens 策略效率较低</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646226160508.png" srcset="/img/loading.gif" lazyload alt="1646226160508"></li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646226160508.png" srcset="/img/loading.gif" lazyload alt="1646226160508">
+<figcaption aria-hidden="true">1646226160508</figcaption>
+</figure></li>
 </ul>
-<h4 id="Training-time-of-EViT">Training time of EViT</h4>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646226237984.png" srcset="/img/loading.gif" lazyload alt="1646226237984"></p>
-<h4 id="Finetuning-of-EViT-on-high-resolution-images">Finetuning of EViT on high resolution images</h4>
+<h4 id="training-time-of-evit">Training time of EViT</h4>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646226237984.png" srcset="/img/loading.gif" lazyload alt="1646226237984">
+<figcaption aria-hidden="true">1646226237984</figcaption>
+</figure>
+<h4 id="finetuning-of-evit-on-high-resolution-images">Finetuning of EViT
+on high resolution images</h4>
 <ul>
 <li>为了将EViT-DeiT-S从低分辨率图像微调到高分辨率图像，作者在训练低分辨率图像时进行了差值操作</li>
-<li>但作者发现，直接在高分辨率的图像上直接训练似乎更好，因为它需要更少的训练时间（没有执行 Fine-tune ），并且通常比 Fine-tune 获得更高的精度</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646226399364.png" srcset="/img/loading.gif" lazyload alt="1646226399364"></li>
+<li>但作者发现，直接在高分辨率的图像上直接训练似乎更好，因为它需要更少的训练时间（没有执行
+Fine-tune ），并且通常比 Fine-tune 获得更高的精度</li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646226399364.png" srcset="/img/loading.gif" lazyload alt="1646226399364">
+<figcaption aria-hidden="true">1646226399364</figcaption>
+</figure></li>
 </ul>
-<h4 id="Token-reorganization-locations">Token reorganization locations</h4>
+<h4 id="token-reorganization-locations">Token reorganization
+locations</h4>
 <ul>
-<li>在这里作者觉得 tokens 的保留率和重组位置不同可能会达到相同的计算效率，结果如下图
+<li>在这里作者觉得 tokens
+的保留率和重组位置不同可能会达到相同的计算效率，结果如下图
 <ul>
 <li>将重组 token 移动到浅层，并增加保留率</li>
 <li>将重组 token 移动到深层，并减少保留率，以保持计算成本近似不变</li>
-</ul>
-</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646235085279.png" srcset="/img/loading.gif" lazyload alt="1646235085279"></li>
+</ul></li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646235085279.png" srcset="/img/loading.gif" lazyload alt="1646235085279">
+<figcaption aria-hidden="true">1646235085279</figcaption>
+</figure></li>
 <li>实验揭示了以下观点：
 <ul>
 <li>将重组模块移动到较浅的层会降低精度
 <ul>
-<li>当重组 token 置于第三层之前，即使计算成本相同，识别精度也会显著下降</li>
+<li>当重组 token
+置于第三层之前，即使计算成本相同，识别精度也会显著下降</li>
 <li>这表明 VIT 在前面的阶段无法识别重要 tokens</li>
 <li>既在浅层中，注意力图对于 tokens 的移除融合并不是可靠的</li>
-</ul>
-</li>
+</ul></li>
 <li>将重组模块放置在不同的更深层次上，对准确性的影响微乎其微
 <ul>
 <li>这表明，只要重组模块位置不在浅层，EViT 就具有稳定的性能</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li>在本文中，作者采用了一种简单的策略来确定重组模块的位置
 <ul>
 <li>让重组模块的位置均匀分割 ViT</li>
 <li>保留率则都设置为相同的值</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h4 id="Adopting-the-DINO-attention-map-for-inattentive-token-identification">Adopting the DINO attention map for inattentive token identification</h4>
+<h4 id="adopting-the-dino-attention-map-for-inattentive-token-identification">Adopting
+the DINO attention map for inattentive token identification</h4>
 <ul>
-<li>在 DINO 工作中，作者表明，自监督训练 ViT 产生的 [CLS] 注意力会更集中在图像中的物体部位</li>
+<li>在 DINO 工作中，作者表明，自监督训练 ViT 产生的 [CLS]
+注意力会更集中在图像中的物体部位</li>
 <li>因此作者探究了 DINO 能否可以用于 inattention tokens 的识别</li>
 <li>作者将 DINO 最后一层产生的 [CLS] 来指导 EViT 中 tokens 的选择</li>
 <li>而且这里作者直接把重组模块放在了第一层，而且保留率为0.5</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646268113321.png" srcset="/img/loading.gif" lazyload alt="1646268113321"></li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646268113321.png" srcset="/img/loading.gif" lazyload alt="1646268113321">
+<figcaption aria-hidden="true">1646268113321</figcaption>
+</figure></li>
 <li>但也因为需要使用 DINO 模型，所以也会带来额外的计算负担</li>
 </ul>
-<h4 id="The-correlation-between-the-quality-of-the-attention-masks-and-the-performance-of-EViT">The correlation between the quality of the attention masks and the performance of EViT</h4>
+<h4 id="the-correlation-between-the-quality-of-the-attention-masks-and-the-performance-of-evit">The
+correlation between the quality of the attention masks and the
+performance of EViT</h4>
 <ul>
-<li>从上面的可视化结果图中可以看出来，mask的效果非常直观有效，意味着 [CLS] 对 tokens 的注意值与图像的语义分割有很好的相关性</li>
+<li>从上面的可视化结果图中可以看出来，mask的效果非常直观有效，意味着
+[CLS] 对 tokens 的注意值与图像的语义分割有很好的相关性</li>
 <li>为此作者在 EViT 中故意使用低质量的 mask ，以查看其性能变化
 <ul>
 <li>topk：选择 [CLS] 注意力中 k 个最大的</li>
 <li>mink：与之相反，取最小的 k 个</li>
 <li>random：随机选</li>
+</ul></li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646269110667.png" srcset="/img/loading.gif" lazyload alt="1646269110667">
+<figcaption aria-hidden="true">1646269110667</figcaption>
+</figure></li>
 </ul>
-</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646269110667.png" srcset="/img/loading.gif" lazyload alt="1646269110667"></li>
-</ul>
-<h4 id="The-attention-scores-of-the-inattentive-tokens-w-r-t-the-layer-depth">The attention scores of the inattentive tokens w.r.t. the layer depth</h4>
+<h4 id="the-attention-scores-of-the-inattentive-tokens-w.r.t.-the-layer-depth">The
+attention scores of the inattentive tokens w.r.t. the layer depth</h4>
 <ul>
-<li>为了发现 inattention tokens 的注意力分数是如何演变的，作者随机抽样了几张图像，并绘制了 [CLS] 的变化</li>
-<li>使用一个预训练的 DeiT-S ，并用最小 [CLS] 来标识 tokens，并进行跟踪</li>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646269735688.png" srcset="/img/loading.gif" lazyload alt="1646269735688">
+<li>为了发现 inattention tokens
+的注意力分数是如何演变的，作者随机抽样了几张图像，并绘制了 [CLS]
+的变化</li>
+<li>使用一个预训练的 DeiT-S ，并用最小 [CLS] 来标识
+tokens，并进行跟踪</li>
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646269735688.png" srcset="/img/loading.gif" lazyload alt="1646269735688">
+<figcaption aria-hidden="true">1646269735688</figcaption>
+</figure>
 <ul>
 <li>箱子的中间一条线，是数据的中位数，代表了样本数据的平均水平</li>
 <li>箱子的上下限，分别是数据的上四分位数和下四分位数。这意味着箱子包含了50%的数据。因此，箱子的宽度在一定程度上反映了数据的波动程度</li>
 <li>在箱子的上方和下方的一条线，代表着最大最小值</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646269897134.png" srcset="/img/loading.gif" lazyload alt="1646269897134"></p>
-<h2 id="HerosNet-Hyperspectral-Explicable-Reconstruction-and-Optimal-Sampling-Deep-Network-for-Snapshot-Compressive-Imaging">HerosNet: Hyperspectral Explicable Reconstruction and Optimal Sampling Deep Network for Snapshot Compressive Imaging</h2>
-<p>文章链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2112.06238">https://arxiv.org/abs/2112.06238</a></p>
-<p>代码链接：<a target="_blank" rel="noopener" href="https://github.com/jianzhangcs/HerosNet">https://github.com/jianzhangcs/HerosNet</a></p>
-<h3 id="Abstract-2">Abstract</h3>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1646269897134.png" srcset="/img/loading.gif" lazyload alt="1646269897134">
+<figcaption aria-hidden="true">1646269897134</figcaption>
+</figure>
+<h2 id="herosnet-hyperspectral-explicable-reconstruction-and-optimal-sampling-deep-network-for-snapshot-compressive-imaging">HerosNet:
+Hyperspectral Explicable Reconstruction and Optimal Sampling Deep
+Network for Snapshot Compressive Imaging</h2>
+<p>文章链接：https://arxiv.org/abs/2112.06238</p>
+<p>代码链接：https://github.com/jianzhangcs/HerosNet</p>
+<h3 id="abstract-1">Abstract</h3>
 <ul>
 <li><strong>压缩感知 compressive sensing, CI</strong>
 <ul>
 <li>压缩感知被应用于电子工程尤其是信号处理中，用于<strong>获取和重构稀疏或可压缩的信号</strong>
 <ul>
 <li>信号处理领域中的一个常见问题就是从一系列的采样中重建原本的信号。一般而言，未被采样的部分信号，是不可能重建出来的。然而通过借助对于信号（性质）的预先了解或合理假设，完美地通过一系列采样重建原信号就成为了可能。</li>
-</ul>
-</li>
+</ul></li>
 <li>奈奎斯特采样定理证明了若<strong>信号的最高频率小于采样频率的一半</strong>，便可完美地从采样结果中恢复原本信号，因此定义了采样定理取样频率的下限</li>
 <li>详细的可以看这个<a target="_blank" rel="noopener" href="https://bbs.huaweicloud.com/blogs/282786">解释</a></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/0.gif" srcset="/img/loading.gif" lazyload alt="img"></p>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/0.gif" srcset="/img/loading.gif" lazyload alt="img">
+<figcaption aria-hidden="true">img</figcaption>
+</figure>
 <ul>
-<li><strong>光谱快照压缩感知  spectral snapshot compressive sensing, SCI</strong>
+<li><strong>光谱快照压缩感知 spectral snapshot compressive sensing,
+SCI</strong>
 <ul>
 <li>旨在通过2D探测器来获取3D场景信息</li>
 <li>具有低带宽、低成本和高数据吞吐量的优点，在遥感、目标检测、超分辨率和医疗诊断等广泛应用中发挥着越来越关键的作用</li>
-</ul>
-</li>
-<li>高光谱图像  Hyperspectral Image, HSI
+</ul></li>
+<li>高光谱图像 Hyperspectral Image, HSI
 <ul>
 <li>有着更多的波段（即通道数更多）来更加准确全面的描述被捕获场景的特性</li>
 <li>传统的成像设备采用光谱仪对成像场景进行空间域通道维度的扫描，费时费力，不适用于运动场景</li>
 <li>因此设计出了上述的光谱快照压缩感知</li>
-</ul>
-</li>
-<li>在本文中，作者重点介绍了编码孔径快照光谱成像仪（coded aperture snapshot spectral imager, CASSI）
+</ul></li>
+<li>在本文中，作者重点介绍了编码孔径快照光谱成像仪（coded aperture
+snapshot spectral imager, CASSI）
 <ul>
 <li>该系统通过编码孔径（即物理掩模）调制光谱帧，并通过分散器在光谱维度上移动光谱帧
 <ul>
-<li>CASSI系统首先通过一个编码孔径掩膜对成像场景的各光谱通道进行调制，然后通过一个三棱镜进行色散后在相机上生成一个二维的快照估计图（compressive measurement）</li>
+<li>CASSI系统首先通过一个编码孔径掩膜对成像场景的各光谱通道进行调制，然后通过一个三棱镜进行色散后在相机上生成一个二维的快照估计图（compressive
+measurement）</li>
+</ul></li>
+<li>CASSI的设备很贵，价格在 10,000 到 100,000
+美金。不过它有一个优势就是，存储的时候只需要存储二维的measurement，这可以极大降低存储与传输数据的成本</li>
+</ul></li>
 </ul>
-</li>
-<li>CASSI的设备很贵，价格在 10,000 到 100,000 美金。不过它有一个优势就是，存储的时候只需要存储二维的measurement，这可以极大降低存储与传输数据的成本</li>
-</ul>
-</li>
-</ul>
-<p><img src="https://inews.gtimg.com/newsapp_bt/0/14888139640/1000" srcset="/img/loading.gif" lazyload alt="img"></p>
+<figure>
+<img src="https://inews.gtimg.com/newsapp_bt/0/14888139640/1000" srcset="/img/loading.gif" lazyload alt="img">
+<figcaption aria-hidden="true">img</figcaption>
+</figure>
 <ul>
-<li>
-<p>因此就可以想到通过深度学习来完成这项工作</p>
-</li>
-<li>
-<p>利用深度学习方法，将数值优化算法映射到深度展开网络（deep unfolding networks, DUNs）在光谱快照压缩感知（spectral snapshot compressive sensing, SCI）中取得了较大成果</p>
+<li>因此就可以想到通过深度学习来完成这项工作</li>
+<li>利用深度学习方法，将数值优化算法映射到深度展开网络（deep unfolding
+networks, DUNs）在光谱快照压缩感知（spectral snapshot compressive
+sensing, SCI）中取得了较大成果
 <ul>
-<li>DUN：将求解一个给定连续模型的迭代优化看成是一个动态系统，进而通过<strong>若干可学习模块来离散化</strong>这一系统，得到数据驱动的演化过程（Data-dependent Propagation）的方法
+<li>DUN：将求解一个给定连续模型的迭代优化看成是一个动态系统，进而通过<strong>若干可学习模块来离散化</strong>这一系统，得到数据驱动的演化过程（Data-dependent
+Propagation）的方法
 <ul>
 <li>详细的可以参考<a target="_blank" rel="noopener" href="https://www.jiqizhixin.com/articles/2018-09-07">链接</a></li>
-</ul>
-</li>
+</ul></li>
 <li>但这些方法缺乏跨阶段的特征交互和自适应参数调整</li>
-</ul>
-</li>
-<li>
-<p>本文提出了一种全新的高光谱可解释性重建和最佳采样深度网络—— HerosNet</p>
+</ul></li>
+<li>本文提出了一种全新的高光谱可解释性重建和最佳采样深度网络—— HerosNet
 <ul>
 <li>在梯度下降步骤中，每个阶段都可以灵活地模拟感知矩阵，并根据上下文调整步长</li>
-<li>在近端映射步骤中分层融合和交互先前阶段的隐藏状态，以有效恢复当前 HSI 帧</li>
+<li>在近端映射步骤中分层融合和交互先前阶段的隐藏状态，以有效恢复当前 HSI
+帧</li>
 <li>端到端学习硬件友好的最佳二进制掩码，以进一步提高重建性能</li>
-</ul>
-</li>
-<li>
-<p>在过去的几年中，已经有许多 HSI 重建方法，包括基于模型和基于深度学习的方法</p>
+</ul></li>
+<li>在过去的几年中，已经有许多 HSI
+重建方法，包括基于模型和基于深度学习的方法
 <ul>
 <li>基于模型的方法
 <ul>
 <li>往往是迭代搜索最优解，并通过图像先验将结果细化到期望的信号域</li>
 <li>虽然这些方法具有高度的可解释性，但它们受到手工制作的先验知识和缓慢重建速度的限制</li>
-</ul>
-</li>
+</ul></li>
 <li>基于深度学习的方法
 <ul>
 <li>部分方法直接学习从2D测量到3D高光谱立方体的端到端逆映射</li>
 <li>倾向于大幅降低时间复杂度并获得更好的性能</li>
 <li>然而没有明确体现系统成像模型，只是被训练成一个黑箱</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>最近 DUN 引入HSI重建任务，它融合了基于模型和基于学习的方法的优点</p>
+</ul></li>
+</ul></li>
+<li>最近 DUN 引入HSI重建任务，它融合了基于模型和基于学习的方法的优点
 <ul>
 <li>通过梯度下降模块执行迭代过程，并通过深度先验模块优化中间结果</li>
 <li>问题一：如何有<strong>效地交互和融合相位间的特征</strong>是提高重建质量的关键
@@ -655,275 +767,352 @@
 <li>随着阶段数量的增加，在信息传输过程中，有益的信息往往会丢失
 <ul>
 <li>记忆机制的启发：先前相位的隐藏状态可以为当前相位的计算提供补充信息</li>
-</ul>
-</li>
+</ul></li>
 <li>因此有必要在不同阶段之间引入特征交互机制，以获得增强的特征表示</li>
-</ul>
-</li>
+</ul></li>
 <li>问题二：如何<strong>动态学习梯度下降模块中的参数</strong>
 <ul>
 <li>以前通常使用固定参数来压缩 HSI</li>
 <li>然而固定的参数不能在不同场景中进行自适应和上下文调整，这将导致次优重建，限制了DUNs的灵活性</li>
-</ul>
-</li>
+</ul></li>
 <li>问题三：现有的DUN没有将掩码优化和图像重建<strong>结合到一个统一的框架</strong>中
 <ul>
 <li>不能完全保留HSIs的结构和信息</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>作者说本文是受 ISTA 启发，提出了本文的 HerosNet，联合掩码优化和 HSI 重建</p>
+</ul></li>
+</ul></li>
+<li>作者说本文是受 ISTA 启发，提出了本文的 HerosNet，联合掩码优化和 HSI
+重建
 <ul>
 <li>迭代收缩阈值算法（Iterative Shrinkage Thresholding Algorithm）</li>
 <li>大致思路就是在每一次迭代中通过一个收缩/软阈值操作进行更新</li>
 <li>详细的分析和解释可以参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/louisanu/p/12045861.html">链接</a></li>
-</ul>
-</li>
-<li>
-<p>该网络由采样子网、初始化子网和恢复子网组成</p>
+</ul></li>
+<li>该网络由采样子网、初始化子网和恢复子网组成
 <ul>
 <li>每个恢复阶段对应一个ISTA迭代，并且所有参数都是端到端学习的
 <ul>
 <li>因此该网络具有高质量重建和强解释性的优点</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>本文重要贡献：</p>
+</ul></li>
+</ul></li>
+<li>本文重要贡献：
 <ul>
-<li>ISTA 启发的深度展开网络 HerosNet ，用于联合学习二进制最优掩码和恢复高质量HSI</li>
-<li>dynamic gradient descent module (DGDM)：在梯度下降步长中，灵活模拟传感矩阵并根据上下文调整步长</li>
-<li>hierarchical feature interaction module (HFIM)：融合并交互先前相位的隐藏状态，在近端映射中恢复当前相位的HSI帧</li>
+<li>ISTA 启发的深度展开网络 HerosNet
+，用于联合学习二进制最优掩码和恢复高质量HSI</li>
+<li>dynamic gradient descent module
+(DGDM)：在梯度下降步长中，灵活模拟传感矩阵并根据上下文调整步长</li>
+<li>hierarchical feature interaction module
+(HFIM)：融合并交互先前相位的隐藏状态，在近端映射中恢复当前相位的HSI帧</li>
 <li>在模拟和真实数据集上的性能大大优于最先进的方法</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="Method-2">Method</h3>
-<h4 id="Problem-Formulation">Problem Formulation</h4>
+<h3 id="method-1">Method</h3>
+<h4 id="problem-formulation">Problem Formulation</h4>
 <ul>
-<li>在 CASSI 体系中，三维的高光谱立方体数据首先会通过编码孔径（物理掩码）进行调制，然后通过棱镜进行色散
+<li>在 CASSI
+体系中，三维的高光谱立方体数据首先会通过编码孔径（物理掩码）进行调制，然后通过棱镜进行色散
 <ul>
-<li>考虑 $C$ 通道数的序列 ${ X_i } ^{C} _{i = 1} \in \mathbb R ^ {H \times W}$ ，该序列输入通过掩码进行调制</li>
-<li>$\mathbf{X}<em>{i}^{\prime}=\mathbf{M} \odot \mathbf{X}</em>{i}$</li>
-<li>$\mathbf{X}_{i}$ 是调制后的 HSI 帧，$\odot$ 是哈达玛积（ 逐项乘积 ）</li>
-</ul>
-</li>
-<li>之后不同波长的 HSI 帧在空间位置进行位移并求和，因此调制后的 HSI 帧 ${ X_i^{\prime} } ^{C} _{i = 1} \in \mathbb R ^ {H \times W}$ 压缩为编码测量值
+<li>考虑 <span class="math inline">\(C\)</span> 通道数的序列 <span class="math inline">\(\{ X_i \} ^{C} _{i = 1} \in \mathbb R ^ {H \times
+W}\)</span> ，该序列输入通过掩码进行调制</li>
+<li><span class="math inline">\(\mathbf{X}_{i}^{\prime}=\mathbf{M} \odot
+\mathbf{X}_{i}\)</span></li>
+<li><span class="math inline">\(\mathbf{X}_{i}\)</span> 是调制后的 HSI
+帧，<span class="math inline">\(\odot\)</span> 是哈达玛积（ 逐项乘积
+）</li>
+</ul></li>
+<li>之后不同波长的 HSI 帧在空间位置进行位移并求和，因此调制后的 HSI 帧
+<span class="math inline">\(\{ X_i^{\prime} \} ^{C} _{i = 1} \in \mathbb
+R ^ {H \times W}\)</span> 压缩为编码测量值
 <ul>
-<li>$\mathbf{Y}(m, n)=\sum_{i=1}^{C} \mathbf{X}<em>{i}^{\prime}\left(m, n+d</em>{i}\right)+\mathbf{N}$
+<li><span class="math inline">\(\mathbf{Y}(m, n)=\sum_{i=1}^{C}
+\mathbf{X}_{i}^{\prime}\left(m, n+d_{i}\right)+\mathbf{N}\)</span>
 <ul>
-<li>其中m，n表示空间坐标， $d_i$ 表示 $i$ 通道的移动距离</li>
-<li>$N \in \mathbb R ^ {H \times (W+C-1)}$  和  $Y \in \mathbb R ^ {H \times (W+C-1)}$  分别表示噪声和压缩测量结果</li>
-</ul>
-</li>
-</ul>
-</li>
+<li>其中m，n表示空间坐标， <span class="math inline">\(d_i\)</span> 表示
+<span class="math inline">\(i\)</span> 通道的移动距离</li>
+<li><span class="math inline">\(N \in \mathbb R ^ {H \times
+(W+C-1)}\)</span> 和 <span class="math inline">\(Y \in \mathbb R ^ {H
+\times (W+C-1)}\)</span> 分别表示噪声和压缩测量结果</li>
+</ul></li>
+</ul></li>
 <li>综上，SCI 可以矢量表示为
 <ul>
-<li>$\mathbf{y}=\boldsymbol{\Phi} \mathbf{x}+\mathbf{n}$
+<li><span class="math inline">\(\mathbf{y}=\boldsymbol{\Phi}
+\mathbf{x}+\mathbf{n}\)</span>
 <ul>
-<li>其中  $\Phi \in \mathbb R ^ {H (W+C-1) \times HWC}$  表示感知矩阵</li>
+<li>其中 <span class="math inline">\(\Phi \in \mathbb R ^ {H (W+C-1)
+\times HWC}\)</span> 表示感知矩阵</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655201595202.png" srcset="/img/loading.gif" lazyload alt="1655201595202"></p>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/The-process-of-CASSI-imaging-is-depicted-A-N-N-L-spectral-data-cube-is-spatially.png" srcset="/img/loading.gif" lazyload alt="The process of CASSI imaging is depicted. A N × N × L spectral data... |  Download Scientific Diagram"></p>
-<h4 id="HerosNet">HerosNet</h4>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655201595202.png" srcset="/img/loading.gif" lazyload alt="1655201595202">
+<figcaption aria-hidden="true">1655201595202</figcaption>
+</figure>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/The-process-of-CASSI-imaging-is-depicted-A-N-N-L-spectral-data-cube-is-spatially.png" srcset="/img/loading.gif" lazyload alt="The process of CASSI imaging is depicted. A N × N × L spectral data... | Download Scientific Diagram">
+<figcaption aria-hidden="true">The process of CASSI imaging is depicted.
+A N × N × L spectral data... | Download Scientific Diagram</figcaption>
+</figure>
+<h4 id="herosnet">HerosNet</h4>
 <p>该网络由采样子网、初始化子网和恢复子网组成</p>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655297639978.png" srcset="/img/loading.gif" lazyload alt="1655297639978"></p>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655297639978.png" srcset="/img/loading.gif" lazyload alt="1655297639978">
+<figcaption aria-hidden="true">1655297639978</figcaption>
+</figure>
 <h5 id="采样子网">采样子网</h5>
 <ul>
-<li>旨在学习 HSI 压缩感知的最佳二进制掩码，从而保留足够的光谱空间信息并消除冗余</li>
+<li>旨在学习 HSI
+压缩感知的最佳二进制掩码，从而保留足够的光谱空间信息并消除冗余</li>
 <li>训练过程分为三个阶段：随机化、二值化和压缩</li>
-<li>为了学习二进制掩码 $\mathbf{M}$
+<li>为了学习二进制掩码 <span class="math inline">\(\mathbf{M}\)</span>
 <ul>
-<li>首先采用随机高斯初始化（均值为 $\mu_b$ ，方差为 $\sigma_b$ ）来生成连续矩阵 $\tilde{\mathbf{M}}$</li>
-<li>$\mathbf{M}=\operatorname{BinarySign}(\tilde{\mathbf{M}})$</li>
-<li>其中 $\operatorname{BinarySign}(\cdot)$ 用来将连续矩阵转换为二进制掩码</li>
-<li>$\operatorname{BinarySign}(z)=1$ if $z \geq \mu_{b}$ or 0 else</li>
-</ul>
-</li>
+<li>首先采用随机高斯初始化（均值为 <span class="math inline">\(\mu_b\)</span> ，方差为 <span class="math inline">\(\sigma_b\)</span> ）来生成连续矩阵 <span class="math inline">\(\tilde{\mathbf{M}}\)</span></li>
+<li><span class="math inline">\(\mathbf{M}=\operatorname{BinarySign}(\tilde{\mathbf{M}})\)</span></li>
+<li>其中 <span class="math inline">\(\operatorname{BinarySign}(\cdot)\)</span>
+用来将连续矩阵转换为二进制掩码</li>
+<li><span class="math inline">\(\operatorname{BinarySign}(z)=1\)</span>
+if <span class="math inline">\(z \geq \mu_{b}\)</span> or 0 else</li>
+</ul></li>
 <li>此外，根据上面的成像函数表示，利用转换函数将二进制掩码转换为压缩传感矩阵
 <ul>
-<li>$\Phi =\operatorname{Mask2Mat}(\mathbf{M})$</li>
-<li>$\Phi$ 被视为可学习参数</li>
+<li><span class="math inline">\(\Phi
+=\operatorname{Mask2Mat}(\mathbf{M})\)</span></li>
+<li><span class="math inline">\(\Phi\)</span> 被视为可学习参数</li>
 <li>将二值化函数的导数设置为常数 1， 用于反向传播</li>
-</ul>
-</li>
-<li>通过上面两个变换，将三维高光谱立方体数据 $\mathbf{x}$ 压缩为快照测量值 $\mathbf{y}$</li>
+</ul></li>
+<li>通过上面两个变换，将三维高光谱立方体数据 <span class="math inline">\(\mathbf{x}\)</span> 压缩为快照测量值 <span class="math inline">\(\mathbf{y}\)</span></li>
 </ul>
 <h5 id="初始化子网">初始化子网</h5>
 <ul>
-<li>初始化子网旨在将此二维测量 $\mathbf{y} \in \mathbb R ^ {H \times (W+C-1)}$ 拆分为三维高光谱立方体数据 $\mathbf{x}  \in \mathbb R ^ {H \times W \times C}$</li>
-<li>具体而言，通过以步长 $d$ 滑动来得到 $C$ 个通道</li>
-<li>然后再串联起来，组成一个三维高光谱立方体 $\mathbf{x}^{(0)}  \in \mathbb R ^ {H \times W \times C}$</li>
+<li>初始化子网旨在将此二维测量 <span class="math inline">\(\mathbf{y}
+\in \mathbb R ^ {H \times (W+C-1)}\)</span> 拆分为三维高光谱立方体数据
+<span class="math inline">\(\mathbf{x}  \in \mathbb R ^ {H \times W
+\times C}\)</span></li>
+<li>具体而言，通过以步长 <span class="math inline">\(d\)</span>
+滑动来得到 <span class="math inline">\(C\)</span> 个通道</li>
+<li>然后再串联起来，组成一个三维高光谱立方体 <span class="math inline">\(\mathbf{x}^{(0)}  \in \mathbb R ^ {H \times W
+\times C}\)</span></li>
 </ul>
 <h5 id="恢复子网">恢复子网</h5>
 <ul>
-<li>
-<p>旨在从压缩测量 $\mathbf{y}$ 中重建高质量的 HSI</p>
-</li>
-<li>
-<p>受 ISTA 启发，图像重建被视为优化问题</p>
+<li><p>旨在从压缩测量 <span class="math inline">\(\mathbf{y}\)</span>
+中重建高质量的 HSI</p></li>
+<li><p>受 ISTA 启发，图像重建被视为优化问题</p>
 <ul>
-<li>$\mathbf{x}=\arg \min <em>{\mathbf{x}} \frac{1}{2}|\mathbf{y}-\mathbf{\Phi} \mathbf{x}|</em>{2}^{2}+\lambda \psi(\mathbf{x})$
+<li><span class="math inline">\(\mathbf{x}=\arg \min _{\mathbf{x}}
+\frac{1}{2}\|\mathbf{y}-\mathbf{\Phi} \mathbf{x}\|_{2}^{2}+\lambda
+\psi(\mathbf{x})\)</span>
 <ul>
-<li>第一项为数据保真度，第二项 $\psi(\cdot)$ 为先验正则化，其中 $\lambda$ 表示正则化参数</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>为了优化上面的公式，作者根据 ISTA 来设计深度网络，以实现其简单性和可解释性</p>
-</li>
-<li>
-<p>传统的ISTA通过两个步骤更新结果：梯度下降和近端映射</p>
+<li>第一项为数据保真度，第二项 <span class="math inline">\(\psi(\cdot)\)</span> 为先验正则化，其中 <span class="math inline">\(\lambda\)</span> 表示正则化参数</li>
+</ul></li>
+</ul></li>
+<li><p>为了优化上面的公式，作者根据 ISTA
+来设计深度网络，以实现其简单性和可解释性</p></li>
+<li><p>传统的ISTA通过两个步骤更新结果：梯度下降和近端映射</p>
 <ul>
-<li>$\mathbf{r}^{(k)}=\mathbf{x}^{(k-1)}-\rho \boldsymbol{\Phi}^{\top}\left(\mathbf{\Phi} \mathbf{x}^{(k-1)}-\mathbf{y}\right)$</li>
-<li>$\mathbf{x}^{(k)}=\underset{\mathbf{x}}{\arg \min } \frac{1}{2}\left|\mathbf{x}-\mathbf{r}^{(k)}\right|_{2}^{2}+\lambda \psi(\mathbf{x})$
+<li><span class="math inline">\(\mathbf{r}^{(k)}=\mathbf{x}^{(k-1)}-\rho
+\boldsymbol{\Phi}^{\top}\left(\mathbf{\Phi}
+\mathbf{x}^{(k-1)}-\mathbf{y}\right)\)</span></li>
+<li><span class="math inline">\(\mathbf{x}^{(k)}=\underset{\mathbf{x}}{\arg \min }
+\frac{1}{2}\left\|\mathbf{x}-\mathbf{r}^{(k)}\right\|_{2}^{2}+\lambda
+\psi(\mathbf{x})\)</span>
 <ul>
-<li>其中 $k$ 表示 ISTA 的迭代次数， $\rho$ 表示步长</li>
-</ul>
-</li>
-<li>通过引入近端映射操作 $\operatorname{prox}_{\lambda \psi}(\mathbf{r})=\arg \min <em>{\mathbf{x}} \frac{1}{2}|\mathbf{x}-\mathbf{r}|</em>{2}^{2}+\lambda \psi(\mathbf{x})$ ，可以得到</li>
-<li>$\mathbf{x}^{(k)}=\operatorname{prox}_{\lambda \psi}(\mathbf{r}^{(k)})$</li>
-</ul>
-</li>
-<li>
-<p>作者通过修改这两个步骤，设计了动态梯度下降模块（dynamic gradient descent module, DGDM）和层次特征交互模块（hierarchical feature interaction module, HFIM）</p>
-</li>
-<li>
-<p><strong>动态梯度下降模块（dynamic gradient descent module, DGDM）</strong></p>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655281842824.png" srcset="/img/loading.gif" lazyload alt="1655281842824"></p>
+<li>其中 <span class="math inline">\(k\)</span> 表示 ISTA 的迭代次数，
+<span class="math inline">\(\rho\)</span> 表示步长</li>
+</ul></li>
+<li>通过引入近端映射操作 <span class="math inline">\(\operatorname{prox}_{\lambda
+\psi}(\mathbf{r})=\arg \min _{\mathbf{x}}
+\frac{1}{2}\|\mathbf{x}-\mathbf{r}\|_{2}^{2}+\lambda
+\psi(\mathbf{x})\)</span> ，可以得到</li>
+<li><span class="math inline">\(\mathbf{x}^{(k)}=\operatorname{prox}_{\lambda
+\psi}(\mathbf{r}^{(k)})\)</span></li>
+</ul></li>
+<li><p>作者通过修改这两个步骤，设计了动态梯度下降模块（dynamic gradient
+descent module, DGDM）和层次特征交互模块（hierarchical feature
+interaction module, HFIM）</p></li>
+<li><p><strong>动态梯度下降模块（dynamic gradient descent module,
+DGDM）</strong></p>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655281842824.png" srcset="/img/loading.gif" lazyload alt="1655281842824">
+<figcaption aria-hidden="true">1655281842824</figcaption>
+</figure>
 <ul>
-<li>$\mathbf{r}^{(k)}=\mathbf{x}^{(k-1)}-\rho \boldsymbol{\Phi}^{\top}\left(\mathbf{\Phi} \mathbf{x}^{(k-1)}-\mathbf{y}\right)$</li>
-<li>为了实现上述公式，作者设计 DGDM 来动态生成重建结果 $\mathbf r ^ k$</li>
-<li>大多数现有的 DUN 处理 $\Phi$ 时，${\Phi}^{\top}$ 和 $\rho$ 作为常数，但这限制了网络的灵活性和重建效果</li>
+<li><span class="math inline">\(\mathbf{r}^{(k)}=\mathbf{x}^{(k-1)}-\rho
+\boldsymbol{\Phi}^{\top}\left(\mathbf{\Phi}
+\mathbf{x}^{(k-1)}-\mathbf{y}\right)\)</span></li>
+<li>为了实现上述公式，作者设计 DGDM 来动态生成重建结果 <span class="math inline">\(\mathbf r ^ k\)</span></li>
+<li>大多数现有的 DUN 处理 <span class="math inline">\(\Phi\)</span>
+时，<span class="math inline">\({\Phi}^{\top}\)</span> 和 <span class="math inline">\(\rho\)</span>
+作为常数，但这限制了网络的灵活性和重建效果</li>
 <li>为了解决上述问题：</li>
-<li>作者设计了模块 $\mathcal{H}<em>\Phi(\cdot)$ 和 $\mathcal{H}</em>{\Phi^{\top}}(\cdot)$ 用来从上一个阶段 $\mathbf{x}^{(k-1)}$ 中模拟 $\Phi$ 和 ${\Phi}^{\top}$</li>
-<li>对于内容感知的参数调整，在梯度下降过程中引入动态步长算子 $\mathcal{H}_{d y \rho}(\cdot)$ 来增强网络泛化能力</li>
-<li>其中步长 $\tilde{\rho}^{(k)}$ 也是直接从上一个阶段 $\mathbf{x}^{(k-1)}$ 中得到
+<li>作者设计了模块 <span class="math inline">\(\mathcal{H}_\Phi(\cdot)\)</span> 和 <span class="math inline">\(\mathcal{H}_{\Phi^{\top}}(\cdot)\)</span>
+用来从上一个阶段 <span class="math inline">\(\mathbf{x}^{(k-1)}\)</span>
+中模拟 <span class="math inline">\(\Phi\)</span> 和 <span class="math inline">\({\Phi}^{\top}\)</span></li>
+<li>对于内容感知的参数调整，在梯度下降过程中引入动态步长算子 <span class="math inline">\(\mathcal{H}_{d y \rho}(\cdot)\)</span>
+来增强网络泛化能力</li>
+<li>其中步长 <span class="math inline">\(\tilde{\rho}^{(k)}\)</span>
+也是直接从上一个阶段 <span class="math inline">\(\mathbf{x}^{(k-1)}\)</span> 中得到
 <ul>
-<li>具体来说， $\tilde{\rho}^{(k)}$ 分解为静态和动态分量
+<li>具体来说， <span class="math inline">\(\tilde{\rho}^{(k)}\)</span>
+分解为静态和动态分量
 <ul>
 <li>静态分量可学习，光谱通道共享</li>
 <li>动态分量是从上一阶段中学习得到，作为通道注意力</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li>基于上述分析和设计，公式修改为：
 <ul>
-<li>$\begin{aligned} \mathbf{r}^{(k)} &amp;=\operatorname{DGDM}\left(\mathbf{x}^{(k-1)}, \mathbf{y}\right) \ &amp;=\mathbf{x}^{(k-1)}-\tilde{\boldsymbol{\rho}}^{(k)} \mathcal{H}<em>{\mathbf{\Phi}^{\top}}\left(\mathcal{H}</em>{\mathbf{\Phi}}\left(\mathbf{x}^{(k-1)}\right)-\mathbf{y}\right) \end{aligned}$</li>
-<li>with $\quad \tilde{\boldsymbol{\rho}}^{(k)}=\mathcal{H}_{\mathrm{dy} \rho}\left(\mathbf{x}^{(k-1)}\right)=\boldsymbol{\rho}^{(k)}+\theta \boldsymbol{\Lambda}^{(\boldsymbol{k})}$
+<li><span class="math inline">\(\begin{aligned} \mathbf{r}^{(k)}
+&amp;=\operatorname{DGDM}\left(\mathbf{x}^{(k-1)}, \mathbf{y}\right) \\
+&amp;=\mathbf{x}^{(k-1)}-\tilde{\boldsymbol{\rho}}^{(k)}
+\mathcal{H}_{\mathbf{\Phi}^{\top}}\left(\mathcal{H}_{\mathbf{\Phi}}\left(\mathbf{x}^{(k-1)}\right)-\mathbf{y}\right)
+\end{aligned}\)</span></li>
+<li>with <span class="math inline">\(\quad
+\tilde{\boldsymbol{\rho}}^{(k)}=\mathcal{H}_{\mathrm{dy}
+\rho}\left(\mathbf{x}^{(k-1)}\right)=\boldsymbol{\rho}^{(k)}+\theta
+\boldsymbol{\Lambda}^{(\boldsymbol{k})}\)</span>
 <ul>
-<li>其中 $\boldsymbol{\rho}^{(k)} \in \mathbb{R}^{1 \times C}$ 和 $\boldsymbol{\Lambda}^{(\boldsymbol{k})} \in \mathbb{R}^{1 \times C}$ 表示静态和动态分量</li>
-<li>$\theta$ 是一个常数</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p><strong>层次特征交互模块（hierarchical feature interaction module, HFIM）</strong></p>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655282425808.png" srcset="/img/loading.gif" lazyload alt="1655282425808"></p>
+<li>其中 <span class="math inline">\(\boldsymbol{\rho}^{(k)} \in
+\mathbb{R}^{1 \times C}\)</span> 和 <span class="math inline">\(\boldsymbol{\Lambda}^{(\boldsymbol{k})} \in
+\mathbb{R}^{1 \times C}\)</span> 表示静态和动态分量</li>
+<li><span class="math inline">\(\theta\)</span> 是一个常数</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p><strong>层次特征交互模块（hierarchical feature interaction
+module, HFIM）</strong></p>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655282425808.png" srcset="/img/loading.gif" lazyload alt="1655282425808">
+<figcaption aria-hidden="true">1655282425808</figcaption>
+</figure>
 <ul>
-<li>$\mathbf{x}^{(k)}=\underset{\mathbf{x}}{\arg \min } \frac{1}{2}\left|\mathbf{x}-\mathbf{r}^{(k)}\right|_{2}^{2}+\lambda \psi(\mathbf{x})$</li>
-<li>HFIM 设计用于细化 DGDM 的重建结果 $\mathbf r ^ k$</li>
+<li><span class="math inline">\(\mathbf{x}^{(k)}=\underset{\mathbf{x}}{\arg \min }
+\frac{1}{2}\left\|\mathbf{x}-\mathbf{r}^{(k)}\right\|_{2}^{2}+\lambda
+\psi(\mathbf{x})\)</span></li>
+<li>HFIM 设计用于细化 DGDM 的重建结果 <span class="math inline">\(\mathbf r ^ k\)</span></li>
 <li>应对的两个问题：
 <ul>
 <li>梯度下降模块在图像域中起作用，而深度近端映射模块在特征域中起作用，因此在这两个模块之间传输光谱信息时，光谱信息会丢失</li>
 <li>随着恢复阶段数量的增加，先前阶段中的有用信息无法传播到后续阶段</li>
-</ul>
-</li>
-<li>从上图中可以看出，除了 DGDM 的输入之外，还有级联层次特征 $\mathbf{H}^{k-1} = [\mathbf{h}^{k-1},\mathbf{h}^{k-2},\dots,\mathbf{h}^{0}]$
+</ul></li>
+<li>从上图中可以看出，除了 DGDM 的输入之外，还有级联层次特征 <span class="math inline">\(\mathbf{H}^{k-1} =
+[\mathbf{h}^{k-1},\mathbf{h}^{k-2},\dots,\mathbf{h}^{0}]\)</span>
 <ul>
-<li>$\mathbf{h}^{i}$ 表示第 $i$ 个阶段的隐藏状态</li>
+<li><span class="math inline">\(\mathbf{h}^{i}\)</span> 表示第 <span class="math inline">\(i\)</span> 个阶段的隐藏状态</li>
 <li>作者认为隐藏状态保留了在当前阶段从重构图像中提取的有益信息</li>
-</ul>
-</li>
+</ul></li>
 <li>具体实现很简单：
 <ul>
-<li>$\mathbf r ^ k$ 通过卷积 Conv1 转换到特征域，并与隐藏状态融合，再通过密集连接 Conv2</li>
-<li>之后会输入到 $\mathcal{H}_{\mathrm{EM}}$ 中来提取光谱和空间特征
+<li><span class="math inline">\(\mathbf r ^ k\)</span> 通过卷积 Conv1
+转换到特征域，并与隐藏状态融合，再通过密集连接 Conv2</li>
+<li>之后会输入到 <span class="math inline">\(\mathcal{H}_{\mathrm{EM}}\)</span>
+中来提取光谱和空间特征
 <ul>
-<li>$\mathcal{H}_{EM}$ 包含四个编码块和解码块，以及中间的16个标准残差块</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>$\mathbf{F}<em>{\mathrm{EM}}=\mathcal{H}</em>{\mathrm{EM}}\left(\operatorname{Conv}<em>{2}\left(\left[\mathbf{H}^{(k-1)}, \operatorname{Conv}</em>{1}\left(\mathbf{r}^{(k)}\right)\right]\right)\right)$</li>
-<li>对于获得增强的特征表示 $\mathbf{F}_{\mathrm{EM}} \in \mathbb{R}^{H \times W \times N}$ 使用特征交互机制来生成重构的 HSI 数据 $\mathbf{x}^{(k)} \in \mathbb{R}^{H \times W \times C}$ 和隐藏状态  $\mathbf{h}^{(k)} \in \mathbb{R}^{H \times W \times N}$
+<li><span class="math inline">\(\mathcal{H}_{EM}\)</span>
+包含四个编码块和解码块，以及中间的16个标准残差块</li>
+</ul></li>
+</ul></li>
+<li><span class="math inline">\(\mathbf{F}_{\mathrm{EM}}=\mathcal{H}_{\mathrm{EM}}\left(\operatorname{Conv}_{2}\left(\left[\mathbf{H}^{(k-1)},
+\operatorname{Conv}_{1}\left(\mathbf{r}^{(k)}\right)\right]\right)\right)\)</span></li>
+<li>对于获得增强的特征表示 <span class="math inline">\(\mathbf{F}_{\mathrm{EM}} \in \mathbb{R}^{H \times
+W \times N}\)</span> 使用特征交互机制来生成重构的 HSI 数据 <span class="math inline">\(\mathbf{x}^{(k)} \in \mathbb{R}^{H \times W \times
+C}\)</span> 和隐藏状态 <span class="math inline">\(\mathbf{h}^{(k)} \in
+\mathbb{R}^{H \times W \times N}\)</span>
 <ul>
-<li><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655293289245.png" srcset="/img/loading.gif" lazyload alt="1655293289245"></li>
-<li>$\mathbf{x}^{(k)}=\operatorname{Conv}<em>{4}\left(\mathbf{F}</em>{\mathrm{EM}}\right)+\mathbf{x}^{(0)}$</li>
-<li>$\mathbf{h}^{(k)}=\operatorname{Conv}<em>{3}\left(\mathbf{F}</em>{\mathrm{EM}}\right) \otimes \operatorname{Sigmoid}\left(\operatorname{Conv}<em>{5}\left(\mathbf{x}^{(k)}\right)\right)+\mathbf{F}</em>{\mathrm{EM}}$</li>
-</ul>
-</li>
-<li>该阶段的 HSI 数据 $\mathbf{x}^{(k)}$ 和隐藏状态  $\mathbf{h}^{(k)}$ 将用于下一阶段的重建过程
+<li><figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655293289245.png" srcset="/img/loading.gif" lazyload alt="1655293289245">
+<figcaption aria-hidden="true">1655293289245</figcaption>
+</figure></li>
+<li><span class="math inline">\(\mathbf{x}^{(k)}=\operatorname{Conv}_{4}\left(\mathbf{F}_{\mathrm{EM}}\right)+\mathbf{x}^{(0)}\)</span></li>
+<li><span class="math inline">\(\mathbf{h}^{(k)}=\operatorname{Conv}_{3}\left(\mathbf{F}_{\mathrm{EM}}\right)
+\otimes
+\operatorname{Sigmoid}\left(\operatorname{Conv}_{5}\left(\mathbf{x}^{(k)}\right)\right)+\mathbf{F}_{\mathrm{EM}}\)</span></li>
+</ul></li>
+<li>该阶段的 HSI 数据 <span class="math inline">\(\mathbf{x}^{(k)}\)</span> 和隐藏状态 <span class="math inline">\(\mathbf{h}^{(k)}\)</span> 将用于下一阶段的重建过程
 <ul>
-<li>$\mathbf{x}^{(k)}, \mathbf{h}^{(k)}=\operatorname{HFIM}\left(\mathbf{r}^{(k)}, \mathbf{x}^{(0)}, \mathbf{H}^{(k-1)}\right)$</li>
-</ul>
-</li>
-</ul>
-</li>
+<li><span class="math inline">\(\mathbf{x}^{(k)},
+\mathbf{h}^{(k)}=\operatorname{HFIM}\left(\mathbf{r}^{(k)},
+\mathbf{x}^{(0)}, \mathbf{H}^{(k-1)}\right)\)</span></li>
+</ul></li>
+</ul></li>
 </ul>
 <h5 id="实现细节">实现细节</h5>
 <ul>
-<li>本文中光谱通道 $C$ 取28，特征通道 $N$ 取32</li>
-<li>在使用掩码优化的采样子网中， $\mu_b$ 取0， $\sigma_b$ 取0.1</li>
-<li>在恢复子网中，恢复的阶段数 $K$ 为8，恢复子网等式中的 $\theta$ 取0.5</li>
-<li>所有可学习参数集合为 $\Theta=\left{\mathbf{M}, \mathbb{D}^{(k)}, \mathbb{H}^{(k)}\right}$
+<li>本文中光谱通道 <span class="math inline">\(C\)</span> 取28，特征通道
+<span class="math inline">\(N\)</span> 取32</li>
+<li>在使用掩码优化的采样子网中， <span class="math inline">\(\mu_b\)</span> 取0， <span class="math inline">\(\sigma_b\)</span> 取0.1</li>
+<li>在恢复子网中，恢复的阶段数 <span class="math inline">\(K\)</span>
+为8，恢复子网等式中的 <span class="math inline">\(\theta\)</span>
+取0.5</li>
+<li>所有可学习参数集合为 <span class="math inline">\(\Theta=\left\{\mathbf{M}, \mathbb{D}^{(k)},
+\mathbb{H}^{(k)}\right\}\)</span>
 <ul>
-<li>$\mathbf{M}$ 表示二进制掩码的，$\mathbb{D}^{(k)}$ 表示 DGDM 的，$\mathbb{H}^{(k)}$ 表示 HFIM 的</li>
-</ul>
-</li>
+<li><span class="math inline">\(\mathbf{M}\)</span>
+表示二进制掩码的，<span class="math inline">\(\mathbb{D}^{(k)}\)</span>
+表示 DGDM 的，<span class="math inline">\(\mathbb{H}^{(k)}\)</span> 表示
+HFIM 的</li>
+</ul></li>
 <li>作者最后使用了最终阶段和中间阶段的重建结果来计算损失函数
 <ul>
-<li>对于给定训练数据 ${\mathbf{x} }_{i=1}^{N_d}$ ，损失函数定义为：</li>
-<li>$\mathcal{L}<em>f=\frac{1}{N_d} \sum</em>{i=1}^{N_d} | \mathbf{x}_{i}^{(K)}-\mathbf{x}<em>i |</em>{2}^{2}$</li>
-<li>$\mathcal{L}<em>p = \frac{\beta}{N_d} \sum</em>{i=1}^{N_d} | \mathbf{x}<em>{i}^{(K-1)}-\mathbf{x}<em>i |</em>{2}^{2} + | \mathbf{x}</em>{i}^{(K-2)}-\mathbf{x}<em>i |</em>{2}^{2}$</li>
-<li>$\mathcal{L} = \mathcal{L}_f+\mathcal{L}_p$
+<li>对于给定训练数据 <span class="math inline">\(\{\mathbf{x}
+\}_{i=1}^{N_d}\)</span> ，损失函数定义为：</li>
+<li><span class="math inline">\(\mathcal{L}_f=\frac{1}{N_d}
+\sum_{i=1}^{N_d} \| \mathbf{x}_{i}^{(K)}-\mathbf{x}_i
+\|_{2}^{2}\)</span></li>
+<li><span class="math inline">\(\mathcal{L}_p = \frac{\beta}{N_d}
+\sum_{i=1}^{N_d} \| \mathbf{x}_{i}^{(K-1)}-\mathbf{x}_i \|_{2}^{2} + \|
+\mathbf{x}_{i}^{(K-2)}-\mathbf{x}_i \|_{2}^{2}\)</span></li>
+<li><span class="math inline">\(\mathcal{L} =
+\mathcal{L}_f+\mathcal{L}_p\)</span>
 <ul>
-<li>其中 $K$ 表示恢复阶段的数量，$\mathcal{L}_p$ 表示中间过程的损失函数计算</li>
-<li>$N_d$ 表示样本数</li>
-<li>平衡参数 $\beta$ 设置为0.5</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>4块 NVIDIA Tesla V100 GPU（一搜发现7w一块，算力是几乎是2080两倍，好狠）</li>
+<li>其中 <span class="math inline">\(K\)</span>
+表示恢复阶段的数量，<span class="math inline">\(\mathcal{L}_p\)</span>
+表示中间过程的损失函数计算</li>
+<li><span class="math inline">\(N_d\)</span> 表示样本数</li>
+<li>平衡参数 <span class="math inline">\(\beta\)</span> 设置为0.5</li>
+</ul></li>
+</ul></li>
+<li>4块 NVIDIA Tesla V100
+GPU（一搜发现7w一块，算力是几乎是2080两倍，好狠）</li>
 <li>Adam优化器，100 epochs</li>
-<li>learning rate 初始化 $1 \times 10^{-4}$ ，每10个epoch衰减为原来的0.9</li>
+<li>learning rate 初始化 <span class="math inline">\(1 \times
+10^{-4}\)</span> ，每10个epoch衰减为原来的0.9</li>
 </ul>
-<h3 id="Experiments">Experiments</h3>
+<h3 id="experiments">Experiments</h3>
 <ul>
 <li>模拟实验：公共HSI数据集Cave和KAIST（256×256×28）</li>
 <li>真实场景：使用真实SCI系统捕获的5个空间尺寸为640×694的压缩测量值进行测试</li>
 </ul>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655298152464.png" srcset="/img/loading.gif" lazyload alt="1655298152464"></p>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655298199321.png" srcset="/img/loading.gif" lazyload alt="1655298199321"></p>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655298152464.png" srcset="/img/loading.gif" lazyload alt="1655298152464">
+<figcaption aria-hidden="true">1655298152464</figcaption>
+</figure>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655298199321.png" srcset="/img/loading.gif" lazyload alt="1655298199321">
+<figcaption aria-hidden="true">1655298199321</figcaption>
+</figure>
 <ul>
 <li>为了客观地评估所提出的掩码优化策略的有效性，作者在不同类型的掩码上进行了对比
 <ul>
 <li>下图给出了实验中四种不同掩码的中心区域，空间尺寸为64×64</li>
 <li>当在固定掩码上进行训练时，会删除掩码优化策略</li>
 <li>通过结果对比，作者认为优化后的二值掩模保留了完整的图像结构和足够的细节信息，以实现最佳采样</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655299073144.png" srcset="/img/loading.gif" lazyload alt="1655299073144"></p>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655299073144.png" srcset="/img/loading.gif" lazyload alt="1655299073144">
+<figcaption aria-hidden="true">1655299073144</figcaption>
+</figure>
 <ul>
 <li>在真实数据测试中，所有方法都是使用固定掩码进行训练，并注入部分噪声</li>
 </ul>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655299512690.png" srcset="/img/loading.gif" lazyload alt="1655299512690"></p>
-<p><img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655299544432.png" srcset="/img/loading.gif" lazyload alt="1655299544432"></p>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655299512690.png" srcset="/img/loading.gif" lazyload alt="1655299512690">
+<figcaption aria-hidden="true">1655299512690</figcaption>
+</figure>
+<figure>
+<img src="/2022/03/01/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x21/1655299544432.png" srcset="/img/loading.gif" lazyload alt="1655299544432">
+<figcaption aria-hidden="true">1655299544432</figcaption>
+</figure>
 <h3 id="影响和限制">影响和限制</h3>
 <ul>
 <li>有助于光谱SCI的工业应用，并启发了其他图像逆问题中深度展开网络的设计</li>

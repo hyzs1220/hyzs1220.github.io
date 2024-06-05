@@ -16,12 +16,12 @@
   <meta name="author" content="hyzs1220">
   <meta name="keywords" content="">
   
-    <meta name="description" content="最近轮到我准备组会分享了，然后老师给了我一个左旺孟老师的视频，是关于“自监督上下文建模及底层视觉应用”相关的，里面涉及的不少内容都没有接触过，所以看的过程也是磕磕绊绊，然后想着把里面涉及到的论文都好好看一下，感觉再回过头去看视频应该会轻松一些。 论文的阅读笔记： 《 Pixel Recurrent Neural Networks 》 Google Deepmind  2016，ICML 2016">
+    <meta name="description" content="最近轮到我准备组会分享了，然后老师给了我一个左旺孟老师的视频，是关于“自监督上下文建模及底层视觉应用”相关的，里面涉及的不少内容都没有接触过，所以看的过程也是磕磕绊绊，然后想着把里面涉及到的论文都好好看一下，感觉再回过头去看视频应该会轻松一些。 论文的阅读笔记： 《 Pixel Recurrent Neural Networks 》 Google Deepmind 2016，ICML 201">
 <meta property="og:type" content="article">
 <meta property="og:title" content="论文阅读-0x09">
 <meta property="og:url" content="http://example.com/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/index.html">
 <meta property="og:site_name" content="hyzsのblog">
-<meta property="og:description" content="最近轮到我准备组会分享了，然后老师给了我一个左旺孟老师的视频，是关于“自监督上下文建模及底层视觉应用”相关的，里面涉及的不少内容都没有接触过，所以看的过程也是磕磕绊绊，然后想着把里面涉及到的论文都好好看一下，感觉再回过头去看视频应该会轻松一些。 论文的阅读笔记： 《 Pixel Recurrent Neural Networks 》 Google Deepmind  2016，ICML 2016">
+<meta property="og:description" content="最近轮到我准备组会分享了，然后老师给了我一个左旺孟老师的视频，是关于“自监督上下文建模及底层视觉应用”相关的，里面涉及的不少内容都没有接触过，所以看的过程也是磕磕绊绊，然后想着把里面涉及到的论文都好好看一下，感觉再回过头去看视频应该会轻松一些。 论文的阅读笔记： 《 Pixel Recurrent Neural Networks 》 Google Deepmind 2016，ICML 201">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/2.png">
 <meta property="og:image" content="http://example.com/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/1.png">
@@ -287,18 +287,23 @@
                 
                 <p>最近轮到我准备组会分享了，然后老师给了我一个左旺孟老师的视频，是关于“自监督上下文建模及底层视觉应用”相关的，里面涉及的不少内容都没有接触过，所以看的过程也是磕磕绊绊，然后想着把里面涉及到的论文都好好看一下，感觉再回过头去看视频应该会轻松一些。</p>
 <p>论文的阅读笔记：</p>
-<p>《 Pixel Recurrent Neural Networks 》 Google Deepmind  2016，ICML 2016</p>
-<p>《 Conditional Image Generation with PixelCNN Decoders 》 Google Deepmind ， NIPS 2016</p>
+<p>《 Pixel Recurrent Neural Networks 》 Google Deepmind 2016，ICML
+2016</p>
+<p>《 Conditional Image Generation with PixelCNN Decoders 》 Google
+Deepmind ， NIPS 2016</p>
 <span id="more"></span>
-<h2 id="Pixel-Recurrent-Neural-Networks">Pixel Recurrent Neural Networks</h2>
-<h3 id="Abstract">Abstract</h3>
+<h2 id="pixel-recurrent-neural-networks">Pixel Recurrent Neural
+Networks</h2>
+<h3 id="abstract">Abstract</h3>
 <ul>
 <li>自然图像的分布建模是无监督学习中的一个标志性问题。该任务需要一个同时具有表现力、可处理性和可伸缩性的图像模型</li>
-<li>作者提出了一个深度神经网络，按顺序沿着两个空间维度来预测图片中的像素。 对原始像素值的离散概率建模，并对图像中的完整依赖关系进行编码</li>
+<li>作者提出了一个深度神经网络，按顺序沿着两个空间维度来预测图片中的像素。
+对原始像素值的离散概率建模，并对图像中的完整依赖关系进行编码</li>
 <li>生成图像模型是无监督学习中的一个核心问题</li>
 <li><strong>概率密度模型</strong>可用于各种各样的任务，从图像压缩到图像inpainting和去模糊等重建形式，再到生成新图像</li>
 <li>生成式模型实际上有无穷无尽的图像数据可供学习。然而，由于图像的高维性和高度结构化，估计自然图像的分布是非常具有挑战性的</li>
-<li>生成模型的一个最重要的障碍是建立复杂的、有表现力的、易于处理和可扩展的模型。这种权衡产生了各种各样的生成模型，每种模型都有自己的优势。 大部分工作集中随机潜在变量模型，如VAE，其目的是提取有意义的表征，但往往伴随着难以处理的推理步骤，这可能会阻碍他们的表现</li>
+<li>生成模型的一个最重要的障碍是建立复杂的、有表现力的、易于处理和可扩展的模型。这种权衡产生了各种各样的生成模型，每种模型都有自己的优势。
+大部分工作集中随机潜在变量模型，如VAE，其目的是提取有意义的表征，但往往伴随着难以处理的推理步骤，这可能会阻碍他们的表现</li>
 <li>对图像中像素的联合分布进行可跟踪建模的一种有效方法是将其转换为条件分布的乘积</li>
 <li>这种方法已被采用在自回归模型中，如NADE和全可见神经网络</li>
 <li>因子分解将联合建模问题转化为序列问题，在序列问题中，需要学习之前所有生成的像素来预测下一个像素</li>
@@ -310,145 +315,177 @@
 <li>第一种是行LSTM层，沿着每一行进行卷积</li>
 <li>第二种类型是对角线BiLSTM层，其中以一种新颖的方式沿着图像的对角线应用卷积</li>
 <li>同时使用了残差连接的形式，从而让网络能够达到12层的深度</li>
-</ul>
-</li>
+</ul></li>
 <li>同时作者也提出了另一种简化的架构，对CNN网络使用mask卷积作为具有固定依赖范围的序列模型
 <ul>
 <li>一个由15层组成的全卷积网络组成，它在整个层中保留其输入的空间分辨率，并在每个位置输出一个条件分布</li>
-</ul>
-</li>
+</ul></li>
 <li>作者使用一个简单的softmax层实现的多项分布将像素建模为离散值</li>
 </ul>
-<h3 id="Model">Model</h3>
+<h3 id="model">Model</h3>
 <ul>
 <li>作者的目标是估计自然图像上的分布，该分布用于可跟踪地计算图像的可能性，并生成新的图像</li>
 <li>网络每次扫描一行图像，每次扫描一行中的一个像素。对于每一个像素点，通过上下文信息来预测给出当前位置像素的条件分布</li>
 <li>图像像素上的联合分布被分解为条件分布的乘积。预测中使用的参数在图像中的所有像素位置上共享</li>
 <li>LSTM网络的优点是它能有效地处理对对象和场景理解至关重要的远程依赖关系</li>
-<li>把图像x写成一维序列$x_{1}, \ldots, x_{n^2}$, 像素是逐行从图像中提取的。<strong>为了估计联合分布p(x)我们把它写成条件分布在像素上的乘积 ，从而进行逐行逐像素的生成</strong>
+<li>把图像x写成一维序列<span class="math inline">\(x_{1}, \ldots,
+x_{n^2}\)</span>,
+像素是逐行从图像中提取的。<strong>为了估计联合分布p(x)我们把它写成条件分布在像素上的乘积
+，从而进行逐行逐像素的生成</strong>
 <ul>
-<li>$p(\mathbf{x})=\prod_{i=1}^{n^{2}} p\left(x_{i} \mid x_{1}, \ldots, x_{i-1}\right)$</li>
-<li>其中 $p\left(x_{i} \mid x_{1}, \ldots, x_{i-1}\right)$ 是在给定之前所有像素$x_{1}, \ldots, x_{i-1}$的情况下，第i个像素 $x_i$ 的条件概率</li>
-<li>每个像素 $x_i$ 依次由三个值共同确定，每个值分别对应颜色通道红、绿和蓝(RGB)，所以可以得到分布</li>
-<li>$p\left(x_{i} \mid x_{&lt;i}\right) = p\left(x_{i,R} \mid x_{&lt;i}\right) p\left(x_{i,G} \mid x_{&lt;1},x_{i,R}\right) p\left(x_{i,B} \mid x_{&lt;1}, x_{i,R}, x_{i,G}\right)$</li>
+<li><span class="math inline">\(p(\mathbf{x})=\prod_{i=1}^{n^{2}}
+p\left(x_{i} \mid x_{1}, \ldots, x_{i-1}\right)\)</span></li>
+<li>其中 <span class="math inline">\(p\left(x_{i} \mid x_{1}, \ldots,
+x_{i-1}\right)\)</span> 是在给定之前所有像素<span class="math inline">\(x_{1}, \ldots, x_{i-1}\)</span>的情况下，第i个像素
+<span class="math inline">\(x_i\)</span> 的条件概率</li>
+<li>每个像素 <span class="math inline">\(x_i\)</span>
+依次由三个值共同确定，每个值分别对应颜色通道红、绿和蓝(RGB)，所以可以得到分布</li>
+<li><span class="math inline">\(p\left(x_{i} \mid x_{&lt;i}\right) =
+p\left(x_{i,R} \mid x_{&lt;i}\right) p\left(x_{i,G} \mid
+x_{&lt;1},x_{i,R}\right) p\left(x_{i,B} \mid x_{&lt;1}, x_{i,R},
+x_{i,G}\right)\)</span></li>
 <li>即每一种颜色都取决于其他通道以及之前生成的所有像素</li>
-</ul>
-</li>
-<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/2.png" srcset="/img/loading.gif" lazyload alt></li>
+</ul></li>
+<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/2.png" srcset="/img/loading.gif" lazyload></li>
 <li><strong>在训练和评估过程中，像素值的分布是并行计算的，而图像的生成是顺序的</strong></li>
 <li>所以我们的训练目标就是最大化这个乘积（最大化似然），不过为了表达这个复杂的条件概率，可以使用神经网络来表达该复杂函数</li>
 <li>之前的方法对图像中的像素值采用连续分布。相比之下，作者将p(x)模型化为离散分布，公式中的每个条件分布都是一个多项式，用softmax层建模</li>
-<li>每个通道变量$x_{i, *}$ 简单地从256个不同的值中进行选择。离散分布具有简单的表征性，并且具有任意多模态且形状无先验的优点。实验中我们还发现，与连续分布相比，离散分布更易于学习，且具有更好的性能</li>
-<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/1.png" srcset="/img/loading.gif" lazyload alt></li>
+<li>每个通道变量<span class="math inline">\(x_{i, *}\)</span>
+简单地从256个不同的值中进行选择。离散分布具有简单的表征性，并且具有任意多模态且形状无先验的优点。实验中我们还发现，与连续分布相比，离散分布更易于学习，且具有更好的性能</li>
+<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/1.png" srcset="/img/loading.gif" lazyload></li>
 </ul>
-<h4 id="Pixel-Recurrent-Neural-Networks-2">Pixel Recurrent Neural Networks</h4>
-<p><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/3.png" srcset="/img/loading.gif" lazyload alt></p>
-<h5 id="Row-LSTM">Row LSTM</h5>
+<h4 id="pixel-recurrent-neural-networks-1">Pixel Recurrent Neural
+Networks</h4>
+<p><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/3.png" srcset="/img/loading.gif" lazyload></p>
+<h5 id="row-lstm">Row LSTM</h5>
 <ul>
-<li>一种单向层，它对整行图像进行从上到下的逐行处理 ，同时计算整行特性</li>
-<li>用一维卷积完成，对于像素$x_i$ 该层捕获像素上方的大致三角形范围的上下文信息</li>
-<li>一维卷积的Kernel大小是k x 1其中k&gt;=3。k的值越大，所捕获的上下文范围就越大</li>
+<li>一种单向层，它对整行图像进行从上到下的逐行处理
+，同时计算整行特性</li>
+<li>用一维卷积完成，对于像素<span class="math inline">\(x_i\)</span>
+该层捕获像素上方的大致三角形范围的上下文信息</li>
+<li>一维卷积的Kernel大小是k x
+1其中k&gt;=3。k的值越大，所捕获的上下文范围就越大</li>
 <li>卷积中的权值共享保证了计算特征沿每一行的平移不变性</li>
 <li>LSTM有一个input-to-state组件和一个循环state-to-state组件，他们一起确定了LSTM核心的四个门
 <ul>
-<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/4.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/4.png" srcset="/img/loading.gif" lazyload></li>
 <li>为了增强LSTM的并行能力，首先对整个二维输入映射计算得到input-to-state组件部分
 <ul>
-<li>使用k x 1卷积逐行进行计算，然后使用mask卷积以仅包含先前的像素（有效的上下文）</li>
-<li>产生一个大小为4h × n × n的张量，表示输入映射中每个位置的四个门向量，其中h是输出特征映射的数量</li>
-</ul>
-</li>
-<li>当前状态的上一个隐藏状态和单元状态$h_{i-1},c_{i-1}$，每个状态的大小都是h x n x 1</li>
-<li>$\begin{aligned}\left[\mathbf{o}<em>{i}, \mathbf{f}</em>{i}, \mathbf{i}<em>{i}, \mathbf{g}</em>{i}\right] &amp;=\sigma\left(\mathbf{K}^{s s} \circledast \mathbf{h}<em>{i-1}+\mathbf{K}^{i s} \circledast \mathbf{x}</em>{i}\right) \ \mathbf{c}<em>{i} &amp;=\mathbf{f}</em>{i} \odot \mathbf{c}<em>{i-1}+\mathbf{i}</em>{i} \odot \mathbf{g}<em>{i} \ \mathbf{h}</em>{i} &amp;=\mathbf{o}<em>{i} \odot \tanh \left(\mathbf{c}</em>{i}\right) \end{aligned}$
+<li>使用k x
+1卷积逐行进行计算，然后使用mask卷积以仅包含先前的像素（有效的上下文）</li>
+<li>产生一个大小为4h × n ×
+n的张量，表示输入映射中每个位置的四个门向量，其中h是输出特征映射的数量</li>
+</ul></li>
+<li>当前状态的上一个隐藏状态和单元状态<span class="math inline">\(h_{i-1},c_{i-1}\)</span>，每个状态的大小都是h x n
+x 1</li>
+<li><span class="math inline">\(\begin{aligned}\left[\mathbf{o}_{i},
+\mathbf{f}_{i}, \mathbf{i}_{i}, \mathbf{g}_{i}\right]
+&amp;=\sigma\left(\mathbf{K}^{s s} \circledast
+\mathbf{h}_{i-1}+\mathbf{K}^{i s} \circledast \mathbf{x}_{i}\right) \\
+\mathbf{c}_{i} &amp;=\mathbf{f}_{i} \odot
+\mathbf{c}_{i-1}+\mathbf{i}_{i} \odot \mathbf{g}_{i} \\ \mathbf{h}_{i}
+&amp;=\mathbf{o}_{i} \odot \tanh \left(\mathbf{c}_{i}\right)
+\end{aligned}\)</span>
 <ul>
-<li>其中h x n x 1大小的 $x_i$ 是输入的第i行。$\circledast$ 表示卷积运算，$\odot$ 表示元素相乘</li>
-<li>$K^{ss},K^{is}$ 是state-to-state和input-to-state的卷积核权重，后者按照上述方法进行预先计算</li>
-<li>对于输出门、遗忘门和输入门$o_i,f_i,i_i$ ， $\sigma$ 是sigmoid激活，对于内容门$g_i$，$\sigma$ 是tanh激活</li>
+<li>其中h x n x 1大小的 <span class="math inline">\(x_i\)</span>
+是输入的第i行。<span class="math inline">\(\circledast\)</span>
+表示卷积运算，<span class="math inline">\(\odot\)</span>
+表示元素相乘</li>
+<li><span class="math inline">\(K^{ss},K^{is}\)</span>
+是state-to-state和input-to-state的卷积核权重，后者按照上述方法进行预先计算</li>
+<li>对于输出门、遗忘门和输入门<span class="math inline">\(o_i,f_i,i_i\)</span> ， <span class="math inline">\(\sigma\)</span> 是sigmoid激活，对于内容门<span class="math inline">\(g_i\)</span>，<span class="math inline">\(\sigma\)</span> 是tanh激活</li>
 <li>每一步都通过一次计算输入映射得到整个行的新状态</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li>不过由于是三角形感受野，所以也是没有完整地包含所有上下文信息</li>
 </ul>
-<h5 id="Diagonal-BiLSTM">Diagonal BiLSTM</h5>
+<h5 id="diagonal-bilstm">Diagonal BiLSTM</h5>
 <ul>
-<li>Diagonal BiLSTM的设计既可以并行计算，也可以捕获任意大小的图像的整个有效上下文信息</li>
+<li>Diagonal
+BiLSTM的设计既可以并行计算，也可以捕获任意大小的图像的整个有效上下文信息</li>
 <li>从两个方向扫描图像，从顶部的一个叫出发，向下向左（向下向右）开始，到达底部的相反角
 <ul>
-<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/5.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/5.png" srcset="/img/loading.gif" lazyload></li>
 <li>首先将整个输入映射进行倾斜（将输入映射的每一行相对于前一行偏移一个位置），得到新的倾斜表示，即一个大小为n×(2n−1)的映射</li>
 <li>这样就可以很方便的进行卷积操作，基本和Row LSTM很相似了
 <ul>
-<li>input-to-state：对于两个方向，只需要使用一个1 x 1的卷积$K^{is}$即可，来得到四个门的4h × n × n张量</li>
-<li>state-to-state：然后需要使用一个2 x 1的列卷积$K^{ss}$， 采用前面的隐藏状态和单元状态，结合input-to-state组件的结果，并生成下一个隐藏状态和单元状态
+<li>input-to-state：对于两个方向，只需要使用一个1 x 1的卷积<span class="math inline">\(K^{is}\)</span>即可，来得到四个门的4h × n ×
+n张量</li>
+<li>state-to-state：然后需要使用一个2 x 1的列卷积<span class="math inline">\(K^{ss}\)</span>，
+采用前面的隐藏状态和单元状态，结合input-to-state组件的结果，并生成下一个隐藏状态和单元状态
 <ul>
-<li>这里作者也提到，通过这样一个2 x 1的卷积核，在每一步处理最小数量的信息，从而完成了全局高度非线性的计算</li>
+<li>这里作者也提到，通过这样一个2 x
+1的卷积核，在每一步处理最小数量的信息，从而完成了全局高度非线性的计算</li>
 <li>而且扩大这个卷积核大小也不会扩宽全局感受野</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li>最后通过移除偏移位置，输出特征映射被倾斜回n×n原大小映射</li>
 <li>这个计算在两个方向上都是重复的。这样的话是会得到两个输出映射，同时也为了防止层看到未来的像素（感觉这句话没啥用，但能理解），<strong>右输出映射将向下移动一行并添加到左输出映射</strong></li>
 <li>也就是说先进性左上角向右下角的计算，然后将最终这个结果下移一行，然后添加到另一个方向的计算过程中，从而得到最终的结果</li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <h5 id="else">else</h5>
 <ul>
 <li>Residual Connections
 <ul>
-<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/6.png" srcset="/img/loading.gif" lazyload alt></li>
-</ul>
-</li>
+<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/6.png" srcset="/img/loading.gif" lazyload></li>
+</ul></li>
 <li>Masked Convolution
 <ul>
 <li>网络中每一层每个输入位置的h特征被分成三部分，每一部分对应一个RGB通道</li>
-<li>当预测当前像素 $x_i$ 的R通道时，只使用 $x_i$ 左上方生成的像素作为上下文。在预测G通道时，除了之前生成的像素外，R通道的值也可以作为上下文。同样，对于B通道，R和G通道的值都可以使用</li>
+<li>当预测当前像素 <span class="math inline">\(x_i\)</span>
+的R通道时，只使用 <span class="math inline">\(x_i\)</span>
+左上方生成的像素作为上下文。在预测G通道时，除了之前生成的像素外，R通道的值也可以作为上下文。同样，对于B通道，R和G通道的值都可以使用</li>
 <li>作者在这里使用了两种掩码（掩码A和掩码B）
 <ul>
-<li>掩码 A 仅应用于 PixelRNN 中的第一个卷积层，限制与相邻像素和当前像素中已预测的那些颜色的连接</li>
-<li>掩码 B 应用于所有后续input-to-state卷积转换，并通过允许从颜色到自身的连接来放松掩码 A 的限制</li>
+<li>掩码 A 仅应用于 PixelRNN
+中的第一个卷积层，限制与相邻像素和当前像素中已预测的那些颜色的连接</li>
+<li>掩码 B
+应用于所有后续input-to-state卷积转换，并通过允许从颜色到自身的连接来放松掩码
+A 的限制</li>
 <li>每次更新后，将input-to-state卷积中的相应权值归零</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<h5 id="PixelCNN">PixelCNN</h5>
+<h5 id="pixelcnn">PixelCNN</h5>
 <ul>
-<li>Row LSTM 和 Diagonal BiLSTM有一个潜在的无界依赖范围。每个状态都需要按顺序计算会导致计算成本过高。所以作者使用标准的卷积层来捕获一个有界的接受域，并计算所有像素位置的特征</li>
+<li>Row LSTM 和 Diagonal
+BiLSTM有一个潜在的无界依赖范围。每个状态都需要按顺序计算会导致计算成本过高。所以作者使用标准的卷积层来捕获一个有界的接受域，并计算所有像素位置的特征</li>
 <li>使用多个卷积层来保持空间分辨率，并且没有使用池化层</li>
 <li>同时在卷积中使用了Mask卷积，来避免使用到没有预测的上下文信息</li>
 <li>PixelCNN相对于PixelRNN的并行化优势仅在训练或评估测试图像时可用。这两种网络的图像生成过程都是连续的，因为每个采样像素都需要作为输入返回到网络中</li>
 </ul>
-<h5 id="Multi-Scale-PixelRNN">Multi-Scale PixelRNN</h5>
+<h5 id="multi-scale-pixelrnn">Multi-Scale PixelRNN</h5>
 <ul>
-<li>Multi-Scale PixelRNN由unconditional PixelRNN和一个或多个conditional PixelRNNs组成</li>
-<li>unconditional PixelRNN首先以标准方式生成一个较小的s x s图像，从原始图像中下采样得到</li>
-<li>然后conditional PixelRNNs将s x s图像作为额外的输入，生成一个更大的n x n图像
+<li>Multi-Scale PixelRNN由unconditional PixelRNN和一个或多个conditional
+PixelRNNs组成</li>
+<li>unconditional PixelRNN首先以标准方式生成一个较小的s x
+s图像，从原始图像中下采样得到</li>
+<li>然后conditional PixelRNNs将s x s图像作为额外的输入，生成一个更大的n
+x n图像
 <ul>
-<li>条件网络类似于标准的PixelRNN，但是它的每一层都带有一个s x s图像的上采样版本</li>
-<li>在上采样过程中，使用带反卷积层的卷积网络构造大小为c × n × n的放大特征图，其中c是上采样网络输出的feature的个数</li>
-<li>在加入过程中，对于conditional PixelRNNs中的每一层，将c x n x n映射为4h x n x n，并将其添加到相应层的input-to-state映射中</li>
-</ul>
-</li>
+<li>条件网络类似于标准的PixelRNN，但是它的每一层都带有一个s x
+s图像的上采样版本</li>
+<li>在上采样过程中，使用带反卷积层的卷积网络构造大小为c × n ×
+n的放大特征图，其中c是上采样网络输出的feature的个数</li>
+<li>在加入过程中，对于conditional PixelRNNs中的每一层，将c x n x
+n映射为4h x n x n，并将其添加到相应层的input-to-state映射中</li>
+</ul></li>
 <li>没太看懂这部分，不过那个示意图还是能理解的，，，</li>
 </ul>
-<h3 id="End">End</h3>
+<h3 id="end">End</h3>
 <ul>
 <li>具体网络结构
 <ul>
-<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/7.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/7.png" srcset="/img/loading.gif" lazyload></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="😝😜😋">😝😜😋</h3>
+<h3 id="section">😝😜😋</h3>
 <p>这篇论文的内容也算是反反复复看了好几遍了，也看了网上很多相关的文章介绍，虽然是16年的文章了，但里面涉及到的一些知识点和方法还是蛮陌生的</p>
 <p>其实感觉作者提出的方法并不是很复杂，但是他的实现和里面包含的理论还是感觉有点复杂的，可能也是因为自己基础不牢的原因吧，这样完整看下来之后，感觉其实也没什么特别好整理分享出来的，但是确实自己学习到了很多东西。论文里面作者主要是使用了一些比较巧妙但也是比较系统化的方法实现了对生成模型的一种构建，感觉自己对于一些地方不清楚了解的地方也是主要集中于生成模型这个东西，同时里面使用了巧妙地并行编码方式和mask卷积来达到了作者的预期目标。</p>
-<h2 id="Conditional-Image-Generation-with-PixelCNN-Decoders">Conditional Image Generation with PixelCNN Decoders</h2>
-<h3 id="Abstract-2">Abstract</h3>
+<h2 id="conditional-image-generation-with-pixelcnn-decoders">Conditional
+Image Generation with PixelCNN Decoders</h2>
+<h3 id="abstract-1">Abstract</h3>
 <ul>
 <li>基于PixelCNN架构的新的图像密度模型来探索条件图像生成</li>
 <li>该模型可以以任何向量为条件，包括描述性标签或标签，或由其他网络创建的潜在嵌入
@@ -457,13 +494,13 @@
 <li>当卷积网络给出一张看不见的脸的单一图像时，它会生成同一个人的各种新肖像，这些人的面部表情、姿势和光照条件都不同</li>
 <li>作者还展示了条件PixelCNN可以在图像自动编码器中作为一个强大的解码器</li>
 <li>该模型中的Gated卷积层提高了PixelCNN的log-likelihood（对数似然），匹配了PixelRNN在ImageNet上的最新性能，大大降低了计算成本</li>
-</ul>
-</li>
-<li>利用神经网络进行图像建模的最新进展使得生成捕获训练数据高级结构的各种自然图像成为可能。 尽管此类无条件模型本身令人着迷，但是<strong>图像建模的许多实际应用都要求模型以先验信息为条件</strong>
+</ul></li>
+<li>利用神经网络进行图像建模的最新进展使得生成捕获训练数据高级结构的各种自然图像成为可能。
+尽管此类无条件模型本身令人着迷，但是<strong>图像建模的许多实际应用都要求模型以先验信息为条件</strong>
 <ul>
-<li>例如，一个图像模型用于强化学习规划在视觉环境中需要根据给定的状态和操作来预测未来场景。 类似地，诸如去噪，去模糊，修复，超分辨率和着色之类的图像处理任务依赖于生成基于噪点或不完整数据的改进图像</li>
-</ul>
-</li>
+<li>例如，一个图像模型用于强化学习规划在视觉环境中需要根据给定的状态和操作来预测未来场景。
+类似地，诸如去噪，去模糊，修复，超分辨率和着色之类的图像处理任务依赖于生成基于噪点或不完整数据的改进图像</li>
+</ul></li>
 <li>该网络返回显式概率密度，使其直接应用于压缩和概率规划与探索等领域</li>
 <li>该体系结构的基本思想是使用自回归连接对图像逐像素建模，<strong>将联合图像分布分解为条件的乘积</strong></li>
 <li>原论文中提出了两种变体
@@ -471,115 +508,121 @@
 <li>PixelRNN，其像素分布采用二维LSTM建模</li>
 <li>PixelCNN，其像素分布采用卷积网络建模</li>
 <li>pixelRNN通常性能更好，但pixelCNN训练起来更快，因为卷积更容易并行化</li>
-</ul>
-</li>
-<li>结合这两个模型的优点，通过引入一个有门选的变量PixelCNN(Gated PixelCNN)
+</ul></li>
+<li>结合这两个模型的优点，通过引入一个有门选的变量PixelCNN(Gated
+PixelCNN)
 <ul>
 <li>匹配在CIFAR和ImageNet上PixelRNN的对数似然</li>
-</ul>
-</li>
+</ul></li>
 <li>作者还引入了带有条件变量的Gated PixelCNN的(Conditional PixelCNN)
 <ul>
 <li>它允许我们对给定潜在向量嵌入的自然图像的复杂条件分布建模</li>
-<li>证明了一个单一的条件PixelCNN模型可以被用来从不同的类别中生成图像，如狗、割草机和珊瑚礁，通过简单地对类进行一个one-hot encoding</li>
-<li>同样作者使用嵌入来捕获图像的高级信息，从而生成大量具有类似特征的图像。来对嵌入编码的不变性有了更深入的了解——例如，可以基于单一的图像生成同一个人的不同姿态。 同样的框架也可以用来分析和解释深层神经网络中的不同层次和活动</li>
+<li>证明了一个单一的条件PixelCNN模型可以被用来从不同的类别中生成图像，如狗、割草机和珊瑚礁，通过简单地对类进行一个one-hot
+encoding</li>
+<li>同样作者使用嵌入来捕获图像的高级信息，从而生成大量具有类似特征的图像。来对嵌入编码的不变性有了更深入的了解——例如，可以基于单一的图像生成同一个人的不同姿态。
+同样的框架也可以用来分析和解释深层神经网络中的不同层次和活动</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="Gated-PixelCNN">Gated PixelCNN</h3>
+<h3 id="gated-pixelcnn">Gated PixelCNN</h3>
 <ul>
-<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/8.png" srcset="/img/loading.gif" lazyload alt></li>
-<li>PixelCNNs(和PixelRNNs)将图像x上像素的联合分布建模为以下条件分布的乘积，其中$x_i$为单个像素:
+<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/8.png" srcset="/img/loading.gif" lazyload></li>
+<li>PixelCNNs(和PixelRNNs)将图像x上像素的联合分布建模为以下条件分布的乘积，其中<span class="math inline">\(x_i\)</span>为单个像素:
 <ul>
-<li>$p(\mathbf{x})=\prod_{i=1}^{n^{2}} p\left(x_{i} \mid x_{1}, \ldots, x_{i-1}\right)$</li>
+<li><span class="math inline">\(p(\mathbf{x})=\prod_{i=1}^{n^{2}}
+p\left(x_{i} \mid x_{1}, \ldots, x_{i-1}\right)\)</span></li>
 <li>像素依赖关系的顺序是光栅扫描顺序：逐行逐像素扫描每行</li>
 <li>因此，每个像素都依赖于它上面和左边的所有像素，如上图(左)所示</li>
-</ul>
-</li>
+</ul></li>
 <li>为了保证CNN只能使用当前像素上方和左侧像素的信息，卷积的滤波器被mask，如上图(中间)所示</li>
 <li>对每个像素依次建模三个颜色通道(R, G, B)，B以(R, G)为条件，G以R为条件
 <ul>
-<li>这是通过将网络每一层的feature map分割成三个，并调整掩模张量的中心值来实现的</li>
+<li>这是通过将网络每一层的feature
+map分割成三个，并调整掩模张量的中心值来实现的</li>
 <li>然后使用softmax对每个颜色通道的256个可能值进行建模</li>
-</ul>
-</li>
-<li>PixelCNN通常由一组隐层卷积层组成，以N  x N x 3的图像作为输入，并产生N x N x 3 x  256的预测作为输出
+</ul></li>
+<li>PixelCNN通常由一组隐层卷积层组成，以N x N x 3的图像作为输入，并产生N
+x N x 3 x 256的预测作为输出
 <ul>
 <li>在训练期间，使用卷积并行地对所有像素进行预测</li>
 <li>在采样期间，预测是连续的：每个像素被预测之后都会被反馈到网络中以预测下一个像素
 <ul>
 <li>这种序列性对于生成高质量图像至关重要，因为它允许每个像素以高度非线性和多模态的方式依赖于之前的像素</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li>PixelRNN使用空间LSTM层，效果要比PixelCNN好，作者认为是因为LSTM中的循环连接允许网络中的每一层访问之前像素的整个邻域，而PixelCNN可用的邻域区域随着卷积堆栈的深度线性增长
 <ul>
 <li>不过可以通过增加卷积层深度来解决这一问题</li>
 <li>另一个潜在的优势是PixelRNNs包含乘法单位(以LSTM门的形式)，这可能帮助它建模更复杂的交互</li>
-</ul>
-</li>
+</ul></li>
 <li>为此作者使用<strong>门控激活单元</strong>替换了原pixelCNN中卷积层之间的矫正线性单元：
 <ul>
-<li>$\mathbf{y}=\tanh \left(W_{k, f} * \mathbf{x}\right) \odot \sigma\left(W_{k, g} * \mathbf{x}\right)$
+<li><span class="math inline">\(\mathbf{y}=\tanh \left(W_{k, f} *
+\mathbf{x}\right) \odot \sigma\left(W_{k, g} *
+\mathbf{x}\right)\)</span>
 <ul>
-<li>$\sigma$ 是sigmoid非线性激活函数，k是层数，$\odot$ 表示元素相乘，*表示卷积操作</li>
-</ul>
-</li>
+<li><span class="math inline">\(\sigma\)</span>
+是sigmoid非线性激活函数，k是层数，<span class="math inline">\(\odot\)</span> 表示元素相乘，*表示卷积操作</li>
+</ul></li>
 <li>由此得到Gated PixelCNN</li>
-</ul>
-</li>
-<li>在上面图(右上角)中，作者展示了输入图像上一个3×3mask 滤波器的有效接受域的逐渐增长。不过可以看到输入图像的很大一部分被掩蔽卷积结构忽略了——“盲点”（blind spot）
+</ul></li>
+<li>在上面图(右上角)中，作者展示了输入图像上一个3×3mask
+滤波器的有效接受域的逐渐增长。不过可以看到输入图像的很大一部分被掩蔽卷积结构忽略了——“盲点”（blind
+spot）
 <ul>
 <li>可以覆盖多达四分之一的潜在接收场(当使用3x3滤波器时)，这意味着当前像素右侧的任何内容都不会被考虑在内</li>
-</ul>
-</li>
-<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/9.jpg" srcset="/img/loading.gif" lazyload alt></li>
-<li>为消除这个盲点，可将每一层的 receptive field 分为两个部分，通过合并两个卷积网络堆栈来消除盲点
+</ul></li>
+<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/9.jpg" srcset="/img/loading.gif" lazyload></li>
+<li>为消除这个盲点，可将每一层的 receptive field
+分为两个部分，通过合并两个卷积网络堆栈来消除盲点
 <ul>
-<li>vertical 部分，是当前像素上方的掩码皆为1，其本行和下方行的掩码皆为0，使得 receptive field 在没有盲点的区域以矩形方式生长</li>
-<li>horizontal 部分，只是当前像素所在行，水平部分将当前层已经预测的部分以及垂直部分的输出作为输入</li>
-</ul>
-</li>
+<li>vertical
+部分，是当前像素上方的掩码皆为1，其本行和下方行的掩码皆为0，使得
+receptive field 在没有盲点的区域以矩形方式生长</li>
+<li>horizontal
+部分，只是当前像素所在行，水平部分将当前层已经预测的部分以及垂直部分的输出作为输入</li>
+</ul></li>
 <li>如上图输入分为两部分
 <ul>
-<li>将$W_f$和$W_g$合并在一个单独的mask卷积中以增加并行化（图中蓝色菱形）</li>
-<li>左边是vertical部分，因此维度是 $n\times n$</li>
-<li>右边输入是 horizontal 部分，因此是一行，即$1\times n$</li>
-<li>p 是feature maps的个数，作者在实验中在 vertical 部分加入了Residual Connection 也没有什么提升的效果，因此省了</li>
-</ul>
-</li>
+<li>将<span class="math inline">\(W_f\)</span>和<span class="math inline">\(W_g\)</span>合并在一个单独的mask卷积中以增加并行化（图中蓝色菱形）</li>
+<li>左边是vertical部分，因此维度是 <span class="math inline">\(n\times
+n\)</span></li>
+<li>右边输入是 horizontal 部分，因此是一行，即<span class="math inline">\(1\times n\)</span></li>
+<li>p 是feature maps的个数，作者在实验中在 vertical 部分加入了Residual
+Connection 也没有什么提升的效果，因此省了</li>
+</ul></li>
 <li>给定一个用潜在向量h表示的高级图像描述，来寻找适合该描述的图像的条件分布p(x|h)建模。在形式上，条件PixelCNN模型的分布如下：
 <ul>
-<li>$p(\mathbf{x})=\prod_{i=1}^{n^{2}} p\left(x_{i} \mid x_{1}, \ldots, x_{i-1},h\right)$</li>
+<li><span class="math inline">\(p(\mathbf{x})=\prod_{i=1}^{n^{2}}
+p\left(x_{i} \mid x_{1}, \ldots, x_{i-1},h\right)\)</span></li>
 <li>然后将h添加到非线性激活部分，从而对条件分布进行建模：</li>
-<li>$\mathbf{y}=\tanh \left(W_{k, f} * \mathbf{x} + V_{k,f}^T\mathbf{h} \right) \odot \sigma\left(W_{k, g} * \mathbf{x} + V_{k,g}^T\mathbf{h} \right)$</li>
-</ul>
-</li>
+<li><span class="math inline">\(\mathbf{y}=\tanh \left(W_{k, f} *
+\mathbf{x} + V_{k,f}^T\mathbf{h} \right) \odot \sigma\left(W_{k, g} *
+\mathbf{x} + V_{k,g}^T\mathbf{h} \right)\)</span></li>
+</ul></li>
 <li>作者在这里提到，h是一个指定类的one-hot编码，仅包含有关图像中应包含的内容而不包含位置的信息
 <ul>
 <li>为此作者开发了一种条件作用依赖于位置的变体</li>
 <li>在h中嵌入图像特定结构的位置信息，使用反卷积网络m()来将h映射到空间表示s=m(h)（具有与图像相同的宽度和高度，但可以具有任意数量的特征图）</li>
-<li>$\mathbf{y}=\tanh \left(W_{k, f} * \mathbf{x} + V_{k,f}^T * \mathbf{s} \right) \odot \sigma\left(W_{k, g} * \mathbf{x} + V_{k,g}^T * \mathbf{s} \right)$
+<li><span class="math inline">\(\mathbf{y}=\tanh \left(W_{k, f} *
+\mathbf{x} + V_{k,f}^T * \mathbf{s} \right) \odot \sigma\left(W_{k, g} *
+\mathbf{x} + V_{k,g}^T * \mathbf{s} \right)\)</span>
 <ul>
-<li>$V_{k,g}^T * \mathbf{s}$ 是一个无mask的1x1卷积</li>
-</ul>
-</li>
-</ul>
-</li>
+<li><span class="math inline">\(V_{k,g}^T * \mathbf{s}\)</span>
+是一个无mask的1x1卷积</li>
+</ul></li>
+</ul></li>
 <li>自编码器：一个编码器encoder将输入图像x并将其映射为低维表示h，一个解码器decoder尝试重建原始图像
 <ul>
 <li>作者使用Conditional PixelCNN替换反卷积解码器</li>
 <li>希望网络可以从低维表示h中忽略那些像素统计信息，而去关注更高级的抽象信息</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="Experiments">Experiments</h3>
+<h3 id="experiments">Experiments</h3>
 <ul>
 <li>实验部分还是蛮有趣的，放几张图看看吧</li>
-<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/10.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2021/01/23/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x09/10.png" srcset="/img/loading.gif" lazyload></li>
 </ul>
-<h3 id="😝😜😋-2">😝😜😋</h3>
+<h3 id="section-1">😝😜😋</h3>
 <p>这个论文短很多，主要就是在PixelRNN的基础上进行了改进和完善，一个是mask卷积在CNN中出现的盲点问题，然后改用两个卷积来分别处理，再合并；另一个就是条件生成，加入了一个one-hot编码来控制条件生成；同时改进了激活函数部分，使用门控激活单元。</p>
 <p>可能都是很长时间以前的东西了，但现在自己学习起来还是回感觉有很多不熟悉了解的地方，还是需要继续加油啊~</p>
 

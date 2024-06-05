@@ -292,12 +292,11 @@
 <ul>
 <li>矩阵线性变换
 <ul>
-<li>Ax =  λx</li>
+<li>Ax = λx</li>
 <li>x为A的特征向量，λ为特征值</li>
 <li>即特征向量对矩阵A的作用只有尺度变化而没有方向变化</li>
 <li>从而实现神经网络每一层的放大/缩小以及旋转操作</li>
-</ul>
-</li>
+</ul></li>
 <li>秩
 <ul>
 <li>行列之间的相关性</li>
@@ -307,31 +306,27 @@
 <ul>
 <li>较大奇异值包含了矩阵的主要信息</li>
 <li>只保留前r个较大奇异值及其对应的特征向量，可实现数据降维</li>
-<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/1.jpg" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/1.jpg" srcset="/img/loading.gif" lazyload></li>
 <li>保留决定数据分布的最主要的模式（丢弃的可能是噪声或其他不关键信息）</li>
 <li>推荐系统，图像去噪</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li>机器学习三要素
 <ul>
 <li>模型（问题建模，确定假设空间）
 <ul>
 <li>确定概率形式（函数形式）</li>
 <li>能够从概率形式推导出对应的函数形式（高斯分布-&gt;线性回归）</li>
-</ul>
-</li>
+</ul></li>
 <li>策略（确定目标函数）
 <ul>
 <li>极大似然估计（经验风险最小化）</li>
 <li>策略设计：训练误差-&gt;泛化误差</li>
-<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/2.jpg" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/2.jpg" srcset="/img/loading.gif" lazyload></li>
 <li>策略设计：无免费午餐定理
 <ul>
 <li>当考虑在所以问题的平均性能的时候，任意两个模型都是相同的</li>
-</ul>
-</li>
+</ul></li>
 <li>策略设计：奥卡姆剃刀原理
 <ul>
 <li>如无必要，勿增实体；即简单有效原理</li>
@@ -340,22 +335,17 @@
 <ul>
 <li>训练集的一般性质尚未被学习好（训练误差大）</li>
 <li>提过模型复杂度</li>
-</ul>
-</li>
+</ul></li>
 <li>过拟合
 <ul>
 <li>学习器把训练集特点当作样本的一般特点（训练误差小，测试误差大）</li>
 <li>降低模型复杂度</li>
 <li>数据增广（数据集越大，越不容易过拟合）</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
+</ul></li>
 <li>算法（求解模型参数）</li>
-</ul>
-</li>
+</ul></li>
 <li>频率学派 vs 贝叶斯学派
 <ul>
 <li>频率学派
@@ -364,19 +354,17 @@
 <li>事件发生频率的极限值-&gt;发生的概率会收敛到真实的概率</li>
 <li>模型参数是唯一的，需要从有限的观测数据中估计参数值</li>
 <li>统计机器学习</li>
-</ul>
-</li>
+</ul></li>
 <li>贝叶斯学派
 <ul>
 <li>关注随机事件的“可信程度”（无法重复）</li>
-<li>可能性 = 假设+数据；数据的作用是对初识假设作出修正，使观测者对概率的主观认识（先验）更接近客观实际（观测）</li>
+<li>可能性 =
+假设+数据；数据的作用是对初识假设作出修正，使观测者对概率的主观认识（先验）更接近客观实际（观测）</li>
 <li>模型参数本身是随机变量，需要估计参数的整个概率分布</li>
 <li>概率图模型</li>
-</ul>
-</li>
-<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/3.jpg" srcset="/img/loading.gif" lazyload alt></li>
-</ul>
-</li>
+</ul></li>
+<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/3.jpg" srcset="/img/loading.gif" lazyload></li>
+</ul></li>
 </ul>
 <h2 id="卷积神经网络">卷积神经网络</h2>
 <h3 id="绪论">绪论</h3>
@@ -386,30 +374,25 @@
 <li>搭建神经网络结构</li>
 <li>找到合适的损失函数（交叉熵损失、均方误差）</li>
 <li>找到一个合适的优化函数，更新参数（反向传播BP、随机梯度下降）</li>
-</ul>
-</li>
+</ul></li>
 <li>传统神经网络 vs 卷积神经网络
 <ul>
 <li>全连接网络处理图像的问题
 <ul>
 <li>参数太多：权重矩阵的参数太多-&gt;过拟合</li>
-</ul>
-</li>
+</ul></li>
 <li>卷积神经网络的解决方式
 <ul>
 <li>局部关联，参数共享</li>
 <li>使用卷积核，每一个节点对应的<strong>参数个数就是卷积核大小（加上偏置项）</strong></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 </ul>
 <h3 id="基本组成结构">基本组成结构</h3>
 <ul>
-<li>
-<p>卷积 Convolutional Layer</p>
+<li><p>卷积 Convolutional Layer</p>
 <ul>
-<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/4.jpg" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/4.jpg" srcset="/img/loading.gif" lazyload></li>
 <li>感受野：input的大小</li>
 <li>特征图 feature map ：对应的输出</li>
 <li>步长：每次滑动的距离</li>
@@ -419,44 +402,37 @@
 <li>与之对应的，每个卷积核中也会有三个矩阵，分别对应处理三层rgb的输入</li>
 <li>然后会得到三个内积值，然后加和，再加上偏置项，得到特征图中对应位置的图</li>
 <li>每一个卷积和对应一个特征图，即每一次的卷积操作，<strong>输出的深度等于卷积操作中的卷积核个数</strong></li>
-</ul>
-</li>
+</ul></li>
 <li>padding
 <ul>
 <li>对输入的四周都进行拓宽</li>
-</ul>
-</li>
+</ul></li>
 <li><strong>输出特征图的大小</strong>
 <ul>
-<li>$(N - F)/stride +1$</li>
+<li><span class="math inline">\((N - F)/stride +1\)</span></li>
 <li>输入大小N减去感受野大小F，除以步长，加一</li>
-<li>有padding时，$(N + padding *2 -F)/stride +1$</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>池化 Pooling Layer</p>
+<li>有padding时，<span class="math inline">\((N + padding *2 -F)/stride
++1\)</span></li>
+</ul></li>
+</ul></li>
+<li><p>池化 Pooling Layer</p>
 <ul>
 <li>将一个feature map进行缩放操作</li>
 <li>保留了主要特征的同时减少参数与计算量，防止过拟合，提高模型繁华能力</li>
 <li>处在卷积层与卷积层之间，全连接层与全连接层之间</li>
 <li>Max pooling（最大值池化）/Average pooling（平均池化）</li>
 <li>在池化过程中，也是有对应的filter和stride（进行池化操作，非卷积操作）</li>
-</ul>
-</li>
-<li>
-<p>全连接</p>
+</ul></li>
+<li><p>全连接</p>
 <ul>
 <li>两层之间所有神经元都有权重连接（参数量最大）</li>
 <li>通常在卷积神经网络尾部</li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <h3 id="卷积神经网络典型结构">卷积神经网络典型结构</h3>
-<h4 id="AlexNet">AlexNet</h4>
+<h4 id="alexnet">AlexNet</h4>
 <ul>
-<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/5.jpg" srcset="/img/loading.gif" lazyload alt>
+<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/5.jpg" srcset="/img/loading.gif" lazyload>
 <ul>
 <li>成功原因
 <ul>
@@ -464,34 +440,28 @@
 <li>非线性激活函数 ReLU</li>
 <li>防止过拟合 Dropout，Data augmentation（数据增强）</li>
 <li>其他 双GPU实现（网络被分为上下两部分）</li>
-</ul>
-</li>
+</ul></li>
 <li>激活函数
 <ul>
-<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/6.jpg" srcset="/img/loading.gif" lazyload alt>
+<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/6.jpg" srcset="/img/loading.gif" lazyload>
 <ul>
 <li>ReLU函数解决了梯度消失问题（导数恒为一）；计算速度快；收敛速度远快于sigmoid</li>
-</ul>
-</li>
+</ul></li>
 <li>DropOut（随机失活）
 <ul>
 <li>训练时随机关闭部分神经元，测试时整合所有神经元（防止过拟合）</li>
-</ul>
-</li>
+</ul></li>
 <li>Data augmentation（数据增强）
 <ul>
 <li>平移、翻转、对称</li>
 <li>改变rgb通道强度</li>
+</ul></li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h4 id="ZFNet">ZFNet</h4>
-<p><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/7.jpg" srcset="/img/loading.gif" lazyload alt></p>
-<h4 id="GoogleNet">GoogleNet</h4>
+<h4 id="zfnet">ZFNet</h4>
+<p><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/7.jpg" srcset="/img/loading.gif" lazyload></p>
+<h4 id="googlenet">GoogleNet</h4>
 <ul>
 <li>增加了两个辅助分类器</li>
 <li>参数量大概是Alexnet的1/2</li>
@@ -499,23 +469,23 @@
 <li>inception模块
 <ul>
 <li>初衷：多卷积核增加特征多样性</li>
-<li>不同的卷积核操作之后，会有不同的channel和feature map大小，然后进行padding操作，再将多个卷积核的操作结构进行串联即可</li>
-<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/8.jpg" srcset="/img/loading.gif" lazyload alt></li>
+<li>不同的卷积核操作之后，会有不同的channel和feature
+map大小，然后进行padding操作，再将多个卷积核的操作结构进行串联即可</li>
+<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/8.jpg" srcset="/img/loading.gif" lazyload></li>
 <li>但会存在问题，就是随着网络的进行，channel会越来越大，导致计算越来越复杂</li>
 <li>解决思路：插入1*1卷积核进行降维</li>
-<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/9.jpg" srcset="/img/loading.gif" lazyload alt></li>
-<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/10.jpg" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/9.jpg" srcset="/img/loading.gif" lazyload></li>
+<li><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/10.jpg" srcset="/img/loading.gif" lazyload></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h4 id="ResNet（残差学习网络）">ResNet（残差学习网络）</h4>
-<p><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/11.jpg" srcset="/img/loading.gif" lazyload alt></p>
+<h4 id="resnet残差学习网络">ResNet（残差学习网络）</h4>
+<p><img src="/2020/02/22/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2/11.jpg" srcset="/img/loading.gif" lazyload></p>
 <ul>
 <li>这种残差形式的网络，输入x输出F(x)+x，这样就避免了梯度消失的问题；同时网络自身也可以进行学习，例如某一部分的输出F(x)为零，即该部分网络无用，所以网络自身可以根据任务需求，自动学习到一个适当的网络层数。</li>
 </ul>
-<h3 id="代码实践-Tensorflow-CNN">代码实践 Tensorflow-CNN</h3>
-<p>因为之前学习过这个视频内容，所以这一部分代码自己也动手实践过，写在了自己之前的blog上。<br>
-链接地址：<a target="_blank" rel="noopener" href="https://hyzs1220.github.io/2019/11/17/CNN-%E7%AE%80%E5%8D%95%E5%9B%BE%E7%89%87%E5%88%86%E7%B1%BB/">https://hyzs1220.github.io/2019/11/17/CNN-简单图片分类/</a></p>
+<h3 id="代码实践-tensorflow-cnn">代码实践 Tensorflow-CNN</h3>
+<p>因为之前学习过这个视频内容，所以这一部分代码自己也动手实践过，写在了自己之前的blog上。
+链接地址：https://hyzs1220.github.io/2019/11/17/CNN-%E7%AE%80%E5%8D%95%E5%9B%BE%E7%89%87%E5%88%86%E7%B1%BB/</p>
 
                 
               </div>

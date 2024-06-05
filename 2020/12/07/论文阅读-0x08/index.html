@@ -16,12 +16,12 @@
   <meta name="author" content="hyzs1220">
   <meta name="keywords" content="">
   
-    <meta name="description" content="深度学习最近突然有一些做图像着色的想法，也有个想法也算是比较成熟，不过看到已经有不少比较成熟的论文了，所以再学习看一下，还是想试着做一下，哪怕做出来效果不好，但也是自己的一次尝试学习嘛，噶油！ 论文的阅读笔记： 《 Example-Based Colourization Via Dense Encoding Pyramids 》[code] ,   Pacific Graphics 2018 《">
+    <meta name="description" content="深度学习最近突然有一些做图像着色的想法，也有个想法也算是比较成熟，不过看到已经有不少比较成熟的论文了，所以再学习看一下，还是想试着做一下，哪怕做出来效果不好，但也是自己的一次尝试学习嘛，噶油！ 论文的阅读笔记： 《 Example-Based Colourization Via Dense Encoding Pyramids 》[code] , Pacific Graphics 2018">
 <meta property="og:type" content="article">
 <meta property="og:title" content="论文阅读-0x08">
 <meta property="og:url" content="http://example.com/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/index.html">
 <meta property="og:site_name" content="hyzsのblog">
-<meta property="og:description" content="深度学习最近突然有一些做图像着色的想法，也有个想法也算是比较成熟，不过看到已经有不少比较成熟的论文了，所以再学习看一下，还是想试着做一下，哪怕做出来效果不好，但也是自己的一次尝试学习嘛，噶油！ 论文的阅读笔记： 《 Example-Based Colourization Via Dense Encoding Pyramids 》[code] ,   Pacific Graphics 2018 《">
+<meta property="og:description" content="深度学习最近突然有一些做图像着色的想法，也有个想法也算是比较成熟，不过看到已经有不少比较成熟的论文了，所以再学习看一下，还是想试着做一下，哪怕做出来效果不好，但也是自己的一次尝试学习嘛，噶油！ 论文的阅读笔记： 《 Example-Based Colourization Via Dense Encoding Pyramids 》[code] , Pacific Graphics 2018">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/1.png">
 <meta property="og:image" content="http://example.com/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/2.png">
@@ -284,12 +284,15 @@
                 
                 <p>深度学习最近突然有一些做图像着色的想法，也有个想法也算是比较成熟，不过看到已经有不少比较成熟的论文了，所以再学习看一下，还是想试着做一下，哪怕做出来效果不好，但也是自己的一次尝试学习嘛，噶油！</p>
 <p>论文的阅读笔记：</p>
-<p>《 Example-Based Colourization Via Dense Encoding Pyramids 》<a target="_blank" rel="noopener" href="https://github.com/chufengxiao/Example-based-Colorization-via-Dense-Encoding-pyramids">[code]</a> ,   Pacific Graphics 2018</p>
-<p>《  Interactive Deep Colorization Using Simultaneous Global and Local Inputs 》， ICASSP 2019</p>
+<p>《 Example-Based Colourization Via Dense Encoding Pyramids 》<a target="_blank" rel="noopener" href="https://github.com/chufengxiao/Example-based-Colorization-via-Dense-Encoding-pyramids">[code]</a>
+, Pacific Graphics 2018</p>
+<p>《 Interactive Deep Colorization Using Simultaneous Global and Local
+Inputs 》， ICASSP 2019</p>
 <span id="more"></span>
-<h2 id="Example-Based-Colourization-Via-Dense-Encoding-Pyramids">Example-Based Colourization Via Dense Encoding Pyramids</h2>
+<h2 id="example-based-colourization-via-dense-encoding-pyramids">Example-Based
+Colourization Via Dense Encoding Pyramids</h2>
 <p>通过密集编码金字塔的基于实例的着色</p>
-<h3 id="Abstract">Abstract</h3>
+<h3 id="abstract">Abstract</h3>
 <ul>
 <li>提出了一种新的基于深度样本的图像着色方法——密集编码金字塔网络</li>
 <li>作者在本文中将颜色化定义为一个多项分类问题</li>
@@ -297,109 +300,87 @@
 <li>作者通过扩展网络，提出了一种新的并行残差密集块来有效地提取颜色表示的局部-全局上下文</li>
 <li>不像全自动彩色化产生固定颜色的图像，该网络的参考图像是灵活的;自然图像和简单的调色板都可以用来引导色彩</li>
 </ul>
-<p><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/1.png" srcset="/img/loading.gif" lazyload alt></p>
+<p><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/1.png" srcset="/img/loading.gif" lazyload></p>
 <ul>
-<li>
-<p>密集编码金字塔能够根据参考图像或调色板的不同颜色产生似是而非的结果。更重要的是，它比其他的更友好，因为用户可以很容易地操纵调色板，从而得到所需的样式</p>
-</li>
-<li>
-<p>现有的图像着色技术可归纳为两大类</p>
+<li><p>密集编码金字塔能够根据参考图像或调色板的不同颜色产生似是而非的结果。更重要的是，它比其他的更友好，因为用户可以很容易地操纵调色板，从而得到所需的样式</p></li>
+<li><p>现有的图像着色技术可归纳为两大类</p>
 <ul>
 <li>传统的基于用户交互的图像着色技术
 <ul>
 <li>在用户输入的指导下，一个优化过程被用来传播颜色。然而，优化过程通常需要大量的计算量和时间。此外，在边界开放的区域经常会出现漏色和漂色现象</li>
 <li>一些工作提出了在参考图像的指导下对图像着色，不过一旦参考图像和灰度图像的差异很大，这些方法可能无法保证视觉上合理的结果</li>
 <li>一旦参考图像和灰度图像的差异很大，这些方法可能无法保证视觉上合理的结果</li>
-</ul>
-</li>
+</ul></li>
 <li>基于学习的图像自动着色技术
 <ul>
 <li>基于学习的自动方法不能灵活地生成所需的颜色分布的图像</li>
 <li>一些色彩化方法，不过需要用户有足够的艺术感来选择合适的配色方案，特别是对于真实的图像</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>本文提出了一种新的基于实例的深度颜色化方法，即密集编码金字塔网络(Dense Encoding Pyramids Network, DEPN)</p>
+</ul></li>
+</ul></li>
+<li><p>本文提出了一种新的基于实例的深度颜色化方法，即密集编码金字塔网络(Dense
+Encoding Pyramids Network, DEPN)</p>
 <ul>
 <li>关键思想是图像的颜色先验总是来自于图像本身。网络通过将参考图像的颜色分布映射到灰度图像来实现图像着色</li>
 <li>将网络设计成金字塔结构，以利用颜色表示的层次结构的金字塔形状</li>
 <li>提出了一种新的并行残差密集块（PRDB），用于探索网络中更丰富的局部-全局上下文信息</li>
 <li>提出了一种分层解码器滤波器(HDEF)来聚合相邻两层之间的颜色分布结果</li>
-</ul>
-</li>
-<li>
-<p>为了从灰度图像中恢复丢失的信息，传统的着色方法需要用户的指导/用户交互/参考图像</p>
+</ul></li>
+<li><p>为了从灰度图像中恢复丢失的信息，传统的着色方法需要用户的指导/用户交互/参考图像</p>
 <ul>
 <li>一些颜色转移方法也可以用于转移颜色到灰度图像
 <ul>
 <li>它们建立了一个映射函数，将颜色分布从一个映射到另一个</li>
 <li>类似于色彩转换技术，一些方法在参考图像的引导下着色，而不需要用户干预</li>
 <li>通过匹配参考图像和目标图像之间的<strong>亮度和纹理信息</strong>，将颜色从参考图像迁移到目标图像</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>基于学习的图像上色方法</p>
+</ul></li>
+</ul></li>
+<li><p>基于学习的图像上色方法</p>
 <ul>
 <li>利用大规模彩色图像数据的全自动彩色化网络
 <ul>
 <li>然而，这些没有任何提示的全自动方法高度依赖于训练数据</li>
 <li>一旦输入图像没有被训练数据覆盖，就可能无法产生一个合理的、视觉上令人愉快的结果</li>
-</ul>
-</li>
+</ul></li>
 <li>这种用户交互的网络有一个潜在的要求，那就是用户需要有足够的艺术感来选择合适的、和谐的配色方案，特别是对于真实的图像。否则，色彩化的图像可能不自然</li>
 <li>[ZZI*17]提出了一种深度用户引导的着色方法
 <ul>
 <li>该网络通过融合低级线索和从大规模数据中学习的高级语义信息来传播用户交互</li>
 <li>然而，彩色化的结果在很大程度上取决于参考图像的质量。同时，它也必须尽可能地与目标图像相似</li>
-</ul>
-</li>
+</ul></li>
 <li>[HCL*18]提出了一种基于实例的带有两个子网的局部着色方法
 <ul>
 <li>设计了相似子网来寻找参考图像和灰度图像之间的语义对应，然后融合多级抽象特征</li>
 <li>颜色化子网采用相似子网的输出来生成生动的结果</li>
 <li>然而，当输入一个缺乏语义信息的参考图像时，比如一个简单的调色板，由于相似子网无法获取语义和亮度信息，所以整个网络无法产生可信的结果</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>颜色迁移</p>
+</ul></li>
+</ul></li>
+<li><p>颜色迁移</p>
 <ul>
 <li>也可以实现给定参考图像的着色</li>
 <li>[CFL*15]介绍了一种基于颜色的方法来重新着色图像
 <ul>
 <li>开发了一种加速聚类方法，可以从一张图像生成一个调色板</li>
 <li>通过用户改变调色板来实现颜色转移</li>
-</ul>
-</li>
+</ul></li>
 <li>[WZL*17]提出了一种包含相似性映射和细节守恒的两阶段方法
 <ul>
 <li>相似度映射模型采用超像素采样和K-means聚类的方法从输入图像和参考图像中提取RGB空间的中间特征</li>
 <li>在此基础上，提出了一种L0梯度保持算法，通过控制像素在其颜色区域内的梯度来生成迁移结果</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>金字塔结构（Pyramid structure）；残差结构；密集结构（dense structures）</p>
+</ul></li>
+</ul></li>
+<li><p>金字塔结构（Pyramid structure）；残差结构；密集结构（dense
+structures）</p>
 <ul>
 <li>DenseNet来融合各层特征，有效地克服了消失梯度问题，且参数少得多。DenseNet由许多密集的块组成，其中任何层连接到所有随后的层</li>
-</ul>
-</li>
-<li>
-<p>对于图像着色来说，极深的结构可能没有帮助</p>
+</ul></li>
+<li><p>对于图像着色来说，极深的结构可能没有帮助</p>
 <ul>
 <li>要生成语义正确、生动的彩色图像，既需要高水平的知识，也需要低水平的知识</li>
 <li>因此，充分利用多尺度特征比学习更多的冗余特征更重要</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="Method">Method</h3>
-<p><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/2.png" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="method">Method</h3>
+<p><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/2.png" srcset="/img/loading.gif" lazyload></p>
 <ul>
 <li>目的是将参考图像的颜色分布更语义化地映射到输入的灰度图像上
 <ul>
@@ -407,34 +388,42 @@
 <li>提出的并行残差密集块（PRDBs）是通过使网络更宽而不是更深来提取丰富的网络特征</li>
 <li>进一步定义了分层解码器滤波器（HDEF），以促进金字塔网络不同层之间的信息传播，利用从其他层提取的信息作为指导，避免潜在的错误积累</li>
 <li>参考图像的颜色分布由编码器和PRDB进行提取，然后注入到每一层，作为着色过程的指导</li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <h4 id="目标函数">目标函数</h4>
 <ul>
-<li>给定一幅灰度图像X和一幅参考图像Y，网络的目标是学习映射F(X, Y)，以便用Y的颜色分布给X着色</li>
-<li>在实验中，作者使用CIE Lab 色彩空间代替RGB，从而满足人的色彩视觉感知一致性</li>
-<li>将 $X \in  \mathbb{R} ^{H \times W \times 1}$ 作为L通道，然后输出结果 $\hat X \in  \mathbb{R} ^{H \times W \times 2}$ ，表示图像的ab通道</li>
+<li>给定一幅灰度图像X和一幅参考图像Y，网络的目标是学习映射F(X,
+Y)，以便用Y的颜色分布给X着色</li>
+<li>在实验中，作者使用CIE Lab
+色彩空间代替RGB，从而满足人的色彩视觉感知一致性</li>
+<li>将 <span class="math inline">\(X \in  \mathbb{R} ^{H \times W \times
+1}\)</span> 作为L通道，然后输出结果 <span class="math inline">\(\hat X
+\in  \mathbb{R} ^{H \times W \times 2}\)</span> ，表示图像的ab通道</li>
 <li>类似于[ZIE16]，将颜色化问题定义为多项分类</li>
 <li>作者将ab通道量化为大小为10的网格，从而减少ab通道的颜色对数目，进而减少计算量。最终，在整个色域中将向量Q保留为313个值，表示ab对的数量</li>
 <li>每个网络分支的目标是最小化训练数据集上期望的分类损失
 <ul>
-<li>$\hat{\theta}^{i}=\arg \min <em>{\theta^{i}}\left(\mathcal{L}</em>{c l}\left(\mathcal{F}^{i}\left(X^{i}, Y^{i} ; \theta^{i}\right), Y^{i}\right)\right)$
+<li><span class="math inline">\(\hat{\theta}^{i}=\arg \min
+_{\theta^{i}}\left(\mathcal{L}_{c l}\left(\mathcal{F}^{i}\left(X^{i},
+Y^{i} ; \theta^{i}\right), Y^{i}\right)\right)\)</span>
 <ul>
-<li>其中$\theta^{i}$ 表示第i层分支网络的参数</li>
-<li>$\mathcal{L}_{c l}$ 表示交叉熵损失，用于测量参考图像Y的预测颜色分布 $\hat Z$ 与真实颜色分布 $Z \in  \mathbb{R} ^{H \times W \times Q}$ 之间的误差</li>
-</ul>
-</li>
-<li>$\mathcal{L}<em>{c l}\left(\hat{Z}^{i}, Z^{i}\right)=-\sum</em>{h, w} \omega^{i}\left(Z_{h, w}^{i}\right) \sum_{q} Z_{h, w, q}^{i} \log \left(\hat{Z}_{h, w, q}^{i}\right)$
+<li>其中<span class="math inline">\(\theta^{i}\)</span>
+表示第i层分支网络的参数</li>
+<li><span class="math inline">\(\mathcal{L}_{c l}\)</span>
+表示交叉熵损失，用于测量参考图像Y的预测颜色分布 <span class="math inline">\(\hat Z\)</span> 与真实颜色分布 <span class="math inline">\(Z \in  \mathbb{R} ^{H \times W \times Q}\)</span>
+之间的误差</li>
+</ul></li>
+<li><span class="math inline">\(\mathcal{L}_{c l}\left(\hat{Z}^{i},
+Z^{i}\right)=-\sum_{h, w} \omega^{i}\left(Z_{h, w}^{i}\right) \sum_{q}
+Z_{h, w, q}^{i} \log \left(\hat{Z}_{h, w, q}^{i}\right)\)</span>
 <ul>
-<li>其中$\omega^{i}$ 表示 $Z_{h, w}^{i}$ 的再平衡权重</li>
+<li>其中<span class="math inline">\(\omega^{i}\)</span> 表示 <span class="math inline">\(Z_{h, w}^{i}\)</span> 的再平衡权重</li>
 <li>能够校正不平衡前景-背景分布中的ab值</li>
+</ul></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<h4 id="密集编码金字塔——Dense-encoding-pyramids">密集编码金字塔——Dense encoding pyramids</h4>
+<h4 id="密集编码金字塔dense-encoding-pyramids">密集编码金字塔——Dense
+encoding pyramids</h4>
 <ul>
 <li>输入多尺度图像，从而让来自较低层次的特征以由粗到细的方式引导较高层次的特征</li>
 <li>主要优势是多尺度的上下文信息和递归预测机制（由粗到细）</li>
@@ -442,34 +431,43 @@
 <ul>
 <li>作者这里使用的金字塔结构从四个不同尺度的上下文信息着色图像</li>
 <li>因此作者提出的DEPN可以看作是一种由粗到细的图像着色处理方法</li>
-</ul>
-</li>
+</ul></li>
 <li>对于每一个网络分支都可以看作一个完整的着色网络
 <ul>
-<li>对于第i层的 $\mathcal{F}^{i}$ ，接收到一个灰度图像  $X^{i}$ 和 参考图像 $Y^{i}$ ，分别由X和Y进行下采样得到</li>
+<li>对于第i层的 <span class="math inline">\(\mathcal{F}^{i}\)</span>
+，接收到一个灰度图像 <span class="math inline">\(X^{i}\)</span> 和
+参考图像 <span class="math inline">\(Y^{i}\)</span>
+，分别由X和Y进行下采样得到</li>
 <li>首先通过普通卷积来获取浅层特征，然后插入三个PRDBs，提取不同尺度的特征</li>
 <li>参考图像的颜色分布被注入到第一个PRDB中作为颜色提示</li>
-<li>接着经过一个反卷积块、一个卷积块和一个解码器，生成预测 $\hat Y^{i}$ 的ab通道</li>
-</ul>
-</li>
-<li>为了聚合两个相邻分支之间的特征，即 $\mathcal{F}^{i-1}$ 和 $\mathcal{F}^{i}$ ，作者提出了HDEF
+<li>接着经过一个反卷积块、一个卷积块和一个解码器，生成预测 <span class="math inline">\(\hat Y^{i}\)</span> 的ab通道</li>
+</ul></li>
+<li>为了聚合两个相邻分支之间的特征，即 <span class="math inline">\(\mathcal{F}^{i-1}\)</span> 和 <span class="math inline">\(\mathcal{F}^{i}\)</span> ，作者提出了HDEF
 <ul>
 <li>在相邻两层之间建立联系，将信息从低层传递到高层</li>
-<li>$\mathcal{F}(G, X)=\left{\begin{array}{l}\mathcal{F}^{i}\left(X^{i}, Y^{i}\right), i=1 \ \mathcal{F}^{i}\left(X^{i}, Y^{i}, \Theta\left(\mathcal{F}^{i-1}\right)\right), i&gt;1\end{array}\right.$</li>
-<li>$\Theta$ 表示HDEF，作者采用了逐步训练网络的方式，从而让网络能够更好的适应多尺度的着色任务</li>
-<li>在最后一级 $\mathcal{F}^{i}$ ，从 $Z^{i}$ 解码得到的 $\hat X^{i}$ 的ab值通过双线性插值上采样恢复到原始输入图像的分辨率大小</li>
-<li>$\hat X$ 与X的L通道相结合形成最终输出的彩色图像</li>
+<li><span class="math inline">\(\mathcal{F}(G,
+X)=\left\{\begin{array}{l}\mathcal{F}^{i}\left(X^{i}, Y^{i}\right), i=1
+\\ \mathcal{F}^{i}\left(X^{i}, Y^{i},
+\Theta\left(\mathcal{F}^{i-1}\right)\right),
+i&gt;1\end{array}\right.\)</span></li>
+<li><span class="math inline">\(\Theta\)</span>
+表示HDEF，作者采用了逐步训练网络的方式，从而让网络能够更好的适应多尺度的着色任务</li>
+<li>在最后一级 <span class="math inline">\(\mathcal{F}^{i}\)</span> ，从
+<span class="math inline">\(Z^{i}\)</span> 解码得到的 <span class="math inline">\(\hat X^{i}\)</span>
+的ab值通过双线性插值上采样恢复到原始输入图像的分辨率大小</li>
+<li><span class="math inline">\(\hat X\)</span>
+与X的L通道相结合形成最终输出的彩色图像</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h4 id="并行残差密集块——Parallel-residual-dense-block">并行残差密集块——Parallel residual dense block</h4>
+<h4 id="并行残差密集块parallel-residual-dense-block">并行残差密集块——Parallel
+residual dense block</h4>
 <ul>
-<li>主要是为了充分利用 $\mathcal{F}^{i}$ 的多种特征，提取图像的丰富特征表示，包括输入图像、参考图像和输出图像</li>
-<li><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/3.png" srcset="/img/loading.gif" lazyload alt>
+<li>主要是为了充分利用 <span class="math inline">\(\mathcal{F}^{i}\)</span>
+的多种特征，提取图像的丰富特征表示，包括输入图像、参考图像和输出图像</li>
+<li><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/3.png" srcset="/img/loading.gif" lazyload>
 <ul>
 <li>与原来的链式残差结构做对比</li>
-</ul>
-</li>
+</ul></li>
 <li>与常规卷积相比，残差和密集的结构有利于记忆底层信息并提取丰富的特征</li>
 <li>作者这里提出说网络过深可能对于图像着色并没有很大的帮助，色彩化同样依赖于低水平和高水平的信息来产生语义上正确和不同颜色的图像</li>
 <li><strong>充分利用多尺度特征比学习更多的冗余特征更重要</strong></li>
@@ -478,54 +476,57 @@
 <li>作者在PRDB的开始部分添加了卷积层来对前面的块进行裁剪，在最后添加了另一个卷积层来进行批处理归一化，以实现信息的集成和快速收敛</li>
 <li>网络具体结构就不写了，和上图一致</li>
 </ul>
-<h4 id="分层编码-解码滤波——Hierarchical-decoder–encoder-filter">分层编码-解码滤波——Hierarchical decoder–encoder filter</h4>
+<h4 id="分层编码-解码滤波hierarchical-decoderencoder-filter">分层编码-解码滤波——Hierarchical
+decoder–encoder filter</h4>
 <ul>
 <li>整个网络是一个全局编码-解码结构，编码器向高级特征中注入低级信息，解码器从分类值中恢复最终结果的色彩信息</li>
 <li>不过来自底层的错误会累积，从而增加冗余信息。
 <ul>
 <li>为此作者定义了HDEF，一种非对称的编码-解码器，作为两个相邻级之间的连接</li>
 <li>编码器被用来映射颜色值到颜色分布</li>
-<li>解码器能够产生每个网络分支的结果 $Y^{i}$</li>
-</ul>
-</li>
+<li>解码器能够产生每个网络分支的结果 <span class="math inline">\(Y^{i}\)</span></li>
+</ul></li>
 <li>作者采用软编码的方法将密集的颜色信息编码到颜色分布中
 <ul>
 <li>它使网络在分类问题中比单热点编码更快地提取知识</li>
 <li>该编码器通过搜索由RBF加权的bins的K个最近的邻居，从而将图像映射到颜色分布中</li>
-<li>对第i级参考图像 $Y^{i}$ 的颜色分布 $Z^{i}$ 进行编码</li>
-<li><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/4.png" srcset="/img/loading.gif" lazyload alt></li>
-<li>emmm没有特别看懂他这部分，感觉这里的K-nearest neighbours和感受野差不多，后面作者也说到在低分辨率下采用较大的  $\left|K^{i}\right|$，然后较大的分辨率上采用较小的$\left|K^{i}\right|$</li>
-</ul>
-</li>
-<li>解码器对于每一个网络分支，将分类结果 $Z^{i}$ 转换回ab通道
+<li>对第i级参考图像 <span class="math inline">\(Y^{i}\)</span>
+的颜色分布 <span class="math inline">\(Z^{i}\)</span> 进行编码</li>
+<li><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/4.png" srcset="/img/loading.gif" lazyload></li>
+<li>emmm没有特别看懂他这部分，感觉这里的K-nearest
+neighbours和感受野差不多，后面作者也说到在低分辨率下采用较大的 <span class="math inline">\(\left|K^{i}\right|\)</span>，然后较大的分辨率上采用较小的<span class="math inline">\(\left|K^{i}\right|\)</span></li>
+</ul></li>
+<li>解码器对于每一个网络分支，将分类结果 <span class="math inline">\(Z^{i}\)</span> 转换回ab通道
 <ul>
 <li>利用softmax函数得到每个像素处的概率</li>
-<li>$P\left(Z_{h, w}^{i}\right)=\frac{\exp \left(Z_{h, w}^{i}\right)}{\sum_{q=1}^{|Q|} \exp \left(Z_{h, w, q}^{i}\right)}$</li>
-<li>Q中分布的平均值由每个像素的分类概率 $Z_{h, w}^{i}$ 与Q的内积计算得出</li>
-<li>$Dec^i \left(Z_{h, w}^{i}\right)=P\left(Z_{h, w}^{i}\right) \bigodot Q$</li>
-</ul>
-</li>
+<li><span class="math inline">\(P\left(Z_{h, w}^{i}\right)=\frac{\exp
+\left(Z_{h, w}^{i}\right)}{\sum_{q=1}^{|Q|} \exp \left(Z_{h, w,
+q}^{i}\right)}\)</span></li>
+<li>Q中分布的平均值由每个像素的分类概率 <span class="math inline">\(Z_{h, w}^{i}\)</span> 与Q的内积计算得出</li>
+<li><span class="math inline">\(Dec^i \left(Z_{h,
+w}^{i}\right)=P\left(Z_{h, w}^{i}\right) \bigodot Q\)</span></li>
+</ul></li>
 <li>编码器将彩色图像映射到颜色分布，而解码器则相反
 <ul>
 <li>不过这两个过程不可逆，这是因为分层编码器利用软编码方案，在牺牲密集的颜色信息的同时形成稀疏矢量</li>
 <li>将两者组合得到</li>
-<li>$\Theta(Z^{i})= Enc^i \left(Dec^i \left(Z^{i}\right) \right)$</li>
+<li><span class="math inline">\(\Theta(Z^{i})= Enc^i \left(Dec^i
+\left(Z^{i}\right) \right)\)</span></li>
 <li>HDEF不是直接将颜色分布传递给下一个网络分支，而是先将颜色分布解码为颜色信息，然后再将其编码为密集特征</li>
 <li>从而避免之前级别分支的错误累积。另一方面，Enc的密集输出有助于挖掘深层信息，为下一个网络分支提供指导</li>
-</ul>
-</li>
+</ul></li>
 <li>网络的具体实现和上面的网络结构图一致</li>
 </ul>
-<h3 id="Experiments">Experiments</h3>
+<h3 id="experiments">Experiments</h3>
 <ul>
 <li>与当前先进的着色方法做对比（定性&amp;定量）</li>
 <li>然后使用各种参考图（调色板）来评估稳健性</li>
 <li>用户研究</li>
 <li>消融实验</li>
-<li><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/5.png" srcset="/img/loading.gif" lazyload alt></li>
-<li><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/6.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/5.png" srcset="/img/loading.gif" lazyload></li>
+<li><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/6.png" srcset="/img/loading.gif" lazyload></li>
 </ul>
-<h3 id="😝😜😋">😝😜😋</h3>
+<h3 id="section">😝😜😋</h3>
 <p>看的第一篇图像上色的论文，感触还是蛮多的，慢慢写点吧，然后以后看的时候也多注意这些方面</p>
 <ul>
 <li>我觉得我现在最大的疑问还是网络结构上吧，这篇论文里面作者也提到了许多关于网络结构选择的想法，比如选择多尺度而不是高深度。不过作者网络结构中还是使用了编码-解码结构，因为在我的感觉里面，这种图像上色任务，更重要的是要保留这种结构信息，所以应该尽可能地保留尺度信息。
@@ -533,16 +534,15 @@
 <li>自己主要没有特别想明白的就是，如果对图像进行编码-解码，那这样的话，就会有分辨率的损失，虽然会通过解码器进行恢复，但仍然感觉不能恢复到原始最佳的分辨率状态，emmm就是感觉那个结构信息很难保存下来，但看作者的效果是很好的，不知道是不是通过多分辨多分支操作的结果，难以理解，，，，</li>
 <li>不过作者在将网络输入到网络之前，也是对RGB进行了处理，转换到了另一个结构空间，然后只处理ab通道，另外的L通道直接保留，然后拼接到最终的输出结果上。可能也是对图像结构信息的一种保留吧，这个可以再学习看一下</li>
 <li>还有一点想吐槽一下的就是，作者论文里面的用到的结构其实都没有特别复杂感觉，但是作者解释完就让人感觉很麻烦，而且有几个公式和几句话我还没看懂，，，但看他的网络结构其实还蛮简单的，但是还是能感觉到图像上色这个任务所应用到的部分还是很多的，不是简单的一个端到端网络就能够轻易解决的</li>
-<li>作者在这个网络中使用的网络结构和思想感觉都还是挺先进的，前几篇看的CVPR 2020的几篇论文感觉一些思想上和这个都是很相近的</li>
-</ul>
-</li>
+<li>作者在这个网络中使用的网络结构和思想感觉都还是挺先进的，前几篇看的CVPR
+2020的几篇论文感觉一些思想上和这个都是很相近的</li>
+</ul></li>
 <li>另外发现图像上色并不像自己之前想的那么简单，作者在实验部分，借鉴一张参考图像来给图像上色的部分中，作者认为网络会学习其语义特征，进而来给灰度图像进行上色，而对于直接使用调色板来给图像上色，是缺少这种语义信息的，所以在上色过程中会出现一些问题，类似下面这种，不能够出现我们所预期想要得到的色彩效果（感觉也是因为在训练过程中没有相关数据集的学习）
 <ul>
-<li><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/7.png" srcset="/img/loading.gif" lazyload alt></li>
+<li><img src="/2020/12/07/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x08/7.png" srcset="/img/loading.gif" lazyload></li>
 <li>所以就感觉自己想的那种通过调色板来实现非常完美的图像上色还是很麻烦的，感觉很难学习到那种对应区域上色，以及调色板之外色彩的学习生成</li>
 <li>理解上来说，感觉神经网络通过学习应该是学习一些语义特征之类的知识，但对于图像上色，如果没有很丰富的数据集支持，在最后使用的时候就很难达到我们所预期的效果，不过这东西感觉有没有很好的办法，，所以还是有点迷茫</li>
-</ul>
-</li>
+</ul></li>
 <li>在作者提出的论文基础上，感觉作者在网络中使用的结构和损失函数等应该都算是比较常规的，感觉可以在损失函数和结构设计上再添加一点东西，不过不知道效果咋样了，打算再读读论文，然后试着去跑跑代码，加油！！</li>
 </ul>
 

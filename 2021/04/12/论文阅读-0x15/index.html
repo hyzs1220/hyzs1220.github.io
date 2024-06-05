@@ -16,12 +16,12 @@
   <meta name="author" content="hyzs1220">
   <meta name="keywords" content="">
   
-    <meta name="description" content="论文的阅读笔记： 《 Neighbor2Neighbor: Self-Supervised Denoising from Single Noisy Images 》,   [code],  CVPR 2021">
+    <meta name="description" content="论文的阅读笔记： 《 Neighbor2Neighbor: Self-Supervised Denoising from Single Noisy Images 》, [code], CVPR 2021">
 <meta property="og:type" content="article">
 <meta property="og:title" content="论文阅读-0x15">
 <meta property="og:url" content="http://example.com/2021/04/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x15/index.html">
 <meta property="og:site_name" content="hyzsのblog">
-<meta property="og:description" content="论文的阅读笔记： 《 Neighbor2Neighbor: Self-Supervised Denoising from Single Noisy Images 》,   [code],  CVPR 2021">
+<meta property="og:description" content="论文的阅读笔记： 《 Neighbor2Neighbor: Self-Supervised Denoising from Single Noisy Images 》, [code], CVPR 2021">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2021/04/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x15/1.png">
 <meta property="og:image" content="http://example.com/2021/04/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x15/2.png">
@@ -236,7 +236,7 @@
         
         
         
-          37 分钟
+          38 分钟
         
       </span>
     
@@ -279,237 +279,298 @@
               <div class="markdown-body">
                 
                 <p>论文的阅读笔记：</p>
-<p>《 Neighbor2Neighbor: Self-Supervised Denoising from Single Noisy Images 》,   <a target="_blank" rel="noopener" href="https://github.com/TaoHuang2018/Neighbor2Neighbor">[code]</a>,  CVPR 2021</p>
+<p>《 Neighbor2Neighbor: Self-Supervised Denoising from Single Noisy
+Images 》, <a target="_blank" rel="noopener" href="https://github.com/TaoHuang2018/Neighbor2Neighbor">[code]</a>,
+CVPR 2021</p>
 <span id="more"></span>
-<h2 id="Neighbor2Neighbor-Self-Supervised-Denoising-from-Single-Noisy-Images">Neighbor2Neighbor: Self-Supervised Denoising from Single Noisy Images</h2>
-<h3 id="Abstract">Abstract</h3>
+<h2 id="neighbor2neighbor-self-supervised-denoising-from-single-noisy-images">Neighbor2Neighbor:
+Self-Supervised Denoising from Single Noisy Images</h2>
+<h3 id="abstract">Abstract</h3>
 <ul>
-<li>
-<p>近年来，神经网络的快速发展使图像去噪得到了很大的发展。然而，由于监督学习需要大量的无噪声图像对，限制了这些模型的广泛应用</p>
-</li>
-<li>
-<p>虽然已经有一些尝试只用单一的噪声图像来训练图像去噪模型，现有的自监督去噪方法存在网络训练效率低下、有用信息丢失或依赖于噪声建模等问题</p>
-</li>
-<li>
-<p>在本文中，作者提出了一种非常简单而有效的方法，即Neighbor2Neighbor，<strong>只使用噪声图像</strong>来训练得到一个有效的图像去噪模型</p>
+<li><p>近年来，神经网络的快速发展使图像去噪得到了很大的发展。然而，由于监督学习需要大量的无噪声图像对，限制了这些模型的广泛应用</p></li>
+<li><p>虽然已经有一些尝试只用单一的噪声图像来训练图像去噪模型，现有的自监督去噪方法存在网络训练效率低下、有用信息丢失或依赖于噪声建模等问题</p></li>
+<li><p>在本文中，作者提出了一种非常简单而有效的方法，即Neighbor2Neighbor，<strong>只使用噪声图像</strong>来训练得到一个有效的图像去噪模型</p>
 <ul>
 <li>首先，提出了一种<strong>随机邻域下采样器来生成训练图像对</strong>
 <ul>
 <li>具体来说，用于训练网络的输入和目标都是从相同的噪声图像中抽取的下采样图像，满足成对图像中成对像素是相邻的且外观非常相似的要求</li>
-</ul>
-</li>
+</ul></li>
 <li>其次，用第一阶段下采样生成的训练数据对来训练去噪网络，并使用<strong>提出的正则化器作为额外的损失</strong>以获得更好的性能</li>
-</ul>
-</li>
-<li>
-<p>所提出的Neighbor2Neighbor框架能够享受网络体系结构设计中最新的监督式降噪网络的进步</p>
-</li>
-<li>
-<p>此外，它<strong>避免了对噪声分布假设的严重依赖</strong></p>
-</li>
-<li>
-<p>作者从理论的角度解释了该方法，并通过广泛的实验进一步验证了它的方法，包括sRGB空间中具有不同噪声分布的合成实验以及在raw-RGB空间中的降噪基准数据集上的实际实验</p>
-</li>
-<li>
-<p>基于cnn的去噪器在很大程度上依赖于大量去除噪声的图像对来进行训练</p>
+</ul></li>
+<li><p>所提出的Neighbor2Neighbor框架能够享受网络体系结构设计中最新的监督式降噪网络的进步</p></li>
+<li><p>此外，它<strong>避免了对噪声分布假设的严重依赖</strong></p></li>
+<li><p>作者从理论的角度解释了该方法，并通过广泛的实验进一步验证了它的方法，包括sRGB空间中具有不同噪声分布的合成实验以及在raw-RGB空间中的降噪基准数据集上的实际实验</p></li>
+<li><p>基于cnn的去噪器在很大程度上依赖于大量去除噪声的图像对来进行训练</p>
 <ul>
 <li>在真实的摄影中，收集大量对齐的成对噪声清洁的训练数据是极具挑战性和昂贵的</li>
-<li>此外，由于合成噪声和真实噪声之间的 domain gap 域间隙，用合成噪声训练的模型会严重退化</li>
-</ul>
-</li>
-<li>
-<p>为了缓解这一问题，提出了一系列不需要任何干净图像进行训练的无监督和自我监督方法</p>
+<li>此外，由于合成噪声和真实噪声之间的 domain gap
+域间隙，用合成噪声训练的模型会严重退化</li>
+</ul></li>
+<li><p>为了缓解这一问题，提出了一系列不需要任何干净图像进行训练的无监督和自我监督方法</p>
 <ul>
 <li>在每个场景中使用<strong>多个独立的噪声观测</strong>来训练网络</li>
 <li>设计<strong>特定的盲点网络结构</strong>，仅在单个噪声图像上学习自监督模型，并使用噪声模型进一步改进，例如高斯-泊松模型</li>
 <li>用含噪对noisier-noisy训练网络，在noisy图像的基础上加入合成噪声，得到noisier图像</li>
-</ul>
-</li>
-<li>
-<p>然而这些预定要求在真实去噪场景中是不现实的</p>
+</ul></li>
+<li><p>然而这些预定要求在真实去噪场景中是不现实的</p>
 <ul>
 <li>首先，在每个场景捕捉多个噪声观测仍然是非常具有挑战性的，特别是对于运动场景或医学成像</li>
 <li>其次，盲点网络相对较低的精度和繁重的计算量极大地限制了其应用</li>
 <li>此外，当噪声分布已知为先验条件时，带有噪声模型假设的自监督方法可能在合成实验中很好地工作
 <ul>
 <li>然而，这些方法在处理现实世界噪声分布未知的图像时，会急剧退化</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>在本研究中，作者提出了一种新的自监督图像去噪框架Neighbor2Neighbor，克服了上述局限性</p>
+</ul></li>
+</ul></li>
+<li><p>在本研究中，作者提出了一种新的自监督图像去噪框架Neighbor2Neighbor，克服了上述局限性</p>
 <ul>
 <li>包括一种<strong>基于下采样的训练图像对生成策略</strong>和一种<strong>带正则化项的自监督训练方案</strong>
 <ul>
 <li>具体来说，<strong>训练输入和目标由随机的邻域下采样器生成，从单一的噪声图像中提取出两个下采样的成对图像，两个图像的相同位置上的每个元素在原始噪声图像中相邻</strong></li>
-<li>这样，如果假设<strong>每个像素的噪声以像素值为条件是独立的</strong>，不同位置的噪声之间不存在相关性，那么在原始噪声图像的ground  truth的条件下，<strong>这两个下采样成对噪声图像是独立的</strong></li>
+<li>这样，如果假设<strong>每个像素的噪声以像素值为条件是独立的</strong>，不同位置的噪声之间不存在相关性，那么在原始噪声图像的ground
+truth的条件下，<strong>这两个下采样成对噪声图像是独立的</strong></li>
 <li>因此，受Noise2Noise的启发，使用上述训练对来训练去噪网络</li>
-</ul>
-</li>
-<li>此外作者<strong>引入了一个正则化项来解决原始噪点图像上相邻像素之间像素ground-truth的本质差异</strong> （没看懂）</li>
+</ul></li>
+<li>此外作者<strong>引入了一个正则化项来解决原始噪点图像上相邻像素之间像素ground-truth的本质差异</strong>
+（没看懂）</li>
 <li>提出的自监督框架旨在仅使用单一图像训练去噪网络，而不需要对网络结构进行任何修改</li>
 <li>任何在有监督图像去噪任务中表现良好的网络都可以在我们的框架中使用。此外，我们的方法也不依赖于任何噪声模型</li>
-</ul>
-</li>
-<li>
-<p>为了评估所提出的Neighbor2Neighbor，在合成的和真实世界的噪声图像上进行了一系列的实验。大量的实验表明，我们的Neighbor2Neighbor方法优于传统的去噪方法和现有的自监督去噪方法。实验结果表明了该方法的有效性和优越性</p>
-</li>
-<li>
-<p>主要贡献如下：</p>
+</ul></li>
+<li><p>为了评估所提出的Neighbor2Neighbor，在合成的和真实世界的噪声图像上进行了一系列的实验。大量的实验表明，我们的Neighbor2Neighbor方法优于传统的去噪方法和现有的自监督去噪方法。实验结果表明了该方法的有效性和优越性</p></li>
+<li><p>主要贡献如下：</p>
 <ul>
 <li>我们提出了一种新的自监督图像去噪框架，在该框架中，任何现有的去噪网络都可以在没<strong>有任何干净目标、网络修改或噪声模型假设的情况下进行训练</strong></li>
 <li>从理论的角度，我们<strong>为提出的框架提供了良好的动机</strong></li>
 <li><strong>与最先进的自监督去噪方法相比，该方法表现得非常好</strong>，特别是在真实世界的数据集上，这显示了它在真实世界场景中的潜在应用</li>
-</ul>
-</li>
-<li>
-<p>监督图像去噪</p>
+</ul></li>
+<li><p>监督图像去噪</p>
 <ul>
 <li>Zhang等人提出了将卷积神经网络和残差学习相结合的DnCNN进行图像去噪。在对噪声清除的成对图像进行监督学习的情况下，DnCNN的去噪效果大大优于传统图像去噪器。之后，为了进一步提高性能，提出了大量的去噪网络</li>
 <li>然而，这些深度去噪器需要大量成对的噪声-干净的图像对来进行训练。为了进行监督降噪，需要收集大量的训练对。这限制了受监督的降噪器的使用</li>
-</ul>
-</li>
-<li>
-<blockquote>
+</ul></li>
+<li><blockquote>
 <p>仅使用噪声图像的图像去噪</p>
 <ul>
 <li>传统的去噪方法：BM3D、NLM和WNNM</li>
 <li>深度去噪器
 <ul>
-<li>Ulyanov等人提出了深度图像先验(deep image prior, DIP)，其中图像先验是从CNN网络获取的，而不是专门设计的</li>
+<li>Ulyanov等人提出了深度图像先验(deep image prior,
+DIP)，其中图像先验是从CNN网络获取的，而不是专门设计的</li>
 <li>Lehtinen等人引入Noise2Noise对同一场景的多个噪声观测进行深度去噪</li>
 <li>随后提出了包括Noise2Void和Noise2Self在内的自监督降噪模型，以训练每个场景只有一个噪声观测的网络（具体来说，就是使用精心设计的盲点网络来避免学习当前自身位置identity）</li>
-<li>最近，probability Noise2Void，  Laine19，和膨胀盲点网络进一步引入了显式噪声建模和概率推理，以获得更好的性能。引入了mask卷积和堆叠扩张卷积层以提高训练速度</li>
+<li>最近，probability Noise2Void，
+Laine19，和膨胀盲点网络进一步引入了显式噪声建模和概率推理，以获得更好的性能。引入了mask卷积和堆叠扩张卷积层以提高训练速度</li>
 <li>与基于盲点的自监督方法不同，在Noisier2Noise中，从噪声模型生成合成噪声，并将它们添加到单个噪声图像中来生成训练对</li>
-<li>然而，噪声模型很难确定，特别是在真实场景中。上面提到的Noisy-as-Clean 也有类似的理念</li>
+<li>然而，噪声模型很难确定，特别是在真实场景中。上面提到的Noisy-as-Clean
+也有类似的理念</li>
 <li>此外，Soltanayev和Chun使用Stein的无偏风险估计器(SURE)在单幅有噪图像上训练AWGN去噪模型，而Zhussip等人将其扩展到有噪图像相关对的情况</li>
 <li>Cha和Moon曾经对每个测试图像进行微调监督降噪。然而，基于确定的算法只是针对高斯加性噪声设计的，并且噪声级别是已知的先验</li>
+</ul></li>
 </ul>
-</li>
+</blockquote></li>
 </ul>
-</blockquote>
-</li>
-</ul>
-<h3 id="Motivation">Motivation</h3>
+<h3 id="motivation">Motivation</h3>
 <ul>
 <li>回顾Noise2Noise
 <ul>
-<li>该方法只需要对相同场景的独立噪声图像，给定相同ground-truth 图像  $\mathbf{x}$  的两个独立的噪声观测值和 $\mathbf{y}$   $\mathbf{z}$  ，Noise2Noise试图使下列θ值的损失最小化</li>
-<li>$\underset{\theta}{\arg \min } \mathbb{E}<em>{\mathbf{x}, \mathbf{y}, \mathbf{z}}\left|f</em>{\theta}(\mathbf{y})-\mathbf{z}\right|_{2}^{2}$
+<li>该方法只需要对相同场景的独立噪声图像，给定相同ground-truth 图像
+<span class="math inline">\(\mathbf{x}\)</span> 的两个独立的噪声观测值和
+<span class="math inline">\(\mathbf{y}\)</span> <span class="math inline">\(\mathbf{z}\)</span>
+，Noise2Noise试图使下列θ值的损失最小化</li>
+<li><span class="math inline">\(\underset{\theta}{\arg \min }
+\mathbb{E}_{\mathbf{x}, \mathbf{y},
+\mathbf{z}}\left\|f_{\theta}(\mathbf{y})-\mathbf{z}\right\|_{2}^{2}\)</span>
 <ul>
-<li>其中 $f_{\theta}$ 是由 $\theta$ 参数化的去噪网络</li>
-<li><strong>最小化该损失产生的参数解和使用</strong>  $L_2$ <strong>loss的监督训练效果相同</strong></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Paired Images with Similar Ground Truths，与Ground Truths相似的成对图像
+<li>其中 <span class="math inline">\(f_{\theta}\)</span> 是由 <span class="math inline">\(\theta\)</span> 参数化的去噪网络</li>
+<li><strong>最小化该损失产生的参数解和使用</strong> <span class="math inline">\(L_2\)</span>
+<strong>loss的监督训练效果相同</strong></li>
+</ul></li>
+</ul></li>
+<li>Paired Images with Similar Ground Truths，与Ground
+Truths相似的成对图像
 <ul>
 <li>Noise2Noise减少了对干净图像的需求。然而，捕捉一个场景的多个噪声观测仍然是一个非常具有挑战性的问题</li>
 <li>由于遮挡、运动和光照变化等，两个噪声观测的ground-truth很难完全相同，因此，我们建议将上面的损失公式<strong>扩展到底层干净图像之间的间隙情况</strong></li>
-<li>$\varepsilon:=\mathbb{E}<em>{\mathbf{z} \mid \mathbf{x}}(\mathbf{z})-\mathbb{E}</em>{\mathbf{y} \mid \mathbf{x}}(\mathbf{y}) \neq \mathbf{0}$</li>
+<li><span class="math inline">\(\varepsilon:=\mathbb{E}_{\mathbf{z} \mid
+\mathbf{x}}(\mathbf{z})-\mathbb{E}_{\mathbf{y} \mid
+\mathbf{x}}(\mathbf{y}) \neq \mathbf{0}\)</span></li>
 <li>Theorem 1
 <ul>
-<li>假设 $\mathbf{y}$ 和 $\mathbf{z}$ 为以  $\mathbf{x}$  为条件的两个独立的噪声图像，然后假设存在一个 $\varepsilon \not = 0$ 使得 $\mathbb{E}<em>{\mathbf{y} \mid \mathbf{x}}(\mathbf{y}) = \mathbf{x}$ 和 $\mathbb{E}</em>{\mathbf{z} \mid \mathbf{x}}(\mathbf{z}) = \mathbf{x} + \varepsilon$ ，假设 $\mathbf{z}$ 的方差为 $\sigma_{\mathbf{z}}^{2}$ ，则有</li>
-<li>$\begin{aligned} \mathbb{E}<em>{\mathbf{x}, \mathbf{y}}\left|f</em>{\theta}(\mathbf{y})-\mathbf{x}\right|<em>{2}^{2} &amp;=\mathbb{E}</em>{\mathbf{x}, \mathbf{y}, \mathbf{z}}\left|f_{\theta}(\mathbf{y})-\mathbf{z}\right|<em>{2}^{2}-\sigma</em>{\mathbf{z}}^{2} \ &amp;+2 \varepsilon \mathbb{E}<em>{\mathbf{x}, \mathbf{y}}\left(f</em>{\theta}(\mathbf{y})-\mathbf{x}\right) \end{aligned}$</li>
-</ul>
-</li>
-<li>定理1说明，当间隙 $\varepsilon \not = 0$ 时，由于 $\mathbb{E}<em>{\mathbf{x}, \mathbf{y}}(f</em>{\theta}(\mathbf{y}) - \mathbf{x}) \not \equiv 0$ ，优化 $\mathbb{E}<em>{\mathbf{x}, \mathbf{y}, \mathbf{z}}\left|f</em>{\theta}(\mathbf{y})-\mathbf{z}\right|<em>{2}^{2}$  并不会产生和监督学习损失 $\mathbb{E}</em>{\mathbf{x}, \mathbf{y}}\left|f_{\theta}(\mathbf{y})-\mathbf{x}\right|_{2}^{2}$  相同的解</li>
-<li>幸运的是，如果 $\varepsilon \rightarrow 0$ ，即<strong>间隙足够小</strong>，则为 $2 \varepsilon \mathbb{E}<em>{\mathbf{x}, \mathbf{y}}\left(f</em>{\theta}(\mathbf{y})-\mathbf{x}\right) \rightarrow 0$ ，则<strong>用有噪图像对 $(\mathbf{y},\mathbf{z})$ 训练的网络可以作为有监督训练网络的合理近似解</strong></li>
+<li>假设 <span class="math inline">\(\mathbf{y}\)</span> 和 <span class="math inline">\(\mathbf{z}\)</span> 为以 <span class="math inline">\(\mathbf{x}\)</span>
+为条件的两个独立的噪声图像，然后假设存在一个 <span class="math inline">\(\varepsilon \not = 0\)</span> 使得 <span class="math inline">\(\mathbb{E}_{\mathbf{y} \mid
+\mathbf{x}}(\mathbf{y}) = \mathbf{x}\)</span> 和 <span class="math inline">\(\mathbb{E}_{\mathbf{z} \mid
+\mathbf{x}}(\mathbf{z}) = \mathbf{x} + \varepsilon\)</span> ，假设 <span class="math inline">\(\mathbf{z}\)</span> 的方差为 <span class="math inline">\(\sigma_{\mathbf{z}}^{2}\)</span> ，则有</li>
+<li><span class="math inline">\(\begin{aligned} \mathbb{E}_{\mathbf{x},
+\mathbf{y}}\left\|f_{\theta}(\mathbf{y})-\mathbf{x}\right\|_{2}^{2}
+&amp;=\mathbb{E}_{\mathbf{x}, \mathbf{y},
+\mathbf{z}}\left\|f_{\theta}(\mathbf{y})-\mathbf{z}\right\|_{2}^{2}-\sigma_{\mathbf{z}}^{2}
+\\ &amp;+2 \varepsilon \mathbb{E}_{\mathbf{x},
+\mathbf{y}}\left(f_{\theta}(\mathbf{y})-\mathbf{x}\right)
+\end{aligned}\)</span></li>
+</ul></li>
+<li>定理1说明，当间隙 <span class="math inline">\(\varepsilon \not =
+0\)</span> 时，由于 <span class="math inline">\(\mathbb{E}_{\mathbf{x},
+\mathbf{y}}(f_{\theta}(\mathbf{y}) - \mathbf{x}) \not \equiv 0\)</span>
+，优化 <span class="math inline">\(\mathbb{E}_{\mathbf{x}, \mathbf{y},
+\mathbf{z}}\left\|f_{\theta}(\mathbf{y})-\mathbf{z}\right\|_{2}^{2}\)</span>
+并不会产生和监督学习损失 <span class="math inline">\(\mathbb{E}_{\mathbf{x},
+\mathbf{y}}\left\|f_{\theta}(\mathbf{y})-\mathbf{x}\right\|_{2}^{2}\)</span>
+相同的解</li>
+<li>幸运的是，如果 <span class="math inline">\(\varepsilon \rightarrow
+0\)</span> ，即<strong>间隙足够小</strong>，则为 <span class="math inline">\(2 \varepsilon \mathbb{E}_{\mathbf{x},
+\mathbf{y}}\left(f_{\theta}(\mathbf{y})-\mathbf{x}\right) \rightarrow
+0\)</span> ，则<strong>用有噪图像对 <span class="math inline">\((\mathbf{y},\mathbf{z})\)</span>
+训练的网络可以作为有监督训练网络的合理近似解</strong></li>
 <li><strong>（上面这部分其实就是说用合成噪声对去训练的网络是无法去拟合有监督学习的，会存在偏差，也就是说用噪声数据对训练得到的网络参数解和监督学习的解不相同，但如果两幅噪声数据对的差异很小可以忽略的时候，就可以当成一个合理近似解）</strong></li>
-<li>注意到当间隙 $\varepsilon = 0$ 时， $\sigma_{\mathbf{z}}^{2}$ 是一个常数，这时候去最小化理论1中的方程得到 $\underset{\theta}{\arg \min } \mathbb{E}<em>{\mathbf{x}, \mathbf{y}, \mathbf{z}}\left|f</em>{\theta}(\mathbf{y})-\mathbf{z}\right|_{2}^{2}$ ，就是Noise2Noise的目标</li>
-</ul>
-</li>
+<li>注意到当间隙 <span class="math inline">\(\varepsilon = 0\)</span>
+时， <span class="math inline">\(\sigma_{\mathbf{z}}^{2}\)</span>
+是一个常数，这时候去最小化理论1中的方程得到 <span class="math inline">\(\underset{\theta}{\arg \min }
+\mathbb{E}_{\mathbf{x}, \mathbf{y},
+\mathbf{z}}\left\|f_{\theta}(\mathbf{y})-\mathbf{z}\right\|_{2}^{2}\)</span>
+，就是Noise2Noise的目标</li>
+</ul></li>
 <li>Extension to Single Noisy Images， 拓展到单个图像去噪
 <ul>
-<li>受Noise2Noise（训练数据对是同一场景的独立的噪声图像对）的启发，我们进一步提出<strong>从单一噪声图像 $\mathbf{y}$  中通过采样生成独立的训练数据对</strong></li>
-<li>具体来说，使用图像对采样器 $G = (g_1, g_2)$ ，从单个有噪图像 $\mathbf{y}$ 生成有噪图像对 $(g_1(\mathbf{y}), g_2(\mathbf{y}))$ ，两个采样得到的图像对内容十分相似</li>
+<li>受Noise2Noise（训练数据对是同一场景的独立的噪声图像对）的启发，我们进一步提出<strong>从单一噪声图像
+<span class="math inline">\(\mathbf{y}\)</span>
+中通过采样生成独立的训练数据对</strong></li>
+<li>具体来说，使用图像对采样器 <span class="math inline">\(G = (g_1,
+g_2)\)</span> ，从单个有噪图像 <span class="math inline">\(\mathbf{y}\)</span> 生成有噪图像对 <span class="math inline">\((g_1(\mathbf{y}), g_2(\mathbf{y}))\)</span>
+，两个采样得到的图像对内容十分相似</li>
 <li>与上面类似，我们尝试将采样后的图像对作为两个噪声观测值</li>
-<li>$\underset{\theta}{\arg \min } \mathbb{E}<em>{\mathbf{x}, \mathbf{y}}\left|f</em>{\theta}(g_1(\mathbf{y}))-g_2(\mathbf{y}))\right|_{2}^{2}$</li>
-<li>这里与Noise2Noise不同的是，<strong>这两个采样图像的ground-truth是不一样的</strong>，即 $\varepsilon =\mathbb{E}<em>{\mathbf{y} \mid \mathbf{x}}(g_2(\mathbf{y})))-\mathbb{E}</em>{\mathbf{y} \mid \mathbf{x}}(g_1(\mathbf{y}))) \neq \mathbf{0}$</li>
-<li>根据定理1，直接使用  $\underset{\theta}{\arg \min } \mathbb{E}<em>{\mathbf{x}, \mathbf{y}}\left|f</em>{\theta}(g_1(\mathbf{y}))-g_2(\mathbf{y}))\right|_{2}^{2}$  是不合适的，<strong>会导致过平滑</strong>，因此作者在这里考虑非零间隙 $\varepsilon$
+<li><span class="math inline">\(\underset{\theta}{\arg \min }
+\mathbb{E}_{\mathbf{x},
+\mathbf{y}}\left\|f_{\theta}(g_1(\mathbf{y}))-g_2(\mathbf{y}))\right\|_{2}^{2}\)</span></li>
+<li>这里与Noise2Noise不同的是，<strong>这两个采样图像的ground-truth是不一样的</strong>，即
+<span class="math inline">\(\varepsilon =\mathbb{E}_{\mathbf{y} \mid
+\mathbf{x}}(g_2(\mathbf{y})))-\mathbb{E}_{\mathbf{y} \mid
+\mathbf{x}}(g_1(\mathbf{y}))) \neq \mathbf{0}\)</span></li>
+<li>根据定理1，直接使用 <span class="math inline">\(\underset{\theta}{\arg \min }
+\mathbb{E}_{\mathbf{x},
+\mathbf{y}}\left\|f_{\theta}(g_1(\mathbf{y}))-g_2(\mathbf{y}))\right\|_{2}^{2}\)</span>
+是不合适的，<strong>会导致过平滑</strong>，因此作者在这里考虑非零间隙
+<span class="math inline">\(\varepsilon\)</span>
 <ul>
 <li>这里感觉就是如果直接用这个来学习的话，因为是两个不同下采样得到的图像，所以对于一些突变的边界而言，可能就会学习的不太好，会学习到一个平均值，导致过于平滑（个人理解）</li>
-</ul>
-</li>
-<li>考虑到使用干净图像和 $L_2$ loss和干净图像是最佳（理想）去噪器 $f_{\theta}^{<em>}$ ，给定 $\mathbf{x}$ ，对于 $\ell \in{1,2}$ ，它满足 $f_{\theta}^{</em>}(\mathbf{y})=\mathbf{x}$ 和 $f_{\theta}^{*}\left(g_{\ell}(\mathbf{y})\right)=g_{\ell}(\mathbf{x})$</li>
-<li>因此，对于最优网络 $f_{\theta}^{*}$ ，以下情况成立:
+</ul></li>
+<li>考虑到使用干净图像和 <span class="math inline">\(L_2\)</span>
+loss和干净图像是最佳（理想）去噪器 <span class="math inline">\(f_{\theta}^{*}\)</span> ，给定 <span class="math inline">\(\mathbf{x}\)</span> ，对于 <span class="math inline">\(\ell \in\{1,2\}\)</span> ，它满足 <span class="math inline">\(f_{\theta}^{*}(\mathbf{y})=\mathbf{x}\)</span> 和
+<span class="math inline">\(f_{\theta}^{*}\left(g_{\ell}(\mathbf{y})\right)=g_{\ell}(\mathbf{x})\)</span></li>
+<li>因此，对于最优网络 <span class="math inline">\(f_{\theta}^{*}\)</span> ，以下情况成立:
 <ul>
-<li>$\mathbb{E}<em>{\mathbf{y} \mid \mathbf{x}}\left{f</em>{\theta}^{<em>}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})-\left(g_{1}\left(f_{\theta}^{</em>}(\mathbf{y})\right)-g_{2}\left(f_{\theta}^{*}(\mathbf{y})\right)\right)\right}$<br>
-$=g_{1}(\mathbf{x})-\mathbb{E}<em>{\mathbf{y} \mid \mathbf{x}}\left{g</em>{2}(\mathbf{y})\right}-\left(g_{1}(\mathbf{x})-g_{2}(\mathbf{x})\right)$<br>
-$=g_{2}(\mathbf{x})-\mathbb{E}<em>{\mathbf{y} \mid \mathbf{x}}\left{g</em>{2}(\mathbf{y})\right}=0$</li>
-<li>上式中的最后两项，是考虑到了<strong>训练图像和ground truth之间的差距间隙</strong>
+<li><span class="math inline">\(\mathbb{E}_{\mathbf{y} \mid
+\mathbf{x}}\left\{f_{\theta}^{*}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})-\left(g_{1}\left(f_{\theta}^{*}(\mathbf{y})\right)-g_{2}\left(f_{\theta}^{*}(\mathbf{y})\right)\right)\right\}\)</span>
+<span class="math inline">\(=g_{1}(\mathbf{x})-\mathbb{E}_{\mathbf{y}
+\mid
+\mathbf{x}}\left\{g_{2}(\mathbf{y})\right\}-\left(g_{1}(\mathbf{x})-g_{2}(\mathbf{x})\right)\)</span>
+<span class="math inline">\(=g_{2}(\mathbf{x})-\mathbb{E}_{\mathbf{y}
+\mid \mathbf{x}}\left\{g_{2}(\mathbf{y})\right\}=0\)</span></li>
+<li>上式中的最后两项，是考虑到了<strong>训练图像和ground
+truth之间的差距间隙</strong>
 <ul>
 <li><strong>当间隙为零时，上式中后两项相减消去</strong>，这样就得到了Noise2Noise配对训练的特例</li>
-<li>但如果<strong>间隙不为零，则这两项作为对上式中前两项的ground truth gap的修正，使上式为零</strong></li>
+<li>但如果<strong>间隙不为零，则这两项作为对上式中前两项的ground truth
+gap的修正，使上式为零</strong></li>
 <li>这里作者设计的太巧妙了！！❗❗❗</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>可以看出来，上式其实提供了一个约束条件，当去噪器 $f_{\theta}$ 是理想的 $f_{\theta}^{*}$ 时，该约束条件得到满足。为了利用这个(理想)约束，而不是直接优化方程  $\underset{\theta}{\arg \min } \mathbb{E}<em>{\mathbf{x}, \mathbf{y}}\left|f</em>{\theta}(g_1(\mathbf{y}))-g_2(\mathbf{y}))\right|_{2}^{2}$  ，我们考虑以下约束优化问题:
+</ul></li>
+</ul></li>
+<li>可以看出来，上式其实提供了一个约束条件，当去噪器 <span class="math inline">\(f_{\theta}\)</span> 是理想的 <span class="math inline">\(f_{\theta}^{*}\)</span>
+时，该约束条件得到满足。为了利用这个(理想)约束，而不是直接优化方程 <span class="math inline">\(\underset{\theta}{\arg \min }
+\mathbb{E}_{\mathbf{x},
+\mathbf{y}}\left\|f_{\theta}(g_1(\mathbf{y}))-g_2(\mathbf{y}))\right\|_{2}^{2}\)</span>
+，我们考虑以下约束优化问题:
 <ul>
-<li>$\min <em>{\theta} \mathbb{E}</em>{\mathbf{y} \mid \mathbf{x}}\left|f_{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})\right|<em>{2}^{2}$, s.t.<br>
-$\mathbb{E}</em>{\mathbf{y} \mid \mathbf{x}}\left{f_{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})-g_{1}\left(f_{\theta}(\mathbf{y})\right)+g_{2}\left(f_{\theta}(\mathbf{y})\right)\right}=0$</li>
-<li>其中 $\mathbb{E}_{x,y}=  \mathbb{E}<em>x \mathbb{E}</em>{y|x}$ ，我们进一步将其表述为以下正则化优化问题:</li>
-<li>$\begin{aligned} &amp; \min <em>{\theta} \mathbb{E}</em>{\mathbf{x}, \mathbf{y}}\left|f_{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})\right|<em>{2}^{2} \+&amp; \gamma \mathbb{E}</em>{\mathbf{x}, \mathbf{y}}\left|f_{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})-g_{1}\left(f_{\theta}(\mathbf{y})\right)+g_{2}\left(f_{\theta}(\mathbf{y})\right)\right|_{2}^{2} \end{aligned}$</li>
-</ul>
-</li>
-</ul>
-</li>
+<li><span class="math inline">\(\min _{\theta} \mathbb{E}_{\mathbf{y}
+\mid
+\mathbf{x}}\left\|f_{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})\right\|_{2}^{2}\)</span>,
+s.t. <span class="math inline">\(\mathbb{E}_{\mathbf{y} \mid
+\mathbf{x}}\left\{f_{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})-g_{1}\left(f_{\theta}(\mathbf{y})\right)+g_{2}\left(f_{\theta}(\mathbf{y})\right)\right\}=0\)</span></li>
+<li>其中 <span class="math inline">\(\mathbb{E}_{x,y}=  \mathbb{E}_x
+\mathbb{E}_{y|x}\)</span> ，我们进一步将其表述为以下正则化优化问题:</li>
+<li><span class="math inline">\(\begin{aligned} &amp; \min _{\theta}
+\mathbb{E}_{\mathbf{x},
+\mathbf{y}}\left\|f_{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})\right\|_{2}^{2}
+\\+&amp; \gamma \mathbb{E}_{\mathbf{x},
+\mathbf{y}}\left\|f_{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})-g_{1}\left(f_{\theta}(\mathbf{y})\right)+g_{2}\left(f_{\theta}(\mathbf{y})\right)\right\|_{2}^{2}
+\end{aligned}\)</span></li>
+</ul></li>
+</ul></li>
 <li>其实看到这里，基本把整篇文章的思想和提出的方法看完了，真的巧妙！太神了，真的有想法！</li>
 </ul>
-<h3 id="Proposed-Method">Proposed Method</h3>
-<p><img src="/2021/04/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x15/1.png" srcset="/img/loading.gif" lazyload alt></p>
+<h3 id="proposed-method">Proposed Method</h3>
+<p><img src="/2021/04/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x15/1.png" srcset="/img/loading.gif" lazyload></p>
 <ul>
 <li>基于在上一节中的动机，我们提出Neighbor2Neighbor，一个自我监督的框架，通过对单噪声图像观察来训练CNN去噪器。提出的培训方案包括两部分
 <ul>
 <li>利用随机邻域下采样器生成成对的噪声图像</li>
 <li>在使用下采样图像对进行自我监督训练的同时，进一步引入了正则化损失来解决下采样图像之间的非零ground-truth差距</li>
-</ul>
-</li>
+</ul></li>
 <li>Generation of Training Image Pairs
 <ul>
-<li>首先，作者引入了一个邻域下采样器，从单个有噪图像 $\mathbf{y}$ 生成有噪图像对 $(g_1(\mathbf{y}), g_2(\mathbf{y}))$ 进行训练</li>
+<li>首先，作者引入了一个邻域下采样器，从单个有噪图像 <span class="math inline">\(\mathbf{y}\)</span> 生成有噪图像对 <span class="math inline">\((g_1(\mathbf{y}), g_2(\mathbf{y}))\)</span>
+进行训练</li>
 <li>满足之前讨论过的假设：
 <ul>
-<li>已知 $\mathbf{y}$ 的ground truth $\mathbf{x}$ ，下采样成对噪声图像 $(g_1(\mathbf{y}), g_2(\mathbf{y}))$ 是条件独立的</li>
-<li>$(g_1(\mathbf{y}), g_2(\mathbf{y}))$ 的ground truth之间的差距gap较小</li>
-</ul>
-</li>
+<li>已知 <span class="math inline">\(\mathbf{y}\)</span> 的ground truth
+<span class="math inline">\(\mathbf{x}\)</span> ，下采样成对噪声图像
+<span class="math inline">\((g_1(\mathbf{y}), g_2(\mathbf{y}))\)</span>
+是条件独立的</li>
+<li><span class="math inline">\((g_1(\mathbf{y}),
+g_2(\mathbf{y}))\)</span> 的ground truth之间的差距gap较小</li>
+</ul></li>
 <li>邻域下采样器的图像对生成示意图：</li>
-<li><img src="/2021/04/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x15/2.png" srcset="/img/loading.gif" lazyload alt></li>
-<li>表示一幅图像 $\mathbf{y}$ ，宽度为W，高度为H。相邻子采样器 $G = (g_1, g_2)$ 的细节描述如下
+<li><img src="/2021/04/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x15/2.png" srcset="/img/loading.gif" lazyload></li>
+<li>表示一幅图像 <span class="math inline">\(\mathbf{y}\)</span>
+，宽度为W，高度为H。相邻子采样器 <span class="math inline">\(G = (g_1,
+g_2)\)</span> 的细节描述如下
 <ul>
-<li>将图像 $\mathbf{y}$ 分为 $\lfloor W/k \rfloor × \lfloor H/k \rfloor$ 个单元，每个单元的大小为k × k。根据经验，我们设k = 2</li>
-<li>对于第i行和第j列单元，随机选择两个相邻的位置。分别作为子采样器 $G = (g_1, g_2)$ 的第 $(i,  j)$ 个元素</li>
-<li>对于所有的 $\lfloor W/k \rfloor × \lfloor H/k \rfloor$ 个单元，重复步骤2，从而生成相邻的子采样器 $G = (g_1, g_2)$</li>
-</ul>
-</li>
-<li>给定图像 $\mathbf{y}$ ，导出两个下采样图像 $(g_1(\mathbf{y}), g_2(\mathbf{y}))$ ，大小为 $\lfloor W/k \rfloor × \lfloor H/k \rfloor$</li>
-<li>成对图像 $(g_1(\mathbf{y}), g_2(\mathbf{y}))$ 的ground-truth相似，因为 $(g_1(\mathbf{y}), g_2(\mathbf{y}))$ 的成对像素从原始噪声图像 $\mathbf{y}$ 相邻采样得到</li>
-<li>$(g_1(\mathbf{y}), g_2(\mathbf{y}))$ 在给定 $\mathbf{x}$  的条件下，如果进一步假设有噪图像 $\mathbf{y}$ 在给定ground-truth $\mathbf{x}$  的条件下是像素独立的，则满足 $(g_1(\mathbf{y}), g_2(\mathbf{y}))$ 的独立性要求</li>
-</ul>
-</li>
+<li>将图像 <span class="math inline">\(\mathbf{y}\)</span> 分为 <span class="math inline">\(\lfloor W/k \rfloor × \lfloor H/k \rfloor\)</span>
+个单元，每个单元的大小为k × k。根据经验，我们设k = 2</li>
+<li>对于第i行和第j列单元，随机选择两个相邻的位置。分别作为子采样器 <span class="math inline">\(G = (g_1, g_2)\)</span> 的第 <span class="math inline">\((i,  j)\)</span> 个元素</li>
+<li>对于所有的 <span class="math inline">\(\lfloor W/k \rfloor × \lfloor
+H/k \rfloor\)</span> 个单元，重复步骤2，从而生成相邻的子采样器 <span class="math inline">\(G = (g_1, g_2)\)</span></li>
+</ul></li>
+<li>给定图像 <span class="math inline">\(\mathbf{y}\)</span>
+，导出两个下采样图像 <span class="math inline">\((g_1(\mathbf{y}),
+g_2(\mathbf{y}))\)</span> ，大小为 <span class="math inline">\(\lfloor
+W/k \rfloor × \lfloor H/k \rfloor\)</span></li>
+<li>成对图像 <span class="math inline">\((g_1(\mathbf{y}),
+g_2(\mathbf{y}))\)</span> 的ground-truth相似，因为 <span class="math inline">\((g_1(\mathbf{y}), g_2(\mathbf{y}))\)</span>
+的成对像素从原始噪声图像 <span class="math inline">\(\mathbf{y}\)</span>
+相邻采样得到</li>
+<li><span class="math inline">\((g_1(\mathbf{y}),
+g_2(\mathbf{y}))\)</span> 在给定 <span class="math inline">\(\mathbf{x}\)</span>
+的条件下，如果进一步假设有噪图像 <span class="math inline">\(\mathbf{y}\)</span> 在给定ground-truth <span class="math inline">\(\mathbf{x}\)</span> 的条件下是像素独立的，则满足
+<span class="math inline">\((g_1(\mathbf{y}), g_2(\mathbf{y}))\)</span>
+的独立性要求</li>
+</ul></li>
 <li>Self-Supervised Training with a Regularizer
 <ul>
-<li>给定来自噪声图像 $\mathbf{y}$ 的一对下采样图像 $(g_1(\mathbf{y}), g_2(\mathbf{y}))$ ，我们使用上一节中提出的正则化损失来训练去噪网络：</li>
-<li>$\begin{aligned} \mathcal{L} &amp;=\mathcal{L}<em>{r e c}+\gamma \cdot \mathcal{L}</em>{r e g} \ &amp;=\left|f_{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})\right|<em>{2}^{2} \ &amp;+\gamma \cdot\left|f</em>{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})-\left(g_{1}\left(f_{\theta}(\mathbf{y})\right)-g_{2}\left(f_{\theta}(\mathbf{y})\right)\right)\right|_{2}^{2} \end{aligned}$
+<li>给定来自噪声图像 <span class="math inline">\(\mathbf{y}\)</span>
+的一对下采样图像 <span class="math inline">\((g_1(\mathbf{y}),
+g_2(\mathbf{y}))\)</span>
+，我们使用上一节中提出的正则化损失来训练去噪网络：</li>
+<li><span class="math inline">\(\begin{aligned} \mathcal{L}
+&amp;=\mathcal{L}_{r e c}+\gamma \cdot \mathcal{L}_{r e g} \\
+&amp;=\left\|f_{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})\right\|_{2}^{2}
+\\ &amp;+\gamma
+\cdot\left\|f_{\theta}\left(g_{1}(\mathbf{y})\right)-g_{2}(\mathbf{y})-\left(g_{1}\left(f_{\theta}(\mathbf{y})\right)-g_{2}\left(f_{\theta}(\mathbf{y})\right)\right)\right\|_{2}^{2}
+\end{aligned}\)</span>
 <ul>
-<li>$f_{\theta}$  为任意网络设计的去噪网络， $\gamma$ 为控制正则化项强度的超参数</li>
+<li><span class="math inline">\(f_{\theta}\)</span>
+为任意网络设计的去噪网络， <span class="math inline">\(\gamma\)</span>
+为控制正则化项强度的超参数</li>
+</ul></li>
+<li>为了稳定学习，我们在训练过程中停止 <span class="math inline">\(g_1(f_{\theta}(\mathbf{y})),
+g_2(f_{\theta}(\mathbf{y}))\)</span> 的梯度，逐渐增加 <span class="math inline">\(\gamma\)</span> 到指定的值</li>
+<li><img src="/2021/04/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x15/3.png" srcset="/img/loading.gif" lazyload></li>
+</ul></li>
 </ul>
-</li>
-<li>为了稳定学习，我们在训练过程中停止 $g_1(f_{\theta}(\mathbf{y})), g_2(f_{\theta}(\mathbf{y}))$ 的梯度，逐渐增加 $\gamma$ 到指定的值</li>
-<li><img src="/2021/04/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-0x15/3.png" srcset="/img/loading.gif" lazyload alt></li>
-</ul>
-</li>
-</ul>
-<h3 id="Experiments">Experiments</h3>
+<h3 id="experiments">Experiments</h3>
 <p>emm实验不说了</p>
-<h3 id="😝😜😋">😝😜😋</h3>
+<h3 id="section">😝😜😋</h3>
 <p>真的很神奇，从noise2noise到这边一篇，感觉每一篇都很有趣，很有想法，而且很多细节设计上真的很巧妙，能够很好的避免一些缺陷。虽然总结起来会很简单，但是去看他的具体设计的话，还是很有收获的。</p>
-<p>最近感觉读论文啥的似乎也不是一个很好的方式，想着这段时间先不读论文了， 去跑跑那个noise2noise的代码，然后改一改。这篇论文的代码暂时还没有放出来，所以倒也不是很急，慢慢来，噶油~</p>
+<p>最近感觉读论文啥的似乎也不是一个很好的方式，想着这段时间先不读论文了，
+去跑跑那个noise2noise的代码，然后改一改。这篇论文的代码暂时还没有放出来，所以倒也不是很急，慢慢来，噶油~</p>
 
                 
               </div>
